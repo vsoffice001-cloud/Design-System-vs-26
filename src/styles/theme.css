@@ -1,0 +1,365 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  
+  /* ========================================
+     TYPOGRAPHY SCALE - Major Third (1.25 ratio)
+     ======================================== 
+     
+     PURPOSE: Creates harmonious visual hierarchy through mathematical progression.
+     RATIO: Each size is 1.25× the previous size (Major Third musical interval).
+     BASE: 16px (1rem) - Standard readable body text size.
+     
+     USAGE GUIDELINES:
+     - Use CSS variables for all standard typography
+     - Hardcode only when spatial constraints or client specs require it
+     - See FONT_SIZE_RATIONALE_ANALYSIS.md for detailed explanations
+     
+     UPDATED: January 2025 - Section headings changed from --text-3xl to --text-2xl
+     
+     ======================================== */
+  
+  --text-xs: 0.8rem;      /* 12.8px - Labels, metadata, categories, section eyebrows */
+  --text-sm: 1rem;        /* 16px - Body text, descriptions, standard paragraphs */
+  --text-base: 1.25rem;   /* 20px - Large body text, card titles (when 4+ cards) */
+  --text-lg: 1.563rem;    /* 25px - Card titles (when 2-3 cards) */
+  --text-xl: 1.953rem;    /* 31.25px - Subsection headings (h3), engagement objectives, methodology steps */
+  --text-2xl: 2.441rem;   /* 39px - SECTION HEADINGS (h2) - NEW STANDARD for main sections */
+  --text-3xl: 3.052rem;   /* 48.8px - Hero h1, Final CTA h2 - RESERVED for hero moments only */
+  --text-4xl: 3.815rem;   /* 61px - Extra large headings (challenges card numbers when <4 cards) */
+  --text-5xl: 4.768rem;   /* 76.3px - Massive headings (future use, rarely needed) */
+  
+  /* ========================================
+     CUSTOM FONT SIZES (Outside Scale)
+     ======================================== 
+     
+     These exist for specific use cases where the mathematical scale 
+     doesn't provide the precise size needed for spatial/optical reasons.
+     
+     WHEN TO USE:
+     ✅ Sidebar/narrow column layouts (Client Context)
+     ✅ Preventing text wrapping in cards
+     ✅ Client-specified pixel precision (Navbar)
+     ✅ Creating micro-hierarchies within components
+     
+     WHEN NOT TO USE:
+     ❌ Standard section headings (use --text-xl, --text-2xl, --text-3xl)
+     ❌ Body paragraphs (use --text-sm)
+     ❌ Section labels (use --text-xs)
+     
+     ======================================== */
+  
+  --text-2xs: 0.75rem;     /* 12px - Navbar text, micro labels (when 12.8px too large) */
+  --text-compact: 0.875rem; /* 14px - Compact body text (challenges with 4+ cards) */
+  
+  /* SECTION-SPECIFIC CUSTOM SIZES (documented inline in components):
+   *
+   * Client Context Sidebar:
+   * - 9.5px: Micro labels (Client Company, Industry) - Sidebar constraint
+   * - 13px: Secondary info, list numbers - Creates hierarchy
+   * - 17px: Company name - Prevents wrapping
+   * - clamp(19px, 2.8vw, 24px): Lead paragraph - Responsive editorial treatment
+   * 
+   * Impact Section:
+   * - clamp(1.75rem, 5vw, 2.5rem): Metric values - Prevents wrapping of "₹110 Cr"
+   * 
+   * See component files for detailed rationale comments.
+   */
+  
+  /* ========================================
+     COLOR SYSTEM - Case Study Editorial
+     ======================================== */
+  
+  /* ========================================
+     PRIMARY BRAND COLORS
+     ======================================== */
+  
+  /* Ken Bold Red - Primary Brand Color */
+  --brand-red: #b01f24;
+  --brand-red-hover: #8f181d;
+  --brand-red-active: #771419;
+  
+  /* Ken Bold Red - Full Tints & Shades Scale */
+  --red-50: #fef2f2;    /* Lightest - Subtle backgrounds, alert highlights */
+  --red-100: #fee2e2;   /* Very light - Notice backgrounds, hover states */
+  --red-200: #fecaca;   /* Light - Disabled states, soft accents */
+  --red-300: #fca5a7;   /* Medium light - Borders, dividers */
+  --red-400: #f87176;   /* Medium - Icons, secondary buttons */
+  --red-500: #dc3238;   /* Standard - Links, active states */
+  --red-600: #b01f24;   /* PRIMARY BRAND - CTAs, buttons, key accents */
+  --red-700: #8f181d;   /* Hover - Button hover states */
+  --red-800: #771419;   /* Active - Button active/pressed states */
+  --red-900: #5f1014;   /* Darkest - Text on light backgrounds, deep shadows */
+  
+  /* Black & White - Foundation */
+  --black: #000000;
+  --white: #ffffff;
+  
+  /* Black Tints (White mixed in) */
+  --black-50: #fafafa;   /* Near white - Very subtle backgrounds */
+  --black-100: #f5f5f5;  /* Lightest gray - Card backgrounds */
+  --black-200: #e5e5e5;  /* Very light gray - Borders, dividers */
+  --black-300: #d4d4d4;  /* Light gray - Disabled states */
+  --black-400: #a3a3a3;  /* Medium gray - Placeholder text */
+  --black-500: #737373;  /* Gray - Secondary text */
+  --black-600: #525252;  /* Dark gray - Body text alternative */
+  --black-700: #404040;  /* Darker gray - Headings alternative */
+  --black-800: #262626;  /* Very dark - Strong text */
+  --black-900: #171717;  /* Almost black - Deep backgrounds */
+  --black: #000000;      /* Pure black - Primary text, hero backgrounds */
+  
+  /* White Tints (Black mixed in) - Same as Black Tints, reversed */
+  --white: #ffffff;      /* Pure white - Primary backgrounds */
+  --white-900: #fafafa;  /* Slightly off-white */
+  --white-800: #f5f5f5;  /* Off-white */
+  
+  /* ========================================
+     ACCENT COLORS - Strategic Use
+     ======================================== */
+  
+  /* Color 1: Warm - Already in use, expanded scale */
+  --warm-50: #fefdfd;    /* Barely there - Subtle overlays */
+  --warm-100: #fcfbfa;   /* Very subtle - Hover backgrounds */
+  --warm-200: #f9f7f6;   /* Soft - Card backgrounds */
+  --warm-300: #f5f2f1;   /* BASE - Current section backgrounds */
+  --warm-400: #f0ebe9;   /* Medium - Alternative backgrounds */
+  --warm-500: #eae5e3;   /* Borders - Current usage */
+  --warm-600: #d9d1ce;   /* Timeline base - Current usage */
+  --warm-700: #c8bcb8;   /* Timeline nodes - Current usage */
+  --warm-800: #b7a9a3;   /* Dark warm - Text on light warm */
+  --warm-900: #a6968e;   /* Darkest warm - Strong accents */
+  
+  /* Color 2: True V (Purple) - Premium, Innovation, Insights */
+  --purple-50: #f7f6fe;   /* Lightest - Subtle highlights, backgrounds */
+  --purple-100: #efedfd;  /* Very light - Hover states, cards */
+  --purple-200: #dfdcfb;  /* Light - Borders, dividers */
+  --purple-300: #c4bef7;  /* Medium light - Icons, badges */
+  --purple-400: #a89ff2;  /* Medium - Secondary accents */
+  --purple-500: #9488ec;  /* Standard - Interactive elements */
+  --purple-600: #806ce0;  /* BASE - Premium features, insights sections */
+  --purple-700: #6c5bc0;  /* Hover - Button hover states */
+  --purple-800: #5a4ba0;  /* Active - Button active states */
+  --purple-900: #483c80;  /* Darkest - Text, deep accents */
+  
+  /* Color 3: Periwinkle - Soft, Trust, Reliability */
+  --periwinkle-50: #fafbfe;   /* Lightest - Subtle backgrounds */
+  --periwinkle-100: #f5f6fd;  /* Very light - Card backgrounds */
+  --periwinkle-200: #ebedfb;  /* Light - Hover states */
+  --periwinkle-300: #dfe1f9;  /* Medium light - Soft accents */
+  --periwinkle-400: #d3d5f9;  /* Medium - Borders, dividers */
+  --periwinkle-500: #c3c6f9;  /* BASE - Trust indicators, secondary sections */
+  --periwinkle-600: #a7abf0;  /* Standard - Interactive elements */
+  --periwinkle-700: #8b90e0;  /* Hover - Links, buttons */
+  --periwinkle-800: #7075c8;  /* Active - Active states */
+  --periwinkle-900: #5a5fa0;  /* Darkest - Text on light backgrounds */
+  
+  /* Color 4: Perano (Light Blue) - Calm, Professional, Data */
+  --perano-50: #fcfdfe;    /* Lightest - Barely visible backgrounds */
+  --perano-100: #f9fbfe;   /* Very light - Subtle highlights */
+  --perano-200: #f4f8fd;   /* Light - Card backgrounds */
+  --perano-300: #eff5fc;   /* Medium light - Hover states */
+  --perano-400: #e9f2fb;   /* Medium - Soft accents */
+  --perano-500: #dfeafa;   /* BASE - Data sections, calm backgrounds */
+  --perano-600: #c8dff5;   /* Standard - Borders, dividers */
+  --perano-700: #a7c9ed;   /* Hover - Interactive elements */
+  --perano-800: #86b3e5;   /* Active - Active states */
+  --perano-900: #6b94c0;   /* Darkest - Text, strong accents */
+  
+  /* ========================================
+     LEGACY COLOR VARIABLES (Keep for backwards compatibility)
+     ======================================== */
+  
+  /* Warm Off-White for Highlighted Sections */
+  --bg-warm: #f5f2f1;          /* Base - Challenges, Methodology sections */
+  --bg-warm-500: #eae5e3;      /* Subtle borders, separator lines */
+  --bg-warm-600: #d9d1ce;      /* Timeline base, medium contrast */
+  --bg-warm-700: #c8bcb8;      /* Timeline nodes, stronger borders */
+  
+  /* Pure Black/White for Primary Sections */
+  --bg-pure-black: #000000;    /* Hero, Resources sections */
+  --bg-pure-white: #ffffff;    /* Standard white sections */
+  
+  /* ========================================
+     TYPOGRAPHY DEFAULTS
+     ======================================== */
+  
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  
+  /* ========================================
+     BUTTON SIZE SYSTEM
+     ======================================== */
+  
+  /* Button Heights - Increased for better presence */
+  --button-height-sm: 2.5rem;     /* 40px - Small utility buttons */
+  --button-height-md: 3rem;       /* 48px - Standard buttons */
+  --button-height-lg: 3.5rem;     /* 56px - Primary CTAs */
+  --button-height-xl: 4rem;       /* 64px - Hero/Emphasis CTAs */
+  
+  /* Button Font Sizes */
+  --button-font-sm: 0.875rem;     /* 14px - Small buttons */
+  --button-font-md: 1rem;         /* 16px - Standard buttons */
+  --button-font-lg: 1.125rem;     /* 18px - Large buttons */
+  
+  /* Button Padding Horizontal */
+  --button-px-sm: 1.25rem;        /* 20px - Compact */
+  --button-px-md: 1.75rem;        /* 28px - Standard */
+  --button-px-lg: 2.25rem;        /* 36px - Spacious */
+  --button-px-xl: 2.5rem;         /* 40px - Extra Spacious */
+  
+  /* Button Padding Vertical (for auto-height buttons) */
+  --button-py-sm: 0.625rem;       /* 10px */
+  --button-py-md: 0.875rem;       /* 14px */
+  --button-py-lg: 1rem;           /* 16px */
+  
+  /* Button Min Widths */
+  --button-min-width-sm: 5rem;    /* 80px */
+  --button-min-width-md: 7rem;    /* 112px */
+  --button-min-width-lg: 9rem;    /* 144px */
+  
+  /* Brand Colors for Buttons */
+  --brand-red: #b01f24;
+  --brand-red-hover: #8f181d;
+  --brand-red-active: #771419;
+}
+
+@layer base {
+  html {
+    font-size: var(--font-size);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-black;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* Scroll margin for sections to account for fixed navbar */
+  section[id],
+  div[id] {
+    scroll-margin-top: 120px;
+  }
+
+  /* ========================================
+     CUSTOM ANIMATIONS
+     ======================================== */
+  
+  /* Subtle pulse animation for active methodology step node */
+  @keyframes pulse-subtle {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  /* Button spinner animation */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Button ripple effect */
+  @keyframes ripple {
+    0% {
+      transform: scale(0);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(2.5);
+      opacity: 0;
+    }
+  }
+  
+  /* Sticky CTA pulse ring animation */
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }
+  
+  .animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* ========================================
+     MOTION & ANIMATION SYSTEM
+     ======================================== 
+     
+     Additional keyframes for the Motion tab demos
+     and micro-interactions throughout the system.
+     
+     ======================================== */
+
+  /* Fade In Scale - Modal/Dialog entrances */
+  @keyframes fade-in-scale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-fade-in-scale {
+    animation: fade-in-scale 300ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  /* Bounce Once - Notification or attention-getting */
+  @keyframes bounce-once {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-25%);
+    }
+  }
+
+  .animate-bounce-once {
+    animation: bounce-once 500ms ease-in-out;
+  }
+
+  /* Bounce Subtle - Gentle bounce for notifications */
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10%);
+    }
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 1s ease-in-out 3;
+  }
+
+  /* Loading Bar - Progress indicator */
+  @keyframes loading-bar {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
+
+  .animate-loading-bar {
+    animation: loading-bar 1.5s ease-in-out infinite;
+  }
+}
