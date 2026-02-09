@@ -150,7 +150,7 @@ export function Button({
       if (background === 'dark') {
         return 'bg-white/10 text-white border border-white/20 hover:border-white/40 hover:bg-white/[0.15] active:bg-white/[0.2] disabled:border-white/10 disabled:text-white/40';
       }
-      return 'bg-white text-black border border-black/20 hover:border-black/40 hover:bg-black/[0.02] active:bg-black/[0.04] disabled:border-black/10 disabled:text-black/40';
+      return 'bg-white text-black border border-black/20 hover:border-[#ea7a5f] hover:bg-black/[0.02] active:bg-black/[0.04] disabled:border-black/10 disabled:text-black/40 [&:hover_svg]:text-[#ea7a5f]';
     }
     if (variant === 'ghost') {
       // Ghost adapts to background
@@ -268,10 +268,10 @@ export function Button({
       if (background === 'dark') {
         return 'bg-gradient-to-r from-white/10 via-white/30 to-white/10';
       }
-      // Light background: Subtle warm amber shimmer
-      // Uses white → #fef7f0 (warm amber-100) → white
-      // UX: Soft, warm, non-dominant - elegant refinement
-      return 'bg-gradient-to-r from-white via-[#fef7f0] to-white';
+      // Light background: Subtle periwinkle shimmer
+      // Uses white → #f5f6fd (periwinkle-100) → white
+      // UX: Soft, calm, elegant - trust and sophistication
+      return 'bg-gradient-to-r from-white via-[#f5f6fd] to-white';
     }
     if (variant === 'ghost') {
       if (background === 'dark') {
@@ -346,7 +346,7 @@ export function Button({
       {/* Icon Only */}
       {iconOnly && !loading && (icon || animatedArrow) && (
         <span className="relative z-10 overflow-visible">
-          {animatedArrow ? <AnimatedArrowWrapper /> : <IconWrapper>{icon}</IconWrapper>}
+          {animatedArrowWrapper ? <AnimatedArrowWrapper /> : <IconWrapper>{icon}</IconWrapper>}
         </span>
       )}
       
