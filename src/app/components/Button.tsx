@@ -1,5 +1,59 @@
-import { ReactNode, useState, useRef, cloneElement, isValidElement } from 'react';
-import { Loader2, ArrowUpRight } from 'lucide-react';
+import { ReactNode, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { AnimatedArrow } from '@/app/components/AnimatedArrow';
+import { useShimmer } from '@/app/hooks/useShimmer';
+
+/**
+ * Button Component
+ * 
+ * A comprehensive, reusable button system following VS Design System principles.
+ * Features: Shimmer effects (always active), animated arrows (urgency CTAs), 
+ * ripple effects, multiple variants, sizes, and accessible states.
+ * 
+ * Design System Best Practices:
+ * - ✅ Prop-driven API for maximum flexibility
+ * - ✅ Accessible (ARIA labels, focus states, keyboard navigation)
+ * - ✅ Motion respect (prefers-reduced-motion support)
+ * - ✅ Consistent token usage (CSS variables from theme.css)
+ * - ✅ Separated concerns (shimmer hook, AnimatedArrow component)
+ * 
+ * Signature Interactions:
+ * - Shimmer: ALWAYS active on all buttons (right-to-left sweep on hover)
+ * - Arrow: ONLY for urgency CTAs (forms, redirects with time pressure)
+ * 
+ * @param variant - Visual style: 'primary' | 'secondary' | 'ghost' | 'brand'
+ * @param size - Button size: 'sm' | 'md' | 'lg' | 'xl'
+ * @param background - Context: 'light' | 'dark' (affects secondary/ghost colors)
+ * @param fullWidth - Expand to full container width
+ * @param icon - Optional icon element (left or right)
+ * @param iconPosition - Icon placement: 'left' | 'right'
+ * @param iconOnly - Icon-only mode (square button, no text)
+ * @param loading - Show loading spinner
+ * @param disabled - Disabled state
+ * @param ripple - Material-style ripple effect on click
+ * @param shimmerDuration - Shimmer animation duration in ms (default: 700)
+ * @param showArrow - Show AnimatedArrow for urgency CTAs (default: false)
+ * @param onClick - Click handler
+ * @param className - Additional CSS classes
+ * @param type - HTML button type
+ * @param ariaLabel - Accessibility label
+ * 
+ * @example
+ * ```tsx
+ * // Primary CTA with arrow (urgency)
+ * <Button variant="brand" showArrow onClick={handleSubmit}>
+ *   Get Started
+ * </Button>
+ * 
+ * // Secondary button with icon
+ * <Button variant="secondary" icon={<Download />}>
+ *   Download
+ * </Button>
+ * 
+ * // Icon-only button
+ * <Button variant="ghost" iconOnly icon={<Settings />} ariaLabel="Settings" />
+ * ```
+ */
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'brand';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
@@ -9,7 +63,7 @@ interface ButtonProps {
   children?: ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  background?: ButtonBackground; // Control button appearance based on background color
+  background?: ButtonBackground;
   fullWidth?: boolean;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
@@ -17,8 +71,8 @@ interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   ripple?: boolean;
-  shimmerDuration?: number; // Shimmer animation duration in ms (default: 700) - Shimmer is ALWAYS active as brand identity
-  animatedArrow?: boolean; // Enable looping arrow animation for urgency CTAs (form redirects, page navigation) - Uses hardcoded ArrowUpRight icon
+  shimmerDuration?: number;
+  showArrow?: boolean;
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
@@ -35,7 +89,7 @@ interface RippleType {
 export function Button({
   children,
   variant = 'primary',
-  size = 'lg',
+  size = 'md', // Changed from 'lg' to 'md' as base default
   background = 'light',
   fullWidth = false,
   icon,
@@ -45,7 +99,7 @@ export function Button({
   disabled = false,
   ripple = true,
   shimmerDuration = 700,
-  animatedArrow = false,
+  showArrow = false,
   onClick,
   className = '',
   type = 'button',
@@ -55,25 +109,31 @@ export function Button({
   const [isHovering, setIsHovering] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // 🎯 IMPROVED: Icon sizing based on button size with optical correction
-  // Using slightly larger icons for better visual balance
+  // Icon sizing based on button size
   const iconSizeMap = {
-    sm: 16,  // 40px button height → 16px icon (40% of height)
-    md: 18,  // 48px button height → 18px icon (37.5% of height)
-    lg: 20,  // 56px button height → 20px icon (35.7% of height)
-    xl: 24,  // 64px button height → 24px icon (37.5% of height)
+    sm: 16,
+    md: 18,
+    lg: 20,
+    xl: 24,
   };
   const iconSize = iconSizeMap[size];
 
-  // 🎯 IMPROVED: Gap spacing based on button size for optical balance
-  // Smaller buttons need proportionally smaller gaps
+  // Gap spacing based on button size
   const gapMap = {
-    sm: 'gap-1.5',    // 6px
-    md: 'gap-2',      // 8px
-    lg: 'gap-2.5',    // 10px
-    xl: 'gap-3',      // 12px
+    sm: 'gap-1.5',
+    md: 'gap-2',
+    lg: 'gap-2.5',
+    xl: 'gap-3',
   };
   const gapSize = gapMap[size];
+
+  // Arrow color based on variant
+  const getArrowColor = () => {
+    if (variant === 'primary' || variant === 'brand') return 'white';
+    if (variant === 'secondary') return background === 'dark' ? 'white' : 'black';
+    if (variant === 'ghost') return background === 'dark' ? 'white' : 'black';
+    return 'black';
+  };
 
   // Handle ripple effect
   const createRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -96,7 +156,6 @@ export function Button({
 
     setRipples((prev) => [...prev, newRipple]);
 
-    // Remove ripple after animation
     setTimeout(() => {
       setRipples((prev) => prev.filter((r) => r.key !== newRipple.key));
     }, 600);
@@ -109,10 +168,10 @@ export function Button({
     }
   };
 
-  // Base styles - always applied with dynamic gap
+  // Base styles
   const baseStyles = `group relative inline-flex items-center justify-center ${gapSize} font-medium tracking-[0.0875px] transition-all duration-300 rounded-[5px] overflow-hidden whitespace-nowrap`;
   
-  // Size variants using CSS custom properties
+  // Size variants
   const sizeStyles = {
     sm: iconOnly 
       ? 'w-[var(--button-height-sm)] h-[var(--button-height-sm)] p-0' 
@@ -135,9 +194,7 @@ export function Button({
     xl: { fontSize: 'var(--button-font-lg)' },
   };
   
-  // 🎯 NEW: Background-aware variant styles
-  // Primary and brand work on any background
-  // Secondary and ghost adapt based on background prop
+  // Variant styles
   const getVariantStyles = () => {
     if (variant === 'primary') {
       return 'text-white disabled:opacity-50';
@@ -146,14 +203,12 @@ export function Button({
       return 'text-white disabled:opacity-50';
     }
     if (variant === 'secondary') {
-      // Secondary adapts to background
       if (background === 'dark') {
         return 'bg-white/10 text-white border border-white/20 hover:border-white/40 hover:bg-white/[0.15] active:bg-white/[0.2] disabled:border-white/10 disabled:text-white/40';
       }
       return 'bg-white text-black border border-black/20 hover:border-[#ea7a5f] hover:bg-black/[0.02] active:bg-black/[0.04] disabled:border-black/10 disabled:text-black/40 [&:hover_svg]:text-[#ea7a5f]';
     }
     if (variant === 'ghost') {
-      // Ghost adapts to background
       if (background === 'dark') {
         return 'bg-transparent text-white border border-white/20 hover:border-white/40 hover:bg-white/5 active:bg-white/10 disabled:border-white/10 disabled:text-white/40';
       }
@@ -164,42 +219,28 @@ export function Button({
 
   const variantStyles = getVariantStyles();
   
-  // Primary variant needs special background handling with dark-to-grey gradient
+  // Background gradients
   const primaryBgStyle = variant === 'primary' ? {
     ...fontSizeStyles[size],
-    backgroundImage: 'linear-gradient(90deg, #0a0a0a, #6a6a6a)',
-    backgroundSize: '200% 200%',
-    backgroundPosition: isHovering ? '100% 50%' : '0% 50%',
-    transition: 'background-position 0.3s ease, box-shadow 0.3s ease',
+    backgroundImage: 'linear-gradient(90deg, #141016, #656565, #141016)',
     boxShadow: isHovering ? '0 4px 12px rgba(0, 0, 0, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.15)'
   } : {};
 
-  // Brand variant needs special background handling with gradient
   const brandBgStyle = variant === 'brand' ? { 
     ...fontSizeStyles[size],
-    backgroundImage: 'linear-gradient(90deg, var(--red-700), var(--red-500))',
-    backgroundSize: '200% 200%',
-    backgroundPosition: isHovering ? '100% 50%' : '0% 50%',
-    transition: 'background-position 0.3s ease, transform 0.2s ease',
+    backgroundImage: 'linear-gradient(90deg, #b01f24, #eb484e, #b01f24)',
     boxShadow: isHovering ? '0 12px 32px rgba(176, 31, 36, 0.25)' : '0 4px 16px rgba(176, 31, 36, 0.15)'
   } : {};
 
-  // For secondary and ghost, include fontSize in the inline style to avoid conflicts
   const secondaryGhostStyle = (variant === 'secondary' || variant === 'ghost') ? fontSizeStyles[size] : {};
 
-  // Combine gradient styles
   const inlineStyle = variant === 'primary' ? primaryBgStyle : variant === 'brand' ? brandBgStyle : secondaryGhostStyle;
   
-  // Width styles
   const widthStyles = fullWidth ? 'w-full' : iconOnly ? '' : 'w-full sm:w-auto';
-  
-  // Disabled/Loading styles
   const stateStyles = (disabled || loading) ? 'cursor-not-allowed' : 'cursor-pointer';
-  
-  // Combine all styles
   const combinedStyles = `${baseStyles} ${sizeStyles[size]} ${variantStyles} ${widthStyles} ${stateStyles} ${className}`;
   
-  // 🎯 IMPROVED: Spinner with proper sizing
+  // Spinner component
   const Spinner = () => (
     <Loader2 
       size={iconSize}
@@ -208,9 +249,8 @@ export function Button({
     />
   );
 
-  // 🎯 IMPROVED: Icon wrapper with consistent sizing and alignment
+  // Icon wrapper
   const IconWrapper = ({ children }: { children: ReactNode }) => {
-    // Clone icon element and ensure consistent size
     if (isValidElement(children)) {
       return cloneElement(children as React.ReactElement<any>, {
         size: iconSize,
@@ -221,155 +261,115 @@ export function Button({
     return <span className="inline-flex items-center flex-shrink-0">{children}</span>;
   };
 
-  // 🎯 NEW: Animated Arrow - Hardcoded ArrowUpRight with diagonal loop animation (3-ARROW SYSTEM)
-  // When animatedArrow prop is true, this creates THREE hardcoded ArrowUpRight icons in a continuous cascade
-  // Arrow 1: Visible at center → exits top-right
-  // Arrow 2: Hidden at bottom-left → enters center → exits top-right
-  // Arrow 3: Hidden at bottom-left → enters center (takes Arrow 1's place)
-  // Duration: 1000ms total cycle with staggered timing for continuous flow
-  // Movement: 20px diagonal (translate-5), Always uses ArrowUpRight icon
-  const AnimatedArrowWrapper = () => (
-    <span className="relative inline-flex items-center justify-center shrink-0" style={{ width: iconSize, height: iconSize }}>
-      {/* Arrow 1: Starts visible at center, exits top-right first */}
-      <ArrowUpRight 
-        size={iconSize}
-        strokeWidth={2}
-        className="absolute transition-none
-                   group-hover:animate-arrow-1-cascade"
-      />
-      {/* Arrow 2: Starts hidden at bottom-left, enters to center, then exits top-right */}
-      <ArrowUpRight 
-        size={iconSize}
-        strokeWidth={2}
-        className="absolute transition-none
-                   -translate-x-5 translate-y-5 opacity-0
-                   group-hover:animate-arrow-2-cascade"
-      />
-      {/* Arrow 3: Starts hidden at bottom-left (behind Arrow 2), enters to center last */}
-      <ArrowUpRight 
-        size={iconSize}
-        strokeWidth={2}
-        className="absolute transition-none
-                   -translate-x-5 translate-y-5 opacity-0
-                   group-hover:animate-arrow-3-cascade"
-      />
-    </span>
-  );
-
-  // 🎯 NEW: Shimmer gradient configurations by variant (background-aware)
-  const getShimmerGradient = () => {
-    if (variant === 'brand') {
-      return 'bg-gradient-to-r from-[#b01f24] via-[#eb484e] to-[#b01f24]';
-    }
-    if (variant === 'primary') {
-      return 'bg-gradient-to-r from-[#141016] via-[#656565] to-[#141016]';
-    }
-    if (variant === 'secondary') {
-      if (background === 'dark') {
-        return 'bg-gradient-to-r from-white/10 via-white/30 to-white/10';
-      }
-      // Light background: Subtle periwinkle shimmer
-      // Uses white → #f5f6fd (periwinkle-100) → white
-      // UX: Soft, calm, elegant - trust and sophistication
-      return 'bg-gradient-to-r from-white via-[#f5f6fd] to-white';
-    }
-    if (variant === 'ghost') {
-      if (background === 'dark') {
-        return 'bg-gradient-to-r from-transparent via-white/20 to-transparent';
-      }
-      return 'bg-gradient-to-r from-transparent via-black/20 to-transparent';
-    }
-    return '';
-  };
-
-  const shimmerGradient = getShimmerGradient();
-
   return (
-    <button 
+    <button
       ref={buttonRef}
       type={type}
       onClick={handleClick}
       disabled={disabled || loading}
       className={combinedStyles}
       style={inlineStyle}
-      aria-label={ariaLabel || (iconOnly ? 'Button' : undefined)}
+      aria-label={ariaLabel || (typeof children === 'string' ? children : undefined)}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      {/* Shimmer Effect Layer */}
-      {shimmerGradient && (
-        <div
-          className={`absolute inset-0 w-[200%] ${shimmerGradient} 
-            transition-transform ease-out pointer-events-none 
-            group-hover:-translate-x-1/2 motion-reduce:transition-none motion-reduce:transform-none`}
-          style={{ transitionDuration: `${shimmerDuration}ms` }}
-        />
-      )}
-
-      {/* Ripple Effects */}
+      {/* Ripple effects */}
       {ripples.map((ripple) => (
         <span
           key={ripple.key}
-          className="absolute rounded-full pointer-events-none"
+          className="absolute rounded-full bg-white/30 pointer-events-none animate-ripple"
           style={{
             left: ripple.x,
             top: ripple.y,
             width: ripple.size,
             height: ripple.size,
-            backgroundColor: variant === 'primary' || variant === 'brand' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)',
-            animation: 'ripple 600ms ease-out',
           }}
         />
       ))}
-
-      {/* Loading State - Left Icon Position */}
-      {loading && iconPosition === 'left' && (
+      
+      {/* ✨ SHIMMER EFFECT - ALWAYS ACTIVE - Absolute overlay that slides left on hover */}
+      {(variant === 'primary' || variant === 'brand') && (
+        <div
+          className={`absolute inset-0 w-[200%] bg-gradient-to-r pointer-events-none transition-transform ease-out motion-reduce:transition-none ${
+            variant === 'brand' 
+              ? 'from-[#b01f24] via-[#eb484e] to-[#b01f24]' 
+              : 'from-[#141016] via-[#656565] to-[#141016]'
+          } ${isHovering ? '-translate-x-1/2' : 'translate-x-0'}`}
+          style={{ transitionDuration: `${shimmerDuration}ms` }}
+        />
+      )}
+      
+      {/* ✨ SHIMMER EFFECT - SECONDARY & GHOST VARIANTS */}
+      {variant === 'secondary' && (
+        <div
+          className={`absolute inset-0 w-[200%] pointer-events-none transition-transform ease-out motion-reduce:transition-none ${isHovering ? '-translate-x-1/2' : 'translate-x-0'}`}
+          style={{ 
+            transitionDuration: `${shimmerDuration}ms`,
+            backgroundImage: `linear-gradient(to right, transparent, ${background === 'dark' ? '#ffffff' : 'var(--periwinkle-100)'}, transparent)`
+          }}
+        />
+      )}
+      
+      {variant === 'ghost' && (
+        <div
+          className={`absolute inset-0 w-[200%] pointer-events-none transition-transform ease-out motion-reduce:transition-none ${
+            background === 'dark'
+              ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent'
+              : 'bg-gradient-to-r from-transparent via-black/10 to-transparent'
+          } ${isHovering ? '-translate-x-1/2' : 'translate-x-0'}`}
+          style={{ transitionDuration: `${shimmerDuration}ms` }}
+        />
+      )}
+      
+      {/* Loading Spinner */}
+      {loading && (
         <span className="relative z-10">
           <Spinner />
         </span>
       )}
       
       {/* Left Icon */}
-      {!loading && (icon || animatedArrow) && iconPosition === 'left' && (
-        <span className="relative z-10 overflow-visible">
-          {animatedArrow ? <AnimatedArrowWrapper /> : <IconWrapper>{icon}</IconWrapper>}
+      {!loading && (icon || showArrow) && iconPosition === 'left' && (
+        <span className="relative z-10 flex items-center">
+          {showArrow ? (
+            <AnimatedArrow size={iconSize} color={getArrowColor()} isHovered={isHovering} />
+          ) : (
+            <IconWrapper>{icon}</IconWrapper>
+          )}
         </span>
       )}
       
-      {/* Text Content */}
-      {!iconOnly && (
-        <span className={`relative z-10 inline-flex items-center ${loading ? 'opacity-70' : ''}`}>
+      {/* Button Text */}
+      {!iconOnly && children && (
+        <span className="relative z-10 inline-flex items-center whitespace-nowrap">
           {children}
         </span>
       )}
       
       {/* Icon Only */}
-      {iconOnly && !loading && (icon || animatedArrow) && (
-        <span className="relative z-10 overflow-visible">
-          {animatedArrowWrapper ? <AnimatedArrowWrapper /> : <IconWrapper>{icon}</IconWrapper>}
-        </span>
-      )}
-      
-      {/* Loading State - Icon Only */}
-      {iconOnly && loading && (
-        <span className="relative z-10">
-          <Spinner />
+      {iconOnly && !loading && (icon || showArrow) && (
+        <span className="relative z-10 flex items-center justify-center">
+          {showArrow ? (
+            <AnimatedArrow size={iconSize} color={getArrowColor()} isHovered={isHovering} />
+          ) : (
+            <IconWrapper>{icon}</IconWrapper>
+          )}
         </span>
       )}
       
       {/* Right Icon */}
-      {!loading && (icon || animatedArrow) && iconPosition === 'right' && !iconOnly && (
-        <span className="relative z-10 overflow-visible">
-          {animatedArrow ? <AnimatedArrowWrapper /> : <IconWrapper>{icon}</IconWrapper>}
+      {!loading && (icon || showArrow) && iconPosition === 'right' && !iconOnly && (
+        <span className="relative z-10 flex items-center">
+          {showArrow ? (
+            <AnimatedArrow size={iconSize} color={getArrowColor()} isHovered={isHovering} />
+          ) : (
+            <IconWrapper>{icon}</IconWrapper>
+          )}
         </span>
       )}
 
-      {/* Loading State - Right Icon Position */}
-      {loading && iconPosition === 'right' && !iconOnly && (
-        <span className="relative z-10">
-          <Spinner />
-        </span>
-      )}
+      {/* Focus Ring */}
+      <span className="absolute inset-0 rounded-[5px] ring-2 ring-black ring-offset-2 opacity-0 focus-visible:opacity-100 pointer-events-none" />
     </button>
   );
 }
