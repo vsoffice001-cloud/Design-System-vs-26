@@ -52,6 +52,7 @@
   
   --text-2xs: 0.75rem;     /* 12px - Navbar text, micro labels (when 12.8px too large) */
   --text-compact: 0.875rem; /* 14px - Compact body text (challenges with 4+ cards) */
+  --text-nav: 0.875rem;    /* 14px - Navigation elements (TOC items, compact CTAs, button text) */
   
   /* SECTION-SPECIFIC CUSTOM SIZES (documented inline in components):
    *
@@ -276,6 +277,16 @@
     100% {
       transform: scale(2.5);
       opacity: 0;
+    }
+  }
+  
+  /* Button shimmer effect - signature brand animation */
+  @keyframes shimmer-sweep {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
     }
   }
   
