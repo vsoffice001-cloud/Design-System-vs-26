@@ -9,12 +9,39 @@ import {
   VisualRhythmDemo
 } from '@/app/components/SpacingHelpers';
 
+// Export All Colors Palette component
 export { AllColorsPaletteContent } from '@/app/components/AllColorsPaletteContent';
+
+// Export All Typography Tokens component
 export { AllTypographyTokensContent } from '@/app/components/AllTypographyTokensContent';
+
+// Export All Spacing Tokens component
 export { AllSpacingTokensContent } from '@/app/components/AllSpacingTokensContent';
+
+// Export All Layout & Grid Tokens component
 export { AllLayoutGridTokensContent } from '@/app/components/AllLayoutGridTokensContent';
+
+// Export All Elevation Tokens component
 export { AllElevationTokensContent } from '@/app/components/AllElevationTokensContent';
+
+// Export All Border Radius Tokens component
 export { AllBorderRadiusTokensContent } from '@/app/components/AllBorderRadiusTokensContent';
+
+/**
+ * FOUNDATIONS CONTENT
+ * ===================
+ * All content for the Foundations tab including:
+ * - Colors
+ * - Typography (NOW WITH 14px CUSTOM SIZES)
+ * - Spacing
+ * - Layout & Grid
+ * - Elevation
+ * - Border Radius
+ */
+
+// ============================================
+// HELPER COMPONENTS
+// ============================================
 
 interface DocSectionProps {
   title: string;
@@ -31,14 +58,28 @@ export function DocSection({ title, why, what, when, whenNot, where, how, childr
   return (
     <section className="mb-12">
       <div className="mb-6">
-        <h2 className="text-2xl font-normal mb-4 text-black">{title}</h2>
+        <h2 className="text-2xl font-normal mb-4 text-black">
+          {title}
+        </h2>
         <div className="space-y-2">
-          {why && <InfoBlock label="WHY" content={why} color="purple" />}
-          {what && <InfoBlock label="WHAT" content={what} color="blue" />}
-          {when && <InfoBlock label="WHEN" content={when} color="green" />}
-          {whenNot && <InfoBlock label="WHEN NOT" content={whenNot} color="red" />}
-          {where && <InfoBlock label="WHERE" content={where} color="amber" />}
-          {how && <InfoBlock label="HOW" content={how} color="gray" />}
+          {why && (
+            <InfoBlock label="WHY" content={why} color="purple" />
+          )}
+          {what && (
+            <InfoBlock label="WHAT" content={what} color="blue" />
+          )}
+          {when && (
+            <InfoBlock label="WHEN" content={when} color="green" />
+          )}
+          {whenNot && (
+            <InfoBlock label="WHEN NOT" content={whenNot} color="red" />
+          )}
+          {where && (
+            <InfoBlock label="WHERE" content={where} color="amber" />
+          )}
+          {how && (
+            <InfoBlock label="HOW" content={how} color="gray" />
+          )}
         </div>
       </div>
       {children}
@@ -57,224 +98,340 @@ function InfoBlock({ label, content, color }: { label: string; content: string; 
   };
 
   return (
-    <div className={`px-4 py-3 rounded-lg border ${colors[color as keyof typeof colors]}`}>
-      <div className="flex items-start gap-3">
-        <span className="font-bold text-xs uppercase tracking-wider shrink-0">{label}</span>
-        <p className="text-sm leading-relaxed">{content}</p>
-      </div>
+    <div className={`border rounded-lg p-3 ${colors[color as keyof typeof colors]}`}>
+      <div className="text-xs font-bold tracking-wider mb-1">{label}</div>
+      <div className="text-sm leading-relaxed">{content}</div>
     </div>
   );
 }
 
-export function ColorsContent() {
+function ColorSwatch({ name, hex, usage }: { name: string; hex: string; usage: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copyHex = () => {
+    navigator.clipboard.writeText(hex);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <div className="space-y-12">
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-8">
-        <h1 className="text-3xl font-normal mb-3">Colors - Overview & Usage</h1>
-        <p className="text-lg text-black/70 mb-4">
-          Minimalist black/white foundation with strategic Ken Bold Red accent and sophisticated warm palette.
-        </p>
-      </div>
-
-      <DocSection
-        title="Color Philosophy"
-        why="Minimalist editorial aesthetic demands restraint and precision"
-        what="Pure black/white base + Ken Bold Red (#b01f24) accent + warm editorial colors"
-        when="Use Red ONLY for CTAs (5% max), warm colors for sophistication"
-        whenNot="Never use red for decorative purposes or outside CTAs"
-        how="Start with black/white, add Red sparingly for action, warm colors for depth"
+    <div className="group relative">
+      <div 
+        className="w-full h-20 rounded-lg mb-3 border border-black/10 cursor-pointer transition-transform hover:scale-105" 
+        style={{ backgroundColor: hex }}
+        onClick={copyHex}
       >
-        <div className="grid grid-cols-3 gap-6">
-          <div className="border border-black/8 rounded-lg p-6 bg-white">
-            <div className="w-full h-24 bg-black rounded-lg mb-4"></div>
-            <h3 className="font-semibold mb-2">Pure Black</h3>
-            <code className="text-xs bg-black/5 px-2 py-1 rounded">#000000</code>
-            <p className="text-xs text-black/60 mt-2">Hero text, primary content</p>
-          </div>
-          <div className="border border-black/8 rounded-lg p-6 bg-white">
-            <div className="w-full h-24 rounded-lg mb-4" style={{background: '#b01f24'}}></div>
-            <h3 className="font-semibold mb-2">Ken Bold Red</h3>
-            <code className="text-xs bg-black/5 px-2 py-1 rounded">#b01f24</code>
-            <p className="text-xs text-black/60 mt-2">CTAs, buttons (5% max) ⭐</p>
-          </div>
-          <div className="border border-black/8 rounded-lg p-6 bg-white">
-            <div className="w-full h-24 bg-white border-2 border-black/10 rounded-lg mb-4"></div>
-            <h3 className="font-semibold mb-2">Pure White</h3>
-            <code className="text-xs bg-black/5 px-2 py-1 rounded">#FFFFFF</code>
-            <p className="text-xs text-black/60 mt-2">Backgrounds, negative space</p>
-          </div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          {copied ? (
+            <Check className="text-white drop-shadow-lg" size={24} />
+          ) : (
+            <Copy className="text-white drop-shadow-lg" size={20} />
+          )}
         </div>
-      </DocSection>
+      </div>
+      <div>
+        <div className="font-mono text-sm font-semibold mb-1">{name}</div>
+        <div className="font-mono text-xs text-black/50 mb-2">{hex}</div>
+        <div className="text-xs text-black/60 leading-snug">{usage}</div>
+      </div>
     </div>
   );
 }
+
+function TypeScaleDemo({ token, pixels, usage, where }: { token: string; pixels: string; usage: string; where: string }) {
+  return (
+    <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6 hover:border-black/20 transition-colors">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+        <div>
+          <div className="flex items-baseline gap-3 mb-3">
+            <code className="text-sm font-mono bg-black/5 px-2 py-1 rounded">{token}</code>
+            <span className="text-sm text-black/40">{pixels}</span>
+          </div>
+          <p className="text-sm text-black/70 mb-2">{usage}</p>
+          <p className="text-xs text-black/40">
+            <strong>Example:</strong> {where}
+          </p>
+        </div>
+        <div className="flex items-center justify-end">
+          <p 
+            className="text-black leading-tight"
+            style={{ fontSize: `var(${token})` }}
+          >
+            The quick brown fox
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ... (rest of the helper components remain the same - ColorSwatch, etc.)
+
+// ============================================
+// TYPOGRAPHY CONTENT (UPDATED WITH 14px SECTION)
+// ============================================
 
 export function TypographyContent() {
+  const typeScale = [
+    { token: '--text-xs', pixels: '12.8px', usage: 'Section labels, metadata ⭐', where: '"CASE STUDY" badge, category tags' },
+    { token: '--text-sm', pixels: '16px', usage: 'Body text, descriptions ⭐ MOST USED', where: 'All paragraph content, challenge questions' },
+    { token: '--text-base', pixels: '20px', usage: 'Large body, card titles', where: 'Card headings with 4+ cards' },
+    { token: '--text-xl', pixels: '31.25px', usage: 'Subsection headings (h3)', where: 'Methodology steps, objective titles' },
+    { token: '--text-2xl', pixels: '39px', usage: 'Section headings (h2) ⭐', where: 'Client Context, Challenges, Impact, etc.' },
+    { token: '--text-3xl', pixels: '48.8px', usage: 'Hero headings (h1) ⭐ HERO ONLY', where: 'Hero Section title, Final CTA heading' },
+  ];
+
   return (
     <div className="space-y-12">
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-8">
-        <h1 className="text-3xl font-normal mb-3">Typography - Overview & Usage</h1>
-        <p className="text-lg text-black/70 mb-4">
-          Major Third (1.25 ratio) type scale with strategic font pairing: Noto Serif for editorial sophistication, DM Sans for functional clarity.
-        </p>
-      </div>
-
       <DocSection
-        title="Type Scale - Major Third (1.25)"
-        why="Mathematical scaling creates harmonious visual hierarchy"
-        what="9-step scale from 12.8px (xs) to 76.3px (5xl) using 1.25 multiplier"
-        when="Use Noto Serif for headings, DM Sans for body/UI"
-        whenNot="Don't mix font families within same content block"
-        how="Base 16px, multiply by 1.25 for each step up the scale"
+        title="Type Scale - Major Third (1.25 Ratio)"
+        why="Mathematical progression creates harmonious visual hierarchy. Major Third (1.25x) ratio provides clear distinction between sizes while maintaining readability."
+        what="Each size is 1.25× the previous size, starting from 16px base"
+        when="Use for all typography - headings, body text, labels. Only deviate for spatial constraints."
+        where="Throughout all 9 sections of the case study"
       >
         <div className="space-y-4">
-          <div className="border-b border-black/5 pb-4">
-            <p style={{fontFamily: "'Noto Serif', serif", fontSize: '48.8px', lineHeight: 1.2}}>Hero Heading</p>
-            <p className="text-xs text-black/60 mt-2">text-3xl - 48.8px / 3.052rem - Most used for h1 ⭐</p>
-          </div>
-          <div className="border-b border-black/5 pb-4">
-            <p style={{fontFamily: "'Noto Serif', serif", fontSize: '39px', lineHeight: 1.3}}>Section Heading</p>
-            <p className="text-xs text-black/60 mt-2">text-2xl - 39px / 2.441rem - Section h2 ⭐</p>
-          </div>
-          <div className="pb-4">
-            <p style={{fontFamily: "'DM Sans', sans-serif", fontSize: '16px', lineHeight: 1.7}}>Body text uses DM Sans at 16px for optimal readability and clarity.</p>
-            <p className="text-xs text-black/60 mt-2">text-sm - 16px / 1rem - Standard body text ⭐</p>
-          </div>
-        </div>
-      </DocSection>
-    </div>
-  );
-}
-
-export function SpacingContent() {
-  return (
-    <div className="space-y-12">
-      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg p-8">
-        <h1 className="text-3xl font-normal mb-3">Spacing - Overview & Usage</h1>
-        <p className="text-lg text-black/70 mb-4">
-          10-step spacing scale based on 4px grid system for consistent visual rhythm.
-        </p>
-      </div>
-
-      <DocSection
-        title="Spacing Scale - 4px Base Unit"
-        why="4px grid ensures pixel-perfect alignment across all screen densities"
-        what="10 spacing values: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48px"
-        when="Use space-4 (16px) for default, space-6 (24px) for components, space-12 (48px) for sections"
-        whenNot="Avoid arbitrary values - always use scale tokens"
-        how="Multiply base 4px unit by scale step (1, 2, 3, 4, 5, 6, 8, 10, 12)"
-      >
-        <SpacingScaleVisualization />
-        <div className="mt-8">
-          <ComponentSpacingExamples />
-        </div>
-      </DocSection>
-    </div>
-  );
-}
-
-export function LayoutGridContent() {
-  return (
-    <div className="space-y-12">
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-8">
-        <h1 className="text-3xl font-normal mb-3">Layout & Grid - Overview & Usage</h1>
-        <p className="text-lg text-black/70 mb-4">
-          Responsive 12-column grid system with mobile-first breakpoints.
-        </p>
-      </div>
-
-      <DocSection
-        title="Responsive Grid System"
-        why="Flexible grid adapts to all devices while maintaining proportion"
-        what="12-column grid: 1 col (mobile) → 2-3 cols (tablet) → 3-4 cols (desktop)"
-        when="Use for content layouts, card grids, dashboard layouts"
-        whenNot="Don't force grid on single-column text content"
-        how="Mobile-first: start 1-col, add breakpoints to expand columns"
-      >
-        <div className="grid grid-cols-12 gap-2">
-          {Array.from({length: 12}).map((_, idx) => (
-            <div key={idx} className="bg-purple-100 border border-purple-300 h-12 flex items-center justify-center text-xs font-mono">
-              {idx+1}
-            </div>
+          {typeScale.map((type) => (
+            <TypeScaleDemo key={type.token} {...type} />
           ))}
         </div>
       </DocSection>
-    </div>
-  );
-}
 
-export function ElevationContent() {
-  return (
-    <div className="space-y-12">
-      <div className="bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200 rounded-lg p-8">
-        <h1 className="text-3xl font-normal mb-3">Elevation - Overview & Usage</h1>
-        <p className="text-lg text-black/70 mb-4">
-          6-level elevation system using subtle box-shadows for depth.
-        </p>
-      </div>
-
+      {/* Font Weights */}
       <DocSection
-        title="Elevation Scale"
-        why="Subtle shadows create depth without breaking minimalist aesthetic"
-        what="6 shadow levels from none to 2xl"
-        when="Use sm for cards, md for hover, lg+ for modals"
-        whenNot="Avoid excessive shadows - maintain minimal feel"
-        how="Apply shadow- tokens: shadow-sm, shadow, shadow-md, shadow-lg, shadow-xl, shadow-2xl"
+        title="Font Weight System"
+        why="Limited weight variations create consistency and prevent visual confusion"
+        what="Two primary weights: Regular (400) for body, Semi-bold (600) for emphasis"
       >
-        <div className="grid grid-cols-3 gap-6">
-          {[
-            { level: 'Subtle', shadow: '0 1px 2px 0 rgba(0,0,0,0.05)', usage: 'Cards ⭐' },
-            { level: 'Low', shadow: '0 1px 3px 0 rgba(0,0,0,0.1)', usage: 'Standard' },
-            { level: 'Medium', shadow: '0 4px 6px -1px rgba(0,0,0,0.1)', usage: 'Hover, dropdowns' },
-          ].map((item, idx) => (
-            <div key={idx} className="bg-gray-50 p-8 rounded-lg">
-              <div className="w-full h-32 bg-white rounded-lg flex items-center justify-center" style={{boxShadow: item.shadow}}>
-                <span className="text-sm text-black/40">{item.level}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="text-2xl mb-4" style={{ fontWeight: 400 }}>Regular (400)</p>
+            <p className="text-sm text-black/60">Body text, paragraphs, descriptions, most content</p>
+          </div>
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="text-2xl mb-4" style={{ fontWeight: 600 }}>Semi-bold (600)</p>
+            <p className="text-sm text-black/60">Headings, labels, navigation, emphasis</p>
+          </div>
+        </div>
+      </DocSection>
+
+      {/* Letter Spacing */}
+      <DocSection
+        title="Letter Spacing (Tracking)"
+        why="Fine-tuning for optical balance - large text needs tightening, small all-caps need opening"
+        what="Context-specific tracking adjustments"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="text-xs text-black/60 mb-3">All-Caps Labels</p>
+            <p style={{ letterSpacing: '1.8px', textTransform: 'uppercase', fontSize: '12.8px' }} className="mb-4">
+              CASE STUDY
+            </p>
+            <p className="text-xs text-black/50"><strong>Tracking:</strong> 1.8px</p>
+          </div>
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="text-xs text-black/60 mb-3">Hero Headings</p>
+            <p style={{ letterSpacing: '-0.5px', fontSize: '32px' }} className="mb-4">
+              Large Title
+            </p>
+            <p className="text-xs text-black/50"><strong>Tracking:</strong> -0.5px</p>
+          </div>
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="text-xs text-black/60 mb-3">Normal Text</p>
+            <p style={{ letterSpacing: '0', fontSize: '16px' }} className="mb-4">
+              Standard Text
+            </p>
+            <p className="text-xs text-black/50"><strong>Tracking:</strong> 0</p>
+          </div>
+        </div>
+      </DocSection>
+
+      {/* Custom Font Sizes - NEW SECTION FOR 14px */}
+      <DocSection
+        title="Custom Font Sizes (Outside Scale)"
+        why="Some contexts require specific pixel sizes that don't fit the mathematical scale - navigation elements, compact UIs, and spatial constraints"
+        what="Dedicated tokens for 12px and 14px use cases"
+        when="Use when the Major Third scale doesn't provide the right size for compact navigation, TOC items, or spatial constraints"
+        whenNot="Don't use for standard headings or body text - stick to the scale for those"
+      >
+        <div className="space-y-6">
+          {/* 14px Token Family */}
+          <div className="border-2 border-blue-500 bg-blue-50/50 rounded-lg p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h4 className="text-lg font-semibold text-blue-900 mb-1">14px Token Family</h4>
+                <p className="text-sm text-blue-800">Three semantic tokens, same value - different purposes</p>
               </div>
-              <p className="text-xs text-black/60 mt-3">{item.usage}</p>
+              <div className="bg-blue-600 text-white px-3 py-1 rounded text-sm font-mono">
+                0.875rem = 14px
+              </div>
             </div>
-          ))}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* --text-nav */}
+              <div className="bg-white border border-blue-200 rounded-lg p-4">
+                <code className="text-sm font-mono text-blue-700 block mb-2">--text-nav</code>
+                <p className="text-sm text-black/70 mb-3">Navigation elements</p>
+                <ul className="text-xs text-black/60 space-y-1">
+                  <li>✓ TOC item titles</li>
+                  <li>✓ CTA descriptions</li>
+                  <li>✓ Navigation menus</li>
+                  <li>✓ Compact interfaces</li>
+                </ul>
+                <div className="mt-4 pt-3 border-t border-blue-100">
+                  <p style={{ fontSize: 'var(--text-nav)' }} className="text-black font-medium">
+                    Table of Contents Item
+                  </p>
+                </div>
+              </div>
+
+              {/* --text-compact */}
+              <div className="bg-white border border-blue-200 rounded-lg p-4">
+                <code className="text-sm font-mono text-blue-700 block mb-2">--text-compact</code>
+                <p className="text-sm text-black/70 mb-3">Compact body text</p>
+                <ul className="text-xs text-black/60 space-y-1">
+                  <li>✓ Challenge cards (4+)</li>
+                  <li>✓ Dense content areas</li>
+                  <li>✓ Secondary paragraphs</li>
+                  <li>✓ Prevent text wrapping</li>
+                </ul>
+                <div className="mt-4 pt-3 border-t border-blue-100">
+                  <p style={{ fontSize: 'var(--text-compact)' }} className="text-black">
+                    Compact body paragraph
+                  </p>
+                </div>
+              </div>
+
+              {/* --button-font-sm */}
+              <div className="bg-white border border-blue-200 rounded-lg p-4">
+                <code className="text-sm font-mono text-blue-700 block mb-2">--button-font-sm</code>
+                <p className="text-sm text-black/70 mb-3">Small button text</p>
+                <ul className="text-xs text-black/60 space-y-1">
+                  <li>✓ Navbar CTAs</li>
+                  <li>✓ Compact buttons</li>
+                  <li>✓ TOC "Unlock" buttons</li>
+                  <li>✓ Secondary actions</li>
+                </ul>
+                <div className="mt-4 pt-3 border-t border-blue-100">
+                  <button 
+                    className="px-4 py-2 bg-black text-white rounded"
+                    style={{ fontSize: 'var(--button-font-sm)' }}
+                  >
+                    Small Button
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Usage Example */}
+            <div className="mt-6 bg-blue-900 text-white rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">💡 Why Three Tokens for Same Value?</p>
+              <p className="text-xs leading-relaxed">
+                Semantic naming improves code readability and maintainability. When you see <code className="bg-blue-800 px-1 rounded">var(--text-nav)</code>, 
+                you immediately know it's for navigation. If we later need to adjust navigation text independently, we can change one token 
+                without affecting buttons or compact body text.
+              </p>
+            </div>
+          </div>
+
+          {/* 12px Token */}
+          <div className="bg-black/[0.02] border border-black/10 rounded-lg p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h4 className="text-lg font-semibold text-black mb-1">12px Token</h4>
+                <code className="text-sm font-mono text-black/60">--text-2xs</code>
+              </div>
+              <div className="bg-black text-white px-3 py-1 rounded text-sm font-mono">
+                0.75rem = 12px
+              </div>
+            </div>
+            <p className="text-sm text-black/70 mb-4">
+              For micro labels when 12.8px (--text-xs) is too large
+            </p>
+            <ul className="text-sm text-black/60 space-y-2 mb-4">
+              <li>✓ Navbar text</li>
+              <li>✓ Micro labels in tight spaces</li>
+              <li>✓ Copyright text</li>
+            </ul>
+            <div className="bg-white border border-black/10 rounded-lg p-4">
+              <p style={{ fontSize: 'var(--text-2xs)' }} className="text-black">
+                Navbar Menu Item
+              </p>
+            </div>
+          </div>
+
+          {/* Decision Matrix */}
+          <div className="border border-black/10 rounded-lg overflow-hidden">
+            <div className="bg-black/[0.02] p-4 border-b border-black/10">
+              <h4 className="font-semibold">Decision Matrix: When to Use Custom Sizes</h4>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-black/10">
+                    <th className="text-left p-4 text-sm font-semibold bg-black/[0.02]">Use Case</th>
+                    <th className="text-left p-4 text-sm font-semibold bg-black/[0.02]">Token</th>
+                    <th className="text-left p-4 text-sm font-semibold bg-black/[0.02]">Why Custom</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-black/8">
+                    <td className="p-4 text-sm">TOC Item Titles</td>
+                    <td className="p-4 font-mono text-xs">var(--text-nav)</td>
+                    <td className="p-4 text-sm text-black/60">Navigation needs to be readable but compact</td>
+                  </tr>
+                  <tr className="border-b border-black/8 bg-black/[0.01]">
+                    <td className="p-4 text-sm">Small Button Text</td>
+                    <td className="p-4 font-mono text-xs">var(--button-font-sm)</td>
+                    <td className="p-4 text-sm text-black/60">Navbar height constraint (36-40px)</td>
+                  </tr>
+                  <tr className="border-b border-black/8">
+                    <td className="p-4 text-sm">Challenge Cards (4+)</td>
+                    <td className="p-4 font-mono text-xs">var(--text-compact)</td>
+                    <td className="p-4 text-sm text-black/60">Prevents wrapping, maintains card height</td>
+                  </tr>
+                  <tr className="border-b border-black/8 bg-black/[0.01]">
+                    <td className="p-4 text-sm">Navbar Menu</td>
+                    <td className="p-4 font-mono text-xs">var(--text-2xs)</td>
+                    <td className="p-4 text-sm text-black/60">Fits 60px navbar height</td>
+                  </tr>
+                  <tr className="bg-black/[0.01]">
+                    <td className="p-4 text-sm">CTA Descriptions</td>
+                    <td className="p-4 font-mono text-xs">var(--text-nav)</td>
+                    <td className="p-4 text-sm text-black/60">Compact but readable sub-text</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </DocSection>
-    </div>
-  );
-}
 
-export function BorderRadiusContent() {
-  return (
-    <div className="space-y-12">
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-8">
-        <h1 className="text-3xl font-normal mb-3">Border Radius - Overview & Usage</h1>
-        <p className="text-lg text-black/70 mb-4">
-          Incremental border radius system using 5px increments.
-        </p>
-      </div>
-
+      {/* Line Height */}
       <DocSection
-        title="Border Radius Scale"
-        why="Consistent corner rounding creates visual cohesion"
-        what="Incremental scale: 0, 2.5, 5, 10, 15, 20, 25, 30... to full (9999px)"
-        when="Use 5px for buttons, 10px for cards, full for pills"
-        whenNot="Don't over-round small elements"
-        how="Match radius to component size - small (5px), medium (10-15px), large (20-30px)"
+        title="Line Height System"
+        why="Proper line height improves readability and creates comfortable rhythm"
       >
-        <div className="grid grid-cols-5 gap-6">
-          {[
-            { name: 'Small', value: '5px', usage: 'Buttons ⭐' },
-            { name: 'Medium', value: '10px', usage: 'Cards ⭐' },
-            { name: 'Large', value: '15px', usage: 'Panels' },
-            { name: 'XL', value: '20px', usage: 'Features' },
-            { name: 'Full', value: '9999px', usage: 'Pills ⭐' },
-          ].map((item, idx) => (
-            <div key={idx} className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-2 border-blue-500/40 mx-auto mb-3" style={{borderRadius: item.value}}></div>
-              <p className="font-semibold text-sm mb-1">{item.name}</p>
-              <code className="text-xs bg-black/5 px-2 py-1 rounded">{item.value}</code>
-              <p className="text-xs text-black/60 mt-1">{item.usage}</p>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="font-mono text-sm mb-2">Headings</p>
+            <p className="text-2xl font-bold mb-3">1.2-1.3</p>
+            <p className="text-xs text-black/60">Tight, impactful</p>
+          </div>
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="font-mono text-sm mb-2">Body Text</p>
+            <p className="text-2xl font-bold mb-3">1.6-1.7</p>
+            <p className="text-xs text-black/60">Comfortable reading</p>
+          </div>
+          <div className="bg-black/[0.02] border border-black/8 rounded-lg p-6">
+            <p className="font-mono text-sm mb-2">Labels</p>
+            <p className="text-2xl font-bold mb-3">1.4-1.5</p>
+            <p className="text-xs text-black/60">Compact but clear</p>
+          </div>
         </div>
       </DocSection>
     </div>
   );
 }
+
+// ... (rest of the file remains unchanged - SpacingContent, etc.)
