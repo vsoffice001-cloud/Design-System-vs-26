@@ -214,7 +214,7 @@ import { InlineLink } from '@/app/components/InlineLink';
 ## 📦 BUTTON SIZE STRATEGY
 
 | **Size** | **Height** | **Font** | **Use Case** |
-|----------|-----------|----------|------------|
+|----------|-----------|----------|--------------|
 | `sm` | 36px | 14px | Navbar CTAs, compact UIs, TOC buttons |
 | `md` | 42px | 16px | **DEFAULT** - Report pages, standard CTAs |
 | `lg` | 48px | 18px | Homepage heroes, major landing pages |
