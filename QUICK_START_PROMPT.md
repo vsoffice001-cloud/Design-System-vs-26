@@ -43,6 +43,12 @@ CARDS (2-3 cards):
 • Title: 25px (--text-lg)
 • Body: 16px (--text-sm)
 
+BADGES:
+• Section labels: minimal + sm (11px, 23px height)
+• Step pills: pill + sm + warm + bordered + shimmer
+• Info labels: minimal + xs (9-10px, 18px height)
+• Shimmer: Warm theme uses warm-tinted (subtle)
+
 ACCESSIBILITY:
 • IconOnly buttons need ariaLabel
 • Focus: 2px black outline
@@ -97,4 +103,4 @@ Quality target: 9.5/10 (Stripe/Material Design level)
 
 **Full documentation:** See AI_DESIGN_SYSTEM_PROMPT.md  
 **Live examples:** Design System Dashboard  
-**Updated:** 2026-02-13
+**Updated:** 2026-02-17

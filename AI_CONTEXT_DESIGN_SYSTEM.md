@@ -134,6 +134,98 @@ You are working with a professional design system. Follow these rules STRICTLY:
 
 ---
 
+## 🏷️ BADGE SYSTEM
+
+### Variants
+1. **Minimal** - No background, text only (section labels)
+2. **Rounded** - 5px radius, optional background (category tags)
+3. **Pill** - Fully rounded, bordered (step numbers, objectives)
+
+### Sizes (Reduced Heights - Major Third Scale)
+- `xs`: 9-10px font, 18px height - Info card labels (tiny)
+- `sm`: 11px font, 23px height - Section labels, pills ⭐ MOST USED
+- `md`: 13px font, 29px height - Emphasized badges
+- `lg`: 15px font, 35px height - Large interactive badges
+
+### Themes (8 Total)
+- `neutral` - Black/white based (default for most use)
+- `warm` - Warm editorial (#faf9f8 bg, #a6968e text) - Challenges, Methodology
+- `brand` - Ken Bold Red (#b01f24) - High-priority CTAs
+- `success` - Green for positive states
+- `warning` - Amber for caution
+- `error` - Red for negative states
+- `info` - Blue for informational (design system extension)
+- `muted` - Low contrast for subtle badges (design system extension)
+
+### Shimmer Animation ⭐ BRAND SIGNATURE
+```tsx
+// ✨ Shimmer is OPTIONAL but recommended for interactive badges
+<Badge variant="pill" size="sm" theme="warm" bordered shimmer>
+  Step 1
+</Badge>
+```
+
+**Shimmer Behavior:**
+- **Warm light mode:** Warm-tinted shimmer `rgba(168,150,142,0.12)` - Subtle, elegant
+- **Other themes:** White shimmer with varying opacity
+- **Animation:** LEFT → RIGHT sweep (700ms ease-out)
+- **On unhover:** Instant reset (NO reverse animation)
+- **Technical:** Controlled via CSS `:hover` states, no inline transition on base
+
+### Design Principles
+✅ **Flexbox centering** - Perfect icon + text alignment with 6px gap
+✅ **Reduced heights** - Sleeker appearance (18px/23px/29px/35px)
+✅ **Warm-tinted shimmer** - For warm theme (not harsh dark overlay)
+✅ **Interactive states** - Hover effects on interactive badges
+❌ **NEVER** use without proper theme
+❌ **NEVER** use arbitrary heights or sizing
+
+### Usage Examples
+
+**Section Labels (Minimal):**
+```tsx
+<Badge variant="minimal" size="sm" theme="neutral">
+  Challenges
+</Badge>
+```
+
+**Step Numbers (Pill with Shimmer):**
+```tsx
+<Badge variant="pill" size="sm" theme="warm" bordered shimmer>
+  Step 1
+</Badge>
+```
+
+**Interactive Objectives:**
+```tsx
+<Badge variant="pill" size="sm" theme="neutral" bordered interactive>
+  Objective 1
+</Badge>
+```
+
+**Status Indicators:**
+```tsx
+<Badge variant="rounded" size="sm" theme="success" bordered>
+  Completed
+</Badge>
+```
+
+**Category Tags:**
+```tsx
+<Badge variant="rounded" size="sm" theme="neutral" bordered>
+  Strategy
+</Badge>
+```
+
+### Common Patterns
+- **Section eyebrows**: `minimal` + `xs` or `sm` + `neutral`
+- **Step indicators**: `pill` + `sm` + `warm` + `bordered` + `shimmer`
+- **Objectives**: `pill` + `sm` + `neutral` + `bordered` + `interactive`
+- **Info labels**: `minimal` + `xs` + `neutral` (client info cards)
+- **Status badges**: `rounded` + `sm` + semantic theme + `bordered`
+
+---
+
 ## 🔗 LINK SYSTEM
 
 ### Three Components
@@ -359,7 +451,7 @@ When starting a new project, ensure you have:
 
 ---
 
-**Last Updated:** 2026-02-13  
+**Last Updated:** 2026-02-17  
 **Design System Version:** 2.0  
 **Repository:** vsoffice001-cloud/Design-System-vs-26
 ```
