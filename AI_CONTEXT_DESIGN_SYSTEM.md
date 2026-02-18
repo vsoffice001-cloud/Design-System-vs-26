@@ -25,7 +25,10 @@ You are working with a professional design system. Follow these rules STRICTLY:
 
 ### Brand Signatures (ALWAYS ACTIVE)
 1. **✨ Shimmer Effect** - ALWAYS active on ALL buttons (signature animation)
-2. **➡️ Arrow Animation** - ONLY on buttons redirecting to forms/urgent pages
+2. **↗️ Arrow Animation** - ONLY on buttons redirecting to forms/urgent pages
+   - Icon: `ArrowUpRight` from lucide-react (45° diagonal, NOT horizontal)
+   - Animation: 2-arrow replacement (Arrow 1 exits top-right, Arrow 2 enters from bottom-left)
+   - ❌ NEVER use `ArrowRight`, `ChevronRight`, or any horizontal arrow
 
 ---
 
@@ -113,7 +116,7 @@ You are working with a professional design system. Follow these rules STRICTLY:
 
 ### Arrow Animation (CONDITIONAL)
 ```tsx
-// ➡️ Show arrow for forms/urgent redirects
+// ↗️ Show arrow for forms/urgent redirects (uses ArrowUpRight - 45° diagonal)
 <Button variant="brand" showArrow>
   Schedule Demo
 </Button>
@@ -123,6 +126,15 @@ You are working with a professional design system. Follow these rules STRICTLY:
   Learn More
 </Button>
 ```
+
+### Arrow Rules
+✅ Arrow uses `ArrowUpRight` from lucide-react (45° diagonal pointing up-right ↗️)
+✅ Animation: 2-arrow replacement — Arrow 1 exits top-right, Arrow 2 enters from bottom-left
+✅ `showArrow` prop on Button triggers AnimatedArrow component automatically
+✅ CTALink component includes AnimatedArrow by default
+❌ NEVER use `ArrowRight` (→) — horizontal arrows are NOT our brand
+❌ NEVER use `ChevronRight` (›) — chevrons are NOT our brand
+❌ NEVER manually import arrow icons — always use `showArrow` prop or `AnimatedArrow` component
 
 ### Usage Rules
 ✅ Default to `md` size unless specified
@@ -329,11 +341,15 @@ You are working with a professional design system. Follow these rules STRICTLY:
 - Trigger: Always active on hover
 - GPU-accelerated: Yes
 
-### Arrow Animation (CONDITIONAL)
-- Duration: 300ms
-- Transform: translateX(4px)
-- Trigger: Hover on CTAs with `showArrow` prop
+### ↗️ Arrow Animation (CONDITIONAL)
+- Icon: `ArrowUpRight` from lucide-react (45° diagonal, NOT ArrowRight/ChevronRight)
+- Pattern: 2-arrow replacement (two overlapping ArrowUpRight icons)
+- Duration: 300ms with cubic-bezier(0.4, 0, 0.2, 1) easing
+- On hover: Arrow 1 exits via `translate(20px, -20px)` + fade out, Arrow 2 enters from `translate(-20px, 20px)` to center + fade in
+- On unhover: Smooth reverse back to default positions
+- Trigger: `showArrow` prop on Button, or automatic in CTALink
 - Use: Forms, urgent CTAs, schedule demos
+- ❌ NEVER use ArrowRight, ChevronRight, or horizontal arrows
 
 ### Reduced Motion
 All animations respect `prefers-reduced-motion: reduce`
@@ -359,6 +375,12 @@ All animations respect `prefers-reduced-motion: reduce`
 ❌ NEVER use `lg` size by default
 ✅ ALWAYS use `md` size unless specified
 ✅ ALWAYS keep shimmer active
+
+### Arrows
+❌ NEVER use `ArrowRight` or `ChevronRight` — our brand arrow is `ArrowUpRight` (45° diagonal ↗️)
+❌ NEVER manually create arrow icons — use `showArrow` prop on Button or `AnimatedArrow` component
+✅ ALWAYS use the `showArrow` prop for urgency CTAs (forms, demos, sign-ups)
+✅ CTALink includes `AnimatedArrow` automatically — no extra setup needed
 
 ### Sections
 ❌ NEVER use `--text-3xl` for section headings
@@ -451,7 +473,7 @@ When starting a new project, ensure you have:
 
 ---
 
-**Last Updated:** 2026-02-17  
+**Last Updated:** 2026-02-18  
 **Design System Version:** 2.0  
 **Repository:** vsoffice001-cloud/Design-System-vs-26
 ```

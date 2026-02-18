@@ -27,7 +27,10 @@ BUTTONS:
 • Navbar size: sm (36px height, 14px font)
 • Hero size: lg (48px) - big landing pages ONLY
 • Shimmer: Always active (brand signature)
-• Arrow: Only for urgent CTAs redirecting to forms
+• Arrow: ArrowUpRight ↗️ (45° diagonal) - ONLY for urgent CTAs redirecting to forms
+  - Uses showArrow prop on Button, or automatic in CTALink
+  - 2-arrow replacement animation (Arrow 1 exits top-right, Arrow 2 enters from bottom-left)
+  - ❌ NEVER use ArrowRight (→) or ChevronRight (›) — diagonal only
 
 SECTIONS:
 • Alternate: Black → White → Warm → White
@@ -66,13 +69,16 @@ Quality target: 9.5/10 (Stripe/Material Design level)
 // Standard CTA (most common)
 <Button variant="brand">Get Started</Button>
 
+// Urgency CTA with animated arrow ↗️ (ArrowUpRight diagonal - NOT ArrowRight)
+<Button variant="brand" showArrow>Schedule Demo</Button>
+
 // Hero CTA (big pages only)
 <Button variant="brand" size="lg" showArrow>Transform Business</Button>
 
 // Navbar (compact)
 <Button variant="brand" size="sm">Sign Up</Button>
 
-// Text + Arrow Link
+// Text + Arrow Link (AnimatedArrow included automatically)
 <CTALink href="/learn">Explore More</CTALink>
 
 // Inline paragraph link
@@ -103,4 +109,4 @@ Quality target: 9.5/10 (Stripe/Material Design level)
 
 **Full documentation:** See AI_DESIGN_SYSTEM_PROMPT.md  
 **Live examples:** Design System Dashboard  
-**Updated:** 2026-02-17
+**Updated:** 2026-02-18
