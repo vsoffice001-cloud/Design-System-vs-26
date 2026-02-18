@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { ExternalLink, ArrowRight, FileText } from 'lucide-react';
+import { ExternalLink, FileText } from 'lucide-react';
 import { CTALink } from '@/app/components/CTALink';
 import { InlineLink } from '@/app/components/InlineLink';
 import { Button } from '@/app/components/Button';

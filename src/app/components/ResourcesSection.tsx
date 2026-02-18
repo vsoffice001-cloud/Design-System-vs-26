@@ -1,4 +1,3 @@
-import { ArrowRight } from 'lucide-react';
 import { Button } from '@/app/components/Button';
 import imgImageTheFutureOfAiInSupplyChainManagement from "figma:asset/52dc2d242efb6fec4b3045208719c859f0824631.png";
 import imgImageBuildingResilientSupplyChainsIn2024 from "figma:asset/4fe63e827054e6912bad635b5391ff745e22d77f.png";
@@ -80,6 +79,7 @@ export function ResourcesSection() {
   return (
     <section className="py-12 sm:py-16 md:py-20" style={{ background: 'var(--bg-pure-black)' }}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
+        {/* Section Header */}
         <div className="mb-12 sm:mb-16 md:mb-20">
           <span className="font-medium text-white/40 uppercase tracking-[3px] mb-6 md:mb-8 block" style={{ fontSize: '14px' }}>
             Related Resources
@@ -94,6 +94,7 @@ export function ResourcesSection() {
           </p>
         </div>
 
+        {/* Resources Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-16">
           {resources.map((resource, index) => (
             <a
@@ -103,6 +104,7 @@ export function ResourcesSection() {
               aria-label={`Read article: ${resource.title}`}
             >
               <article>
+                {/* Image */}
                 <div className="relative overflow-hidden rounded-[2.5px] mb-4 bg-white/5 aspect-[4/3]">
                   <img 
                     src={resource.image} 
@@ -113,6 +115,7 @@ export function ResourcesSection() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                 </div>
 
+                {/* Meta Info - Stacked Vertically */}
                 <div className="mb-3">
                   <span className="font-medium text-white/30 uppercase tracking-[1.5px] block mb-1" style={{ fontSize: 'var(--text-xs)' }}>
                     {resource.category}
@@ -122,10 +125,12 @@ export function ResourcesSection() {
                   </span>
                 </div>
 
+                {/* Title */}
                 <h3 className="font-normal text-white leading-[1.35] tracking-tight mb-2 group-hover:text-white/80 transition-colors" style={{ fontSize: 'var(--text-sm)' }}>
                   {resource.title}
                 </h3>
 
+                {/* Description */}
                 <p className="leading-[1.6] text-white/50 group-hover:text-white/60 transition-colors" style={{ fontSize: 'var(--text-sm)' }}>
                   {resource.description}
                 </p>
@@ -134,12 +139,12 @@ export function ResourcesSection() {
           ))}
         </div>
 
+        {/* CTA Button */}
         <div className="flex justify-center">
           <Button
             variant="ghost"
             size="md"
-            icon={<ArrowRight className="w-4 h-4 text-white transition-transform duration-300 group-hover:translate-x-1" />}
-            iconPosition="right"
+            showArrow
           >
             View All Resources
           </Button>

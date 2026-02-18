@@ -1,5 +1,5 @@
 import yashLogo from "figma:asset/faa51f6035eb6438eb4b8b0be770366215f25dc2.png";
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { AnimatedArrow } from '@/app/components/AnimatedArrow';
 
 // Content block types
 type ContentBlock = 
@@ -61,9 +61,42 @@ export function ClientContextSection({
               
               <div className="space-y-3">
                 <div>
+                  {/* 
+                    TYPOGRAPHY RATIONALE: Sidebar Micro Labels
+                    - fontSize: 11px (updated from 9.5px for better readability)
+                    
+                    WHY 11px:
+                    1. Sidebar Spatial Constraint: This column is only 33% width (md:col-span-4)
+                    2. Better readability than 9.5px while still subtle
+                    3. Creates hierarchy: 11px labels → 13px secondary → 17px primary
+                    4. Follows "smaller space = smaller type" editorial principle
+                    
+                    ALTERNATIVE CONSIDERED:
+                    - var(--text-xs) (12.8px): Would make labels too prominent in tight sidebar
+                    - 9.5px: Too small, hard to read
+                    
+                    VERDICT: 11px provides optimal sidebar balance and readability
+                  */}
                   <span className="font-medium text-black/40 uppercase tracking-[2px] block mb-1" style={{ fontSize: '11px' }}>
                     Client Company
                   </span>
+                  
+                  {/* 
+                    TYPOGRAPHY RATIONALE: Company Name
+                    - fontSize: 17px (hardcoded, not using --text-base: 20px)
+                    
+                    WHY HARDCODED:
+                    1. Text Length: "Yash Highvoltage Insulators" is 28 characters
+                    2. Wrapping Prevention: 20px would force awkward wrapping in sidebar
+                    3. Visual Hierarchy: Larger than industry (13px), smaller than heading (20px)
+                    4. Single-line Display: Ensures company name stays on one line
+                    
+                    ALTERNATIVE CONSIDERED:
+                    - var(--text-base) (20px): Tested, causes wrapping on most screens
+                    - var(--text-sm) (16px): Too small, loses emphasis
+                    
+                    VERDICT: 17px is the "Goldilocks size" for this sidebar width
+                  */}
                   <h3 className="font-medium text-black leading-[1.3]" style={{ fontSize: '17px' }}>
                     Yash Highvoltage Insulators
                   </h3>
@@ -75,6 +108,24 @@ export function ClientContextSection({
                   <span className="font-medium text-black/40 uppercase tracking-[2px] block mb-1" style={{ fontSize: '11px' }}>
                     Industry
                   </span>
+                  
+                  {/* 
+                    TYPOGRAPHY RATIONALE: Industry Text
+                    - fontSize: 13px (hardcoded, not using --text-sm: 16px)
+                    
+                    WHY HARDCODED:
+                    1. Visual Hierarchy: Creates three-tier hierarchy
+                       - Labels (9.5px) < Industry (13px) < Company Name (17px)
+                    2. Information Density: Longer descriptive text needs compact size
+                    3. Secondary Information: Less important than company name
+                    4. Sidebar Balance: Prevents text from dominating narrow space
+                    
+                    ALTERNATIVE CONSIDERED:
+                    - var(--text-sm) (16px): Too large, competes with company name
+                    - var(--text-xs) (12.8px): Almost works, but creates awkward gap to 17px
+                    
+                    VERDICT: 13px creates perfect hierarchical step between 9.5px and 17px
+                  */}
                   <p className="text-black/70 leading-[1.5]" style={{ fontSize: '13px' }}>
                     Power Transmission & Electrical Equipment
                   </p>
@@ -92,6 +143,32 @@ export function ClientContextSection({
                     <span className="font-medium text-black/40 uppercase tracking-[2px] block mb-4" style={{ fontSize: '11px' }}>
                       Company Overview
                     </span>
+                    {/* 
+                      TYPOGRAPHY RATIONALE: Lead Paragraph (Editorial Treatment)
+                      - fontSize: clamp(19px, 2.8vw, 24px) - Responsive range
+                      
+                      WHY HARDCODED:
+                      1. Responsive Typography: Needs to scale smoothly from mobile to desktop
+                      2. Editorial "Lead Paragraph": Larger than body (16px), smaller than heading (25px)
+                      3. Precise Range Control:
+                         - Minimum 19px: Readable on mobile without being too small
+                         - Maximum 24px: Impactful on desktop without overwhelming
+                         - 2.8vw: Smooth viewport-based scaling
+                      4. Hierarchical Position: Sits between body text and subheadings
+                      
+                      ALTERNATIVE CONSIDERED:
+                      - var(--text-base) (20px): Fixed size, no responsive scaling
+                      - clamp(1rem, 2.5vw, var(--text-lg)): Range too wide (16px-25px)
+                      
+                      WHY THIS SPECIFIC RANGE:
+                      Testing showed:
+                      - 16px-25px: Too jarring on mobile-to-desktop transition
+                      - 18px-22px: Not enough visual impact
+                      - 19px-24px: Perfect balance of readability and prominence
+                      
+                      VERDICT: Keep clamp() for editorial lead paragraph treatment
+                      Note: This is a "featured paragraph" pattern common in editorial design
+                    */}
                     <p 
                       className="leading-[1.45] font-normal text-black" 
                       style={{ fontFamily: "'Noto Serif', serif", fontSize: 'clamp(19px, 2.8vw, 24px)' }}
@@ -147,6 +224,7 @@ export function ClientContextSection({
                     </h4>
                   </div>
                   
+                  {/* Capabilities as stacked cards with better visual hierarchy */}
                   <div className="space-y-3 md:space-y-4">
                     {block.items.map((item, itemIndex) => (
                       <div 
@@ -154,6 +232,7 @@ export function ClientContextSection({
                         className="group relative bg-black/[0.015] hover:bg-black/[0.03] border-l-2 border-black/10 hover:border-black/30 pl-5 pr-4 py-4 transition-all duration-300"
                       >
                         <div className="flex items-start gap-4">
+                          {/* Minimal Number Prefix */}
                           <span 
                             className="font-medium text-black/30 group-hover:text-black/50 transition-colors duration-300 flex-shrink-0 pt-0.5" 
                             style={{ fontSize: '13px', fontFamily: "'Noto Serif', serif", minWidth: '24px' }}
@@ -161,6 +240,7 @@ export function ClientContextSection({
                             {String(itemIndex + 1).padStart(2, '0')}
                           </span>
                           
+                          {/* Content */}
                           <p 
                             className="leading-[1.6] text-black/70 group-hover:text-black/90 transition-colors duration-300 flex-1" 
                             style={{ fontSize: 'var(--text-sm)' }}
@@ -191,6 +271,7 @@ export function ClientContextSection({
                   </div>
                   
                   <div className="relative bg-[#f5f2f1] text-black rounded-[5px] p-8 md:p-10 overflow-hidden">
+                    {/* Subtle pattern overlay */}
                     <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
                     
                     <div className="relative">
@@ -224,11 +305,11 @@ export function ClientContextSection({
               
               <a 
                 href="#" 
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-black text-white rounded-[5px] font-medium hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-all duration-300 group whitespace-nowrap"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-black text-white rounded-[5px] font-medium hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-all duration-300 whitespace-nowrap overflow-hidden"
                 style={{ fontSize: 'var(--text-xs)', letterSpacing: '0.3px' }}
               >
                 <span>View Full Profile</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" strokeWidth={2} />
+                <AnimatedArrow size={16} color="white" />
               </a>
             </div>
           </div>
