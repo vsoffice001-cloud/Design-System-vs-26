@@ -84,12 +84,48 @@ You are working with a professional design system. Follow these rules STRICTLY:
 --warm-600: #d9d1ce;  /* Timeline base */
 ```
 
+### Red Scale (Full 50–900, brand red = --red-600)
+```css
+--red-50: #fef2f2;     /* Badge/alert backgrounds */
+--red-600: #b01f24;    /* = --brand-red ⭐ */
+--red-700: #8f181d;    /* = --brand-red-hover */
+--red-900: #5f1014;    /* Darkest emphasis text */
+```
+
+### Accent Colors (Badges, Data Viz, Section Variety)
+Each has full 50–900 scales in `theme.css`.
+```css
+/* Purple — Premium, Innovation, Insights */
+--purple-600: #806ce0;       /* BASE */
+
+/* Periwinkle — Trust, Reliability */
+--periwinkle-500: #c3c6f9;   /* BASE */
+
+/* Coral — Warmth, Energy, Approachability */
+--coral-600: #ea7a5f;        /* BASE */
+
+/* Perano (Light Blue) — Calm, Data */
+--perano-500: #dfeafa;       /* BASE */
+```
+
+### Utility Colors (Semantic States Only)
+Each has full 50–900 scales in `theme.css`. Distinct from decorative accents.
+```css
+--green-500: #10b981;   /* Success */
+--amber-500: #f59e0b;   /* Warning */
+--rose-500: #f43f5e;    /* Error (NOT brand red) */
+```
+
 ### Usage Rules
 ✅ Red (#b01f24) → CTAs, conversion moments ONLY
 ✅ Black/White → Primary UI, 90% of design
 ✅ Warm → Alternating editorial sections
+✅ Accent colors → Badge themes, data viz, dashboard variety
+✅ Utility colors → Success/warning/error states, form validation
 ❌ NEVER use arbitrary hex colors
-❌ NEVER mix purple/blue/green (not in palette)
+❌ NEVER use `--rose-*` as substitute for `--brand-red`
+❌ NEVER use semantic colors decoratively
+❌ Don't mix more than 2–3 accent families in a single view
 
 ---
 
@@ -149,7 +185,7 @@ You are working with a professional design system. Follow these rules STRICTLY:
 ## 🏷️ BADGE SYSTEM
 
 ### Variants
-1. **Minimal** - No background, text only (section labels)
+1. **Minimal** - No background, text only (section labels, chapter labels)
 2. **Rounded** - 5px radius, optional background (category tags)
 3. **Pill** - Fully rounded, bordered (step numbers, objectives)
 
@@ -159,15 +195,73 @@ You are working with a professional design system. Follow these rules STRICTLY:
 - `md`: 13px font, 29px height - Emphasized badges
 - `lg`: 15px font, 35px height - Large interactive badges
 
-### Themes (8 Total)
-- `neutral` - Black/white based (default for most use)
+### Themes (11 Total)
+- `neutral` - Black/white based (default, no opinion, general-purpose)
 - `warm` - Warm editorial (#faf9f8 bg, #a6968e text) - Challenges, Methodology
-- `brand` - Ken Bold Red (#b01f24) - High-priority CTAs
-- `success` - Green for positive states
-- `warning` - Amber for caution
-- `error` - Red for negative states
-- `info` - Blue for informational (design system extension)
-- `muted` - Low contrast for subtle badges (design system extension)
+- `brand` - Ken Bold Red (#b01f24) - High-priority, report/product/research pages
+- `coral` - Coral/terracotta tones - Warmth, energy, creative content
+- `purple` - Purple tones - Premium, innovation, insights, survey pillar
+- `periwinkle` - Periwinkle/soft blue - Trust, reliability, calm, phase badges
+- `info` - Perano (light blue) - Informational, data, methodology
+- `success` - Green - Positive outcomes, growth, confirmations
+- `warning` - Amber - Caution, attention, important notices
+- `error` - Rose - Errors, validation failures, destructive actions
+- `muted` - Black tints (subdued) - Deprecated, archived, de-emphasized ⚠️ NOT same as neutral
+
+### Muted vs Neutral
+- **Neutral**: Default state, no opinion — "I'm here"
+- **Muted**: Deliberately subdued — "I'm here but don't look at me"
+- Muted has lower opacity and softer borders than neutral
+- Use muted for: deprecated features, archived content, optional metadata
+
+### Three Categories (ONE Component)
+1. **Badges** (pill indicators): `<Badge variant="pill" theme="warm" bordered shimmer>STEP 1</Badge>`
+2. **Section Labels** (text markers): `<SectionLabel theme="brand">KEY INSIGHTS</SectionLabel>`
+3. **Chapter Labels** (numbered text): `<Badge variant="minimal" theme="brand" fontWeight={600}>CHAPTER 1 - TITLE</Badge>`
+
+All share same font DNA: font-sans, semibold, uppercase, wide tracking.
+
+### SectionLabel Wrapper
+```tsx
+import { SectionLabel } from '@/app/components/Badge';
+
+// Default (neutral theme)
+<SectionLabel>CHALLENGES</SectionLabel>
+
+// Report/Product/Research pages
+<SectionLabel theme="brand">KEY INSIGHTS</SectionLabel>
+
+// Survey pillar pages
+<SectionLabel theme="purple">SURVEY METHODOLOGY</SectionLabel>
+
+// Custom font weight (default is 600)
+<SectionLabel theme="brand" fontWeight={400}>SUBTLE MARKER</SectionLabel>
+
+// Dark background
+<SectionLabel mode="dark">RESOURCES</SectionLabel>
+```
+
+### Pillar Color Rules for Section Labels
+- Report / Product / Research pages → theme="brand"
+- Service pages (Survey) → theme="purple"
+- Service pages (Consulting) → theme="warm"
+- Default / General → theme="neutral"
+
+### Chapter Label Pattern (No Wrapper)
+```tsx
+import { Badge } from '@/app/components/Badge';
+
+<Badge variant="minimal" size="sm" theme="brand" fontWeight={600}
+  style={{ marginBottom: '12px' }}>
+  CHAPTER 1 - INDUSTRY ANALYSIS
+</Badge>
+<h2>Understanding the Market Landscape</h2>
+```
+
+### fontWeight Prop
+- `400` - Subtle body-context markers
+- `500` - Balanced, category-like
+- `600` - Default — editorial heading hierarchy (SectionLabel default)
 
 ### Shimmer Animation ⭐ BRAND SIGNATURE
 ```tsx
@@ -189,16 +283,16 @@ You are working with a professional design system. Follow these rules STRICTLY:
 ✅ **Reduced heights** - Sleeker appearance (18px/23px/29px/35px)
 ✅ **Warm-tinted shimmer** - For warm theme (not harsh dark overlay)
 ✅ **Interactive states** - Hover effects on interactive badges
+✅ **11 themes** - All 10 color palette families covered + muted
 ❌ **NEVER** use without proper theme
 ❌ **NEVER** use arbitrary heights or sizing
+❌ **NEVER** use Label.tsx for section headers (use SectionLabel from Badge.tsx)
 
 ### Usage Examples
 
-**Section Labels (Minimal):**
+**Section Labels (SectionLabel Wrapper):**
 ```tsx
-<Badge variant="minimal" size="sm" theme="neutral">
-  Challenges
-</Badge>
+<SectionLabel theme="brand">Key Insights</SectionLabel>
 ```
 
 **Step Numbers (Pill with Shimmer):**
@@ -230,11 +324,40 @@ You are working with a professional design system. Follow these rules STRICTLY:
 ```
 
 ### Common Patterns
-- **Section eyebrows**: `minimal` + `xs` or `sm` + `neutral`
+- **Section eyebrows**: `SectionLabel` wrapper with pillar theme
 - **Step indicators**: `pill` + `sm` + `warm` + `bordered` + `shimmer`
 - **Objectives**: `pill` + `sm` + `neutral` + `bordered` + `interactive`
 - **Info labels**: `minimal` + `xs` + `neutral` (client info cards)
 - **Status badges**: `rounded` + `sm` + semantic theme + `bordered`
+- **Chapter labels**: `minimal` + `sm` + pillar theme + `fontWeight={600}`
+
+---
+
+## 🏷️ LABEL COMPONENT (Form-Only)
+
+### Purpose
+Label.tsx is a **semantic `<label>` element for forms** — completely separate from badges/section labels.
+
+### Variants (3)
+- `default` - Standard form label (16px, medium, black)
+- `secondary` - Less emphasis for optional fields (16px, normal, black/70)
+- `required` - Same as default + red asterisk
+
+### Usage
+```tsx
+import { Label } from '@/app/components/Label';
+
+<Label htmlFor="email" required>Email Address</Label>
+<input id="email" type="email" />
+
+<Label htmlFor="bio" variant="secondary" helperText="Optional">Bio</Label>
+<textarea id="bio" />
+```
+
+### Where Things Live
+- Form labels → Label.tsx → Form Inputs page
+- Section headers → Badge.tsx SectionLabel → Badges & Section Labels page
+- Chapter headers → Badge.tsx (pattern) → Badges & Section Labels page
 
 ---
 
@@ -434,6 +557,8 @@ When starting a new project, ensure you have:
    - CTALink.tsx  
    - InlineLink.tsx
    - AnimatedArrow.tsx (for arrow animation)
+   - Badge.tsx (badges, SectionLabel, chapter labels)
+   - Label.tsx (form labels)
 ✅ Set up font: DM Sans
 ✅ Verified shimmer animation works
 ✅ Tested responsive breakpoints
@@ -473,8 +598,8 @@ When starting a new project, ensure you have:
 
 ---
 
-**Last Updated:** 2026-02-18  
-**Design System Version:** 2.0  
+**Last Updated:** 2026-02-20  
+**Design System Version:** 3.1  
 **Repository:** vsoffice001-cloud/Design-System-vs-26
 ```
 
@@ -493,6 +618,8 @@ When starting a new project, ensure you have:
      - `/src/app/components/InlineLink.tsx`
      - `/src/app/components/AnimatedArrow.tsx`
      - `/src/app/hooks/useShimmer.ts`
+     - `/src/app/components/Badge.tsx`
+     - `/src/app/components/Label.tsx`
 
 2. **Copy AI System Prompt:**
    - Copy the entire "AI SYSTEM PROMPT" section above
@@ -529,6 +656,23 @@ When starting a new project, ensure you have:
 --warm-300: #f5f2f1;
 --warm-500: #eae5e3;
 --warm-600: #d9d1ce;
+
+/* Red Scale */
+--red-50: #fef2f2;
+--red-600: #b01f24;
+--red-700: #8f181d;
+--red-900: #5f1014;
+
+/* Accent Colors */
+--purple-600: #806ce0;
+--periwinkle-500: #c3c6f9;
+--coral-600: #ea7a5f;
+--perano-500: #dfeafa;
+
+/* Utility Colors */
+--green-500: #10b981;
+--amber-500: #f59e0b;
+--rose-500: #f43f5e;
 ```
 
 ---
