@@ -157,6 +157,22 @@ import { InlineLink } from '@/app/components/InlineLink';
 
 /* Warm Highlights */
 --bg-warm: #f5f2f1;          /* Highlighted sections */
+
+/* Red Scale (50–900) — Brand red = --red-600 */
+--red-50: #fef2f2;           /* Badge/alert backgrounds */
+--red-600: #b01f24;          /* = --brand-red ⭐ */
+--red-700: #8f181d;          /* = --brand-red-hover */
+
+/* Accent Colors — Badges, data viz, section variety (full scales in theme.css) */
+--purple-600: #806ce0;       /* Premium, insights */
+--periwinkle-500: #c3c6f9;   /* Trust, reliability */
+--coral-600: #ea7a5f;        /* Warmth, energy */
+--perano-500: #dfeafa;       /* Calm, data */
+
+/* Utility Colors — Semantic states only (full scales in theme.css) */
+--green-500: #10b981;        /* Success */
+--amber-500: #f59e0b;        /* Warning */
+--rose-500: #f43f5e;         /* Error (NOT brand red) */
 ```
 
 **Example Usage:**
@@ -371,6 +387,6 @@ Build a form page with:
 
 ---
 
-**Last Updated:** 2026-02-13  
-**Version:** 1.0.0  
+**Last Updated:** 2026-02-20  
+**Version:** 1.1.0  
 **Status:** ✅ PRODUCTION READY
