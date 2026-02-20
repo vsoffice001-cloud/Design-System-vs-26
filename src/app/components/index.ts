@@ -17,6 +17,19 @@ export { InlineLink } from './InlineLink';
 // Animation Components
 export { AnimatedArrow } from './AnimatedArrow';
 
+// 🏷️ BADGE & LABEL SYSTEM
+// Badge.tsx: Unified component for Badges, Section Labels, and Chapter Labels
+export { Badge, SectionLabel } from './Badge';
+export type { BadgeVariant, BadgeSize, BadgeTheme, BadgeMode, BadgeProps } from './Badge';
+// Convenience wrappers (pre-configured Badge patterns)
+export { StepPill, ObjectivePill, ObjectivePillInteractive } from './Badge';
+export { InfoCardLabel, CategoryBadge, StatusBadge, InfoBadge, MutedBadge, ClickableBadge } from './Badge';
+export { BADGE_TOKENS } from './Badge';
+
+// Label.tsx: Semantic <label> for forms (NOT for section headers)
+export { Label } from './Label';
+export type { LabelVariant } from './Label';
+
 // Demo/Testing Components
 export { LinkSystemDemo } from './LinkSystemDemo';
 export { ButtonDocumentation } from './ButtonDocumentation';
