@@ -288,41 +288,6 @@ import { Badge } from '@/app/components/Badge';
 ❌ **NEVER** use arbitrary heights or sizing
 ❌ **NEVER** use Label.tsx for section headers (use SectionLabel from Badge.tsx)
 
-### Usage Examples
-
-**Section Labels (SectionLabel Wrapper):**
-```tsx
-<SectionLabel theme="brand">Key Insights</SectionLabel>
-```
-
-**Step Numbers (Pill with Shimmer):**
-```tsx
-<Badge variant="pill" size="sm" theme="warm" bordered shimmer>
-  Step 1
-</Badge>
-```
-
-**Interactive Objectives:**
-```tsx
-<Badge variant="pill" size="sm" theme="neutral" bordered interactive>
-  Objective 1
-</Badge>
-```
-
-**Status Indicators:**
-```tsx
-<Badge variant="rounded" size="sm" theme="success" bordered>
-  Completed
-</Badge>
-```
-
-**Category Tags:**
-```tsx
-<Badge variant="rounded" size="sm" theme="neutral" bordered>
-  Strategy
-</Badge>
-```
-
 ### Common Patterns
 - **Section eyebrows**: `SectionLabel` wrapper with pillar theme
 - **Step indicators**: `pill` + `sm` + `warm` + `bordered` + `shimmer`
@@ -657,22 +622,22 @@ When starting a new project, ensure you have:
 --warm-500: #eae5e3;
 --warm-600: #d9d1ce;
 
-/* Red Scale */
+/* Red Scale (50–900) */
 --red-50: #fef2f2;
---red-600: #b01f24;
---red-700: #8f181d;
+--red-600: #b01f24;    /* = --brand-red */
+--red-700: #8f181d;    /* = --brand-red-hover */
 --red-900: #5f1014;
 
-/* Accent Colors */
---purple-600: #806ce0;
---periwinkle-500: #c3c6f9;
---coral-600: #ea7a5f;
---perano-500: #dfeafa;
+/* Accent Colors (full scales in theme.css) */
+--purple-600: #806ce0;       /* Premium, insights */
+--periwinkle-500: #c3c6f9;   /* Trust, reliability */
+--coral-600: #ea7a5f;        /* Warmth, energy */
+--perano-500: #dfeafa;        /* Calm, data */
 
-/* Utility Colors */
---green-500: #10b981;
---amber-500: #f59e0b;
---rose-500: #f43f5e;
+/* Utility Colors (full scales in theme.css) */
+--green-500: #10b981;        /* Success */
+--amber-500: #f59e0b;        /* Warning */
+--rose-500: #f43f5e;         /* Error (NOT brand red) */
 ```
 
 ---
