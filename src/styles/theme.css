@@ -155,6 +155,18 @@
   --periwinkle-800: #7075c8;  /* Active - Active states */
   --periwinkle-900: #5a5fa0;  /* Darkest - Text on light backgrounds */
   
+  /* Color 3.5: Coral/Terracotta - Warmth, Energy, Approachability */
+  --coral-50: #fffbf9;    /* Warmest white - Base backgrounds */
+  --coral-100: #fff5f1;   /* Very light warm */
+  --coral-200: #ffebe4;   /* Light blush - Perceptible coral wash */
+  --coral-300: #fdd7cb;   /* Soft coral - Gentle peachy tone */
+  --coral-400: #fbb8a7;   /* Medium coral - Clear peachy presence */
+  --coral-500: #f99b85;   /* Bright coral - Warm accent */
+  --coral-600: #ea7a5f;   /* BASE - Terracotta coral */
+  --coral-700: #d96548;   /* Deep coral - Hover state */
+  --coral-800: #c15138;   /* Rich terracotta - Active state */
+  --coral-900: #a23f2d;   /* Burnt terracotta - Darkest accent */
+  
   /* Color 4: Perano (Light Blue) - Calm, Professional, Data */
   --perano-50: #fcfdfe;    /* Lightest - Barely visible backgrounds */
   --perano-100: #f9fbfe;   /* Very light - Subtle highlights */
@@ -167,6 +179,46 @@
   --perano-800: #86b3e5;   /* Active - Active states */
   --perano-900: #6b94c0;   /* Darkest - Text, strong accents */
   
+  /* ========================================
+     UTILITY COLORS - Semantic States
+     ======================================== */
+  
+  /* Color 7: Green - Success, Growth, Positive Outcomes */
+  --green-50: #ecfdf5;     /* Success backgrounds */
+  --green-100: #d1fae5;    /* Success highlights */
+  --green-200: #a7f3d0;    /* Soft success states */
+  --green-300: #6ee7b7;    /* Success borders, soft accents */
+  --green-400: #34d399;    /* Success icons, secondary */
+  --green-500: #10b981;    /* BASE - Success messages */
+  --green-600: #059669;    /* Impact metrics */
+  --green-700: #047857;    /* Success hover */
+  --green-800: #065f46;    /* Success pressed */
+  --green-900: #064e3b;    /* Success text on light */
+  
+  /* Color 8: Amber - Warning, Attention, Caution */
+  --amber-50: #fffbeb;     /* Warning backgrounds */
+  --amber-100: #fef3c7;    /* Alert highlights */
+  --amber-200: #fde68a;    /* Soft warning states */
+  --amber-300: #fcd34d;    /* Warning borders */
+  --amber-400: #fbbf24;    /* Warning icons, attention */
+  --amber-500: #f59e0b;    /* BASE - Warning messages */
+  --amber-600: #d97706;    /* Warning buttons */
+  --amber-700: #b45309;    /* Warning hover */
+  --amber-800: #92400e;    /* Warning pressed */
+  --amber-900: #78350f;    /* Warning text on light */
+  
+  /* Color 9: Rose - Error, Validation, Destructive (DISTINCT from Brand Red) */
+  --rose-50: #fff1f2;      /* Error backgrounds */
+  --rose-100: #ffe4e6;     /* Error highlights */
+  --rose-200: #fecdd3;     /* Soft error states */
+  --rose-300: #fda4af;     /* Error borders, soft validation */
+  --rose-400: #fb7185;     /* Error icons, field validation */
+  --rose-500: #f43f5e;     /* BASE - Error messages */
+  --rose-600: #e11d48;     /* Destructive actions, delete */
+  --rose-700: #be123c;     /* Error hover */
+  --rose-800: #9f1239;     /* Error active/pressed */
+  --rose-900: #881337;     /* Error text on light */
+
   /* ========================================
      LEGACY COLOR VARIABLES (Keep for backwards compatibility)
      ======================================== */
@@ -372,5 +424,150 @@
 
   .animate-loading-bar {
     animation: loading-bar 1.5s ease-in-out infinite;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     BADGE SYSTEM - Animations & Interactive States
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  /* Shimmer Animation - Premium 700ms (40% slower than standard) */
+  .badge-shimmer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform: translateX(-100%);  /* Start position: completely off-screen left */
+    /* NO TRANSITION HERE - prevents reverse animation on unhover */
+    z-index: 5;
+  }
+
+  /* BADGE SHIMMER ANIMATION
+     ======================================== 
+     
+     SHIMMER BEHAVIOR:
+     - Initial: translateX(-100%) - shimmer starts off-screen LEFT
+     - On Hover: translateX(200%) - shimmer sweeps across and exits RIGHT
+     - Smooth 700ms ease-out transition ONLY on hover
+     - Instant reset on unhover (no reverse animation)
+     - Parent hover triggers (methodology cards, objective cards, step pills)
+     
+     ANIMATION FLOW:
+     1. Shimmer starts hidden on left (-100%) - NO TRANSITION
+     2. User hovers badge/parent
+     3. Transition is APPLIED, shimmer sweeps left → right (700ms)
+     4. Shimmer exits off-screen right (200%)
+     5. User unhovers
+     6. Shimmer INSTANTLY resets to left (-100%) - NO TRANSITION
+     
+     ======================================== */
+
+  /* Direct badge hover - triggers shimmer on badge itself */
+  .badge:hover .badge-shimmer {
+    transform: translateX(200%);  /* Sweep completely across and exit right */
+    transition: transform 700ms ease-out;  /* Apply transition ONLY on hover */
+  }
+
+  /* Parent hover triggers - for methodology cards, objective cards, step pills */
+  .methodology-card:hover .badge-shimmer,
+  .objective-card:hover .badge-shimmer,
+  .step-pill:hover .badge-shimmer,
+  .group:hover .badge-shimmer {
+    transform: translateX(200%);  /* Sweep completely across and exit right */
+    transition: transform 700ms ease-out;  /* Apply transition ONLY on hover */
+  }
+
+  /* Badge hover background/border transitions (300ms for snappy feel) */
+  .badge:not(.badge-minimal):hover {
+    background-color: var(--badge-hover-bg);
+    border-color: var(--badge-hover-border);
+  }
+
+  /* Interactive badge hover states (clickable badges get scale effect) */
+  .badge-interactive {
+    cursor: pointer;
+  }
+
+  .badge-interactive:hover {
+    transform: scale(1.02);
+    background-color: var(--badge-hover-bg);
+    border-color: var(--badge-hover-border);
+  }
+
+  .badge-interactive:active {
+    transform: scale(0.98);
+  }
+
+  /* Badge variants ensure proper shape rendering */
+  .badge-pill {
+    border-radius: 9999px !important;
+  }
+
+  .badge-rounded {
+    border-radius: 5px !important;
+  }
+
+  .badge-minimal {
+    border-radius: 0 !important;
+    background-color: transparent !important;
+  }
+
+  /* Accessibility - Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .badge-shimmer {
+      transition: none !important;
+      transform: translateX(-100%) !important;
+    }
+    
+    .badge:hover .badge-shimmer,
+    .methodology-card:hover .badge-shimmer,
+    .objective-card:hover .badge-shimmer,
+    .step-pill:hover .badge-shimmer,
+    .group:hover .badge-shimmer {
+      transform: translateX(-100%) !important;
+    }
+
+    .badge-interactive:hover {
+      transform: none;
+    }
+
+    .badge-interactive:active {
+      transform: none;
+    }
+  }
+
+  /* High Contrast Mode Support */
+  @media (prefers-contrast: high) {
+    .badge-interactive:hover {
+      outline: 2px solid currentColor;
+      outline-offset: -2px;
+    }
+  }
+
+  /* ========================================
+     BADGE ICON ALIGNMENT
+     ======================================== 
+     
+     Ensures icons inside badges are properly sized and centered
+     with the text for perfect visual balance.
+     
+     ALIGNMENT RULES:
+     - Icons vertically centered via flexbox (already handled by inline-flex)
+     - Icons sized proportionally to badge font size
+     - 6px gap between icon and text (handled by gap property)
+     
+     USAGE:
+     <Badge>
+       <Icon size={14} /> Label Text
+     </Badge>
+     ======================================== */
+
+  .badge svg,
+  .badge-xs svg { width: 12px; height: 12px; }
+  .badge-sm svg { width: 14px; height: 14px; }
+  .badge-md svg { width: 16px; height: 16px; }
+  .badge-lg svg { width: 18px; height: 18px; }
+
+  /* Ensure icons don't shrink */
+  .badge svg {
+    flex-shrink: 0;
   }
 }
