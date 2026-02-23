@@ -1,6 +1,6 @@
 # DESIGN SYSTEM - AI CONTEXT FILE
-**Version:** 2.0  
-**Date:** 2026-02-13  
+**Version:** 3.1  
+**Date:** 2026-02-20  
 **Purpose:** Complete 4W+H documentation for AI tools to automatically apply this design system
 
 ---
@@ -195,6 +195,131 @@ Pure black/white creates editorial minimalism, Ken Bold Red provides strategic a
 #### **WHEN NOT**
 - ❌ Don't use for hero sections (use pure black)
 - ❌ Don't use for final CTA (use pure black)
+
+---
+
+### **Red Scale (Full Tints & Shades)**
+
+The brand red is `--red-600`. The full 50–900 scale provides lighter tints for backgrounds/badges and darker shades for hover/active states.
+
+```css
+--red-50: #fef2f2;     /* Lightest - Subtle backgrounds, alert highlights */
+--red-100: #fee2e2;    /* Very light - Notice backgrounds, hover states */
+--red-200: #fecaca;    /* Light - Disabled states, soft accents */
+--red-300: #fca5a7;    /* Medium light - Borders, dividers */
+--red-400: #f87176;    /* Medium - Icons, secondary buttons */
+--red-500: #dc3238;    /* Standard - Links, active states */
+--red-600: #b01f24;    /* PRIMARY BRAND (= --brand-red) - CTAs, buttons ⭐ */
+--red-700: #8f181d;    /* Hover (= --brand-red-hover) */
+--red-800: #771419;    /* Active (= --brand-red-active) */
+--red-900: #5f1014;    /* Darkest - Text on light, deep emphasis */
+```
+
+#### **WHEN**
+- ✅ Use `--red-50` through `--red-200` for Badge `brand` theme backgrounds
+- ✅ Use `--red-600` (`--brand-red`) for CTAs only
+- ✅ Use `--red-700`/`--red-800` for hover/active states
+
+#### **WHEN NOT**
+- ❌ Don't use mid-range reds (300–500) for decorative UI — they're for specific badge/status use cases only
+
+---
+
+### **Accent Colors (Decorative Palette)**
+
+Four accent families for badges, data visualization, and section variety. Each has a full 50–900 scale in `theme.css`.
+
+#### **Purple** — Premium, Innovation, Insights
+```css
+--purple-50: #f7f6fe;   /* Lightest backgrounds */
+--purple-500: #9488ec;  /* Standard interactive */
+--purple-600: #806ce0;  /* BASE - Premium features, insights */
+--purple-900: #483c80;  /* Darkest text/accents */
+```
+
+#### **Periwinkle** — Trust, Reliability, Soft Accents
+```css
+--periwinkle-50: #fafbfe;   /* Lightest backgrounds */
+--periwinkle-500: #c3c6f9;  /* BASE - Trust indicators */
+--periwinkle-600: #a7abf0;  /* Standard interactive */
+--periwinkle-900: #5a5fa0;  /* Darkest text */
+```
+
+#### **Coral/Terracotta** — Warmth, Energy, Approachability
+```css
+--coral-50: #fffbf9;    /* Warmest white */
+--coral-500: #f99b85;   /* Bright coral accent */
+--coral-600: #ea7a5f;   /* BASE - Terracotta coral */
+--coral-900: #a23f2d;   /* Burnt terracotta */
+```
+
+#### **Perano (Light Blue)** — Calm, Professional, Data
+```css
+--perano-50: #fcfdfe;    /* Barely visible backgrounds */
+--perano-500: #dfeafa;   /* BASE - Data sections, calm backgrounds */
+--perano-600: #c8dff5;   /* Borders, dividers */
+--perano-900: #6b94c0;   /* Darkest text */
+```
+
+#### **WHEN**
+- ✅ Use for Badge component themes (`purple`, `periwinkle`, `coral`, `info`)
+- ✅ Use for data visualization differentiation
+- ✅ Use for section variety in dashboard views
+- ✅ Use full 50–900 scales from `theme.css` when needed
+
+#### **WHEN NOT**
+- ❌ Don't use accent colors for primary CTAs (use `--brand-red`)
+- ❌ Don't use accent colors for main section backgrounds (use black/white/warm)
+- ❌ Don't mix more than 2–3 accent families in a single view
+
+---
+
+### **Utility Colors (Semantic States)**
+
+Three utility families for success/warning/error states. Each has a full 50–900 scale in `theme.css`. These are **distinct from the decorative accent palette** — use them only for semantic meaning.
+
+#### **Green** — Success, Growth, Positive Outcomes
+```css
+--green-50: #ecfdf5;     /* Success backgrounds */
+--green-500: #10b981;    /* BASE - Success messages */
+--green-600: #059669;    /* Impact metrics */
+--green-900: #064e3b;    /* Success text on light */
+```
+
+#### **Amber** — Warning, Attention, Caution
+```css
+--amber-50: #fffbeb;     /* Warning backgrounds */
+--amber-500: #f59e0b;    /* BASE - Warning messages */
+--amber-600: #d97706;    /* Warning buttons */
+--amber-900: #78350f;    /* Warning text on light */
+```
+
+#### **Rose** — Error, Validation, Destructive (DISTINCT from Brand Red)
+```css
+--rose-50: #fff1f2;      /* Error backgrounds */
+--rose-500: #f43f5e;     /* BASE - Error messages */
+--rose-600: #e11d48;     /* Destructive actions, delete */
+--rose-900: #881337;     /* Error text on light */
+```
+
+#### **WHEN**
+- ✅ Use for Badge component themes (`success`, `warning`, `error`)
+- ✅ Use for form validation states
+- ✅ Use for toast/alert feedback messages
+- ✅ Use for status indicators and metric callouts
+
+#### **WHEN NOT**
+- ❌ Don't use `--rose-*` as a substitute for `--brand-red` — they serve different purposes
+- ❌ Don't use semantic colors decoratively (green for "nature", amber for "sunshine", etc.)
+- ❌ Don't mix semantic colors with accent colors in the same component
+
+---
+
+### **Complete Color Reference**
+
+For full 50–900 scales of all 10 color families (red, warm, purple, periwinkle, coral, perano, green, amber, rose, black), see:
+- **Source of truth:** `/src/styles/theme.css`
+- **Visual reference:** Dashboard → Foundations → Complete Color Palette (`AllColorsPaletteContent.tsx`)
 
 ---
 
@@ -438,6 +563,48 @@ import { AnimatedArrow } from '@/app/components/AnimatedArrow';
 />
 ```
 
+#### **Badges & Section Labels**
+```tsx
+import { Badge, SectionLabel } from '@/app/components/Badge';
+
+// Badge (pill-shaped indicators) — 3 variants, 4 sizes, 11 themes
+<Badge 
+  variant="minimal | rounded | pill"
+  size="xs | sm | md | lg"
+  theme="neutral | warm | brand | coral | purple | periwinkle | info | success | warning | error | muted"
+  mode="light | dark"
+  bordered={boolean}
+  shimmer={boolean}
+  interactive={boolean}
+  fontWeight={400 | 500 | 600}
+>
+  BADGE TEXT
+</Badge>
+
+// SectionLabel (text-only marker above headings)
+<SectionLabel theme="brand" fontWeight={600}>KEY INSIGHTS</SectionLabel>
+<h2>Market Analysis Results</h2>
+
+// ChapterLabel (direct Badge usage — no wrapper)
+<Badge variant="minimal" size="sm" theme="brand" fontWeight={600}
+  style={{ marginBottom: '12px' }}>
+  CHAPTER 1 - INDUSTRY ANALYSIS
+</Badge>
+<h2>Understanding the Market Landscape</h2>
+```
+
+#### **Form Labels**
+```tsx
+import { Label } from '@/app/components/Label';
+
+// Semantic <label> for forms (NOT for section headers)
+<Label htmlFor="email" required>Email Address</Label>
+<input id="email" type="email" />
+
+// Variants: default | secondary | required
+// Props: htmlFor, variant, required, helperText, className
+```
+
 ---
 
 ## LAYOUT SYSTEM
@@ -563,174 +730,6 @@ Reference: /DESIGN_SYSTEM_AI_CONTEXT.md
 
 ---
 
-### **🎯 Prompt 4: Typography Sizing**
-
-```
-Apply correct typography sizing from our design system:
-
-✅ DO USE (Most Common):
-- var(--text-sm) 16px: ALL body text, paragraphs, descriptions
-- var(--text-2xl) 39px: ALL section headings (h2)
-- var(--text-xs) 12.8px: Labels, metadata, section eyebrows
-
-✅ SPECIAL CASES:
-- var(--text-3xl) 48.8px: ONLY hero h1 and final CTA heading
-- var(--text-nav) 14px: TOC items, navigation menus
-- var(--text-compact) 14px: Compact cards with 4+ items
-
-❌ DO NOT USE:
-- Hardcoded pixel values (unless spatial constraint)
-- text-3xl for regular section headings (reserved for heroes)
-- Random font sizes not in scale
-
-Reference: /src/styles/theme.css lines 23-31
-```
-
----
-
-### **🎯 Prompt 5: Color Usage**
-
-```
-Apply colors following our strict design system rules:
-
-✅ Ken Bold Red (#b01f24):
-- ONLY for CTA buttons (variant="brand")
-- ONLY for primary conversion actions
-- Example: "Get Started", "Unlock Report", "Schedule Demo"
-
-✅ Black (#000000):
-- Primary buttons (variant="primary")
-- Hero section backgrounds
-- Final CTA backgrounds
-- Body text
-
-✅ Warm (#f5f2f1):
-- Challenges section background
-- Methodology section background
-- Alternating section pattern
-
-❌ NEVER:
-- Red for decorative purposes
-- Red for borders, icons, general accents
-- Gray (use black tints: black/70, black/50, black/8)
-
-Reference: /DESIGN_SYSTEM_AI_CONTEXT.md → Color System
-```
-
----
-
-### **🎯 Prompt 6: Button vs CTALink Decision**
-
-```
-Choose the correct link component:
-
-✅ Use <Button variant="brand" showArrow>:
-- Form submissions
-- Account creation / signup
-- Download reports (urgency)
-- Schedule meetings
-- Primary conversions
-Example: <Button variant="brand" showArrow>Get Started Free</Button>
-
-✅ Use <CTALink>:
-- Exploratory navigation
-- "Learn more" style links
-- Section jumping
-- Non-urgent discovery
-Example: <CTALink href="#methodology">See How We Did It</CTALink>
-
-✅ Use <InlineLink>:
-- Links WITHIN paragraphs
-- Interlinking content
-- Secondary references
-Example: Read our <InlineLink href="#study">case study</InlineLink>
-
-Reference: /src/app/components/LinksDocumentation.tsx
-```
-
----
-
-### **🎯 Prompt 7: Complete Page Build**
-
-```
-Build a complete page with our design system. Follow this checklist:
-
-STRUCTURE:
-✅ Import components from /src/app/components/
-✅ Follow section alternating pattern (black → white → warm)
-✅ Use semantic HTML (section, h1, h2, h3, p)
-
-TYPOGRAPHY:
-✅ var(--text-3xl) for hero h1 ONLY
-✅ var(--text-2xl) for ALL section h2
-✅ var(--text-sm) for ALL body text
-✅ Font weight 600 for headings, 400 for body
-
-COLORS:
-✅ --brand-red ONLY for CTA buttons
-✅ --black for hero backgrounds
-✅ --warm-300 for alternating sections
-
-COMPONENTS:
-✅ <Button variant="brand"> for conversion CTAs
-✅ <CTALink> for exploratory navigation
-✅ <InlineLink> for in-paragraph links
-
-ANIMATIONS:
-✅ Shimmer on all buttons (automatic)
-✅ showArrow={true} ONLY for urgency/forms
-
-FILES TO READ:
-1. /DESIGN_SYSTEM_AI_CONTEXT.md (this file)
-2. /src/styles/theme.css (tokens)
-3. /src/app/components/Button.tsx (button component)
-4. /src/app/components/HeroSection.tsx (section reference)
-```
-
----
-
-## 🎓 LEARNING RESOURCES
-
-### **For AI Understanding:**
-
-1. **Read First:**
-   - `/DESIGN_SYSTEM_AI_CONTEXT.md` (this file)
-   - `/src/styles/theme.css` (all tokens)
-
-2. **Component References:**
-   - `/src/app/components/Button.tsx`
-   - `/src/app/components/CTALink.tsx`
-   - `/src/app/components/InlineLink.tsx`
-   - `/src/app/components/ButtonDocumentation.tsx`
-
-3. **Section Examples:**
-   - `/src/app/components/HeroSection.tsx`
-   - `/src/app/components/ChallengesSection.tsx`
-   - `/src/app/components/MethodologySection.tsx`
-
-4. **Dashboard:**
-   - `/src/app/components/DesignSystemDashboard.tsx` (visual reference)
-   - `/src/app/components/FoundationsContent.tsx` (typography details)
-
----
-
-## ✅ CHECKLIST FOR AI
-
-Before generating ANY code, verify:
-
-- [ ] Read `/DESIGN_SYSTEM_AI_CONTEXT.md`
-- [ ] Using correct typography tokens (--text-sm, --text-2xl)
-- [ ] Using --brand-red ONLY for CTAs
-- [ ] Button size="md" as default (NOT lg)
-- [ ] showArrow={true} ONLY for urgency/forms
-- [ ] Shimmer animation automatic (don't disable)
-- [ ] Following section pattern (black/white/warm)
-- [ ] Using semantic component (Button vs CTALink vs InlineLink)
-- [ ] Spacing from base-10 scale
-- [ ] No hardcoded values (use tokens)
-
----
-
 ## 🚨 COMMON MISTAKES TO AVOID
 
 ### **❌ DON'T:**
@@ -774,11 +773,7 @@ AI-generated code should score:
 - **Repository:** `vsoffice001-cloud/Design-System-vs-26`
 - **Theme Tokens:** `/src/styles/theme.css`
 - **Button Component:** `/src/app/components/Button.tsx`
+- **Badge Component:** `/src/app/components/Badge.tsx`
+- **Label Component:** `/src/app/components/Label.tsx`
 - **Link Components:** `/src/app/components/CTALink.tsx`, `/src/app/components/InlineLink.tsx`
 - **Dashboard:** `/src/app/components/DesignSystemDashboard.tsx`
-
----
-
-**Last Updated:** 2026-02-13  
-**Maintained By:** Design System Team  
-**Version:** 2.0 - Complete 4W+H Integration
