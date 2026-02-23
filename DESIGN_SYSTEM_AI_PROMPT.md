@@ -310,6 +310,9 @@ src/
 │   │   ├── CTALink.tsx         ← Text + arrow links
 │   │   ├── InlineLink.tsx      ← Paragraph links
 │   │   ├── AnimatedArrow.tsx   ← Arrow animation (auto-imported)
+│   │   ├── Badge.tsx           ← Unified badge system (11 themes)
+│   │   ├── Label.tsx           ← Form labels (3 variants)
+│   │   ├── index.ts            ← Barrel file (all exports)
 │   │   └── ...
 │   └── hooks/
 │       └── useShimmer.ts       ← Shimmer effect hook
@@ -376,6 +379,7 @@ Build a form page with:
 `Dashboard → Foundations → Typography → Custom Font Sizes`
 `Dashboard → Components → Buttons → All Documentation`
 `Dashboard → Components → Links & CTAs`
+`Dashboard → Components → Badges & Section Labels`
 
 **GitHub Repository:**
 `vsoffice001-cloud/Design-System-vs-26`
@@ -383,6 +387,7 @@ Build a form page with:
 **Key Documentation Files:**
 - `/src/styles/theme.css` - All design tokens
 - `/src/app/components/Button.tsx` - Button component
+- `/src/app/components/Badge.tsx` - Badge/SectionLabel system
 - `/DESIGN_SYSTEM_AI_PROMPT.md` - This file
 
 ---
