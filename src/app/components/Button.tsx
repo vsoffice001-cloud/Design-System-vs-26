@@ -1,7 +1,6 @@
 import { ReactNode, useState, useRef, cloneElement, isValidElement } from 'react';
 import { Loader2 } from 'lucide-react';
 import { AnimatedArrow } from '@/app/components/AnimatedArrow';
-import { useShimmer } from '@/app/hooks/useShimmer';
 
 /**
  * Button Component
@@ -206,7 +205,7 @@ export function Button({
       if (background === 'dark') {
         return 'bg-white/10 text-white border border-white/20 hover:border-white/40 hover:bg-white/[0.15] active:bg-white/[0.2] disabled:border-white/10 disabled:text-white/40';
       }
-      return 'bg-white text-black border border-black/20 hover:border-[#ea7a5f] hover:bg-black/[0.02] active:bg-black/[0.04] disabled:border-black/10 disabled:text-black/40 [&:hover_svg]:text-[#ea7a5f]';
+      return 'bg-white text-black border border-black/20 hover:border-[var(--warm-700)] hover:bg-[var(--warm-50)] active:bg-[var(--warm-100)] disabled:border-black/10 disabled:text-black/40';
     }
     if (variant === 'ghost') {
       if (background === 'dark') {
@@ -299,13 +298,13 @@ export function Button({
         />
       )}
       
-      {/* ✨ SHIMMER EFFECT - SECONDARY & GHOST VARIANTS */}
+      {/* ✨ SHIMMER EFFECT - SECONDARY VARIANT - White/Warm gradient */}
       {variant === 'secondary' && (
         <div
           className={`absolute inset-0 w-[200%] pointer-events-none transition-transform ease-out motion-reduce:transition-none ${isHovering ? '-translate-x-1/2' : 'translate-x-0'}`}
           style={{ 
             transitionDuration: `${shimmerDuration}ms`,
-            backgroundImage: `linear-gradient(to right, transparent, ${background === 'dark' ? '#ffffff' : 'var(--periwinkle-100)'}, transparent)`
+            backgroundImage: `linear-gradient(to right, transparent, ${background === 'dark' ? 'rgba(255,255,255,0.15)' : 'var(--warm-300)'}, transparent)`
           }}
         />
       )}
