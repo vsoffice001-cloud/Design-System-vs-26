@@ -123,7 +123,7 @@ export function ButtonControlsGuide() {
             </div>
             
             <div>
-              <p className="text-xs text-black/60 mb-3 font-semibold">Secondary Shimmer (Periwinkle Glow)</p>
+              <p className="text-xs text-black/60 mb-3 font-semibold">Secondary Shimmer (Coral Warmth)</p>
               <div className="flex flex-wrap gap-4">
                 <Button variant="secondary" size="lg">Hover to Shimmer</Button>
                 <Button variant="secondary" size="lg" icon={<Heart size={18} />}>Add to Favorites</Button>
