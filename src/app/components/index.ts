@@ -112,6 +112,19 @@ export { VariantSwitcher } from './VariantSwitcher';
 export { ReadingProgressBar } from './ReadingProgressBar';
 export { TableOfContents } from './TableOfContents';
 
+// 📐 LAYOUT & SECTION COMPONENTS
+export { SectionHeading } from './SectionHeading';
+export { SectionWrapper } from './SectionWrapper';
+export { Card } from './Card';
+
+// ⬆️ SCROLL COMPONENTS
+export { ScrollToTop } from './ScrollToTop';
+export { ScrollProgress } from './ScrollProgress';
+
+// 🎨 ICON COLOR SYSTEM
+export { iconColors, getIconColor } from './iconColors';
+export type { IconColorType } from './iconColors';
+
 // Modal/Overlay Components
 export { ContactModal } from './ContactModal';
 export { StickyCTA } from './StickyCTA';

@@ -34,7 +34,7 @@ This document lists every file in the GitHub repository, organized by directory,
 | File | Purpose |
 |------|--------|
 | `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font integration decisions |
-| `COMPONENT_GUIDELINES_4WH.md` | Component guidelines (What/Why/When/How) |
+| `COMPONENT_GUIDELINES_4WH.md` | Component guidelines (What/Why/When/How) — **v3.3 updated** |
 | `DESIGN_SYSTEM_AI_PROMPT.md` | Design system AI prompt (4th doc) |
 | `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames |
 | `QUICK_START_PROMPT.md` | Quick start AI prompt |
@@ -129,13 +129,24 @@ Main application entry point using `react-router-dom` with routes:
 | `Navbar.tsx` | Responsive two-state navbar |
 | `ContactModal.tsx` | Contact form modal (intentional max-w-[500px]) |
 | `StickyCTA.tsx` | Sticky CTA button |
-| `ReadingProgressBar.tsx` | Reading progress indicator |
+| `ReadingProgressBar.tsx` | Reading progress indicator (case-study-specific) |
 | `TableOfContents.tsx` | Table of contents navigation |
 | `NextSectionCTA.tsx` | Next section CTA link |
 | `CollapsibleSection.tsx` | Expandable/collapsible section |
 | `CodeBlockWithCopy.tsx` | Code block with copy button |
 | `SpacingHelpers.tsx` | Spacing utility components |
 | `VariantSwitcher.tsx` | Component variant switcher UI |
+
+### Layout & Section Components (NEW - v3.3)
+
+| File | Purpose |
+|------|--------|
+| `SectionHeading.tsx` | Reusable heading molecule (eyebrow + h1/h2/h3, Major Third scale) |
+| `SectionWrapper.tsx` | Page section layout wrapper (background, spacing, max-width) |
+| `Card.tsx` | Content container molecule (variant, padding, shadow, hover) |
+| `ScrollToTop.tsx` | Floating action button — scroll to top (Motion animated) |
+| `ScrollProgress.tsx` | Generic scroll depth progress bar (brand red, z-9999) |
+| `iconColors.ts` | Semantic icon color constants (content=#806ce0, utility=#737373) |
 
 ### Showcase & Demo Components
 
@@ -298,8 +309,9 @@ When syncing from Figma Make to GitHub:
 
 | Date | Changes |
 |------|---------|
+| Feb 28, 2026 | v3.3 sync: Added 6 new components (SectionHeading, SectionWrapper, Card, ScrollToTop, ScrollProgress, iconColors); Updated COMPONENT_GUIDELINES_4WH.md with 4W+H docs for all 6 + 2 new decision flowcharts; Updated index.ts barrel exports |
 | Feb 28, 2026 | v3.2 sync: Font Pairing + Container Width + Responsive Padding tokens formalized; 11 process artifacts deleted; AnimatedArrow + design-system showcase components + 10 doc .md files pushed; ui/ confirmed Figma Make-only (zero imports) |
 
 ---
 
-**Total Files on GitHub:** ~95 files across 4 main directories
+**Total Files on GitHub:** ~101 files across 4 main directories
