@@ -4,6 +4,89 @@
   --font-size: 16px;
   
   /* ========================================
+     FONT FAMILY SYSTEM - Typeface Pairing
+     ======================================== 
+     
+     PURPOSE: Two-font pairing system for editorial design.
+     PRINCIPLE: Contrast through category (sans + serif), harmony through weight.
+     
+     DM Sans (Sans-Serif): Body text, UI elements, buttons, labels, navigation
+     - Geometric, modern, highly readable at small sizes
+     - Optical sizing (opsz 9-40) adapts automatically
+     - Weights: 300 (light), 400 (body), 500 (medium/labels), 700 (bold/buttons)
+     
+     Noto Serif (Serif): Headings, display text, hero titles, editorial moments
+     - Classic proportions, editorial authority
+     - Used for h1-h3 section titles, testimonial quotes, large numbers
+     - Weights: 300 (light/headings), 400 (normal), 500 (medium emphasis)
+     
+     PAIRING RULES:
+     ✅ Serif headings + Sans body = Maximum contrast, editorial feel
+     ✅ Sans labels + Serif display = Functional clarity + visual impact
+     ✅ All UI chrome (buttons, badges, nav, forms) = ALWAYS Sans
+     ✅ Code/data = System monospace stack
+     ❌ NEVER use Serif for body text, buttons, labels, or navigation
+     ❌ NEVER use Sans for hero headings or section titles
+     ❌ NEVER mix more than 2 custom typefaces
+     
+     ======================================== */
+  
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  
+  /* ========================================
+     LAYOUT CONTAINER SYSTEM - Max Widths
+     ======================================== 
+     
+     PURPOSE: Consistent content width constraints for readability and visual rhythm.
+     PRINCIPLE: Mobile-first, progressive enhancement. Narrower = more focused.
+     
+     CONTENT WIDTH HIERARCHY:
+     1. --container-page (1200px)    → Outer page shell, full-width heros, navigation
+     2. --container-content (1000px) → Standard section content, cards, grids
+     3. --container-narrow (900px)   → Focused content: CTAs, testimonials, forms
+     4. --container-prose (700px)    → Long-form text, paragraph measure (~65-75 chars)
+     5. --container-compact (600px)  → Descriptions, methodology text, tight reading
+     
+     READABILITY LAW (Baymard Institute / UX research):
+     - Optimal line length: 50-75 characters per line
+     - At 16px body: ~700px = 65-70 chars (ideal)
+     - At 20px body: ~600px = 55-60 chars (acceptable)
+     - Never exceed 80 chars per line — causes reader fatigue
+     
+     RESPONSIVE PADDING SCALE (Mobile-First):
+     - Mobile (0-639px):    16px (px-4)  — Edge-to-edge feel, maximum content area
+     - Tablet (640-1023px): 24px (px-6)  — Breathing room, comfortable margins
+     - Desktop (1024px+):   32px (px-8)  — Generous margins, editorial white space
+     - Wide (1280px+):      Content centers via mx-auto, padding becomes decorative
+     
+     MOBILE-FIRST PRINCIPLES (UX Laws Applied):
+     - Fitts's Law: Touch targets min 44px, generous tap spacing on mobile
+     - Miller's Law: Reduce visible options on small screens (progressive disclosure)
+     - Hick's Law: Simpler choices on mobile = faster decisions
+     - Proximity: Tighter grouping on mobile to show relationships in limited space
+     - Content stacking: 1-column below 640px, 2-col at 768px, multi-col at 1024px+
+     
+     ======================================== */
+  
+  --container-page: 75rem;       /* 1200px - Full page shell, hero backgrounds, navbar */
+  --container-content: 62.5rem;  /* 1000px - Standard sections, card grids, main content */
+  --container-narrow: 56.25rem;  /* 900px  - CTAs, testimonials, focused content */
+  --container-prose: 43.75rem;   /* 700px  - Paragraph text, body copy measure */
+  --container-compact: 37.5rem;  /* 600px  - Tight descriptions, methodology blurbs */
+  
+  /* Responsive Padding Tokens */
+  --padding-mobile: 1rem;        /* 16px - Mobile horizontal padding */
+  --padding-tablet: 1.5rem;      /* 24px - Tablet horizontal padding */
+  --padding-desktop: 2rem;       /* 32px - Desktop horizontal padding */
+  
+  /* Section Vertical Spacing (Mobile-First) */
+  --section-py-mobile: 3rem;     /* 48px - py-12 */
+  --section-py-tablet: 4rem;     /* 64px - sm:py-16 */
+  --section-py-desktop: 5rem;    /* 80px - md:py-20 */
+  
+  /* ========================================
      TYPOGRAPHY SCALE - Major Third (1.25 ratio)
      ======================================== 
      
@@ -285,7 +368,7 @@
 
   body {
     @apply bg-white text-black;
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-sans);
   }
 
   /* Scroll margin for sections to account for fixed navbar */
