@@ -65,6 +65,8 @@ Main application entry point using `react-router-dom` with routes:
 - `/shimmer-demo` - ShimmerDemo
 - `/arrow-animation-test` - ArrowAnimationTest
 
+**IMPORTANT:** The GitHub version uses `react-router-dom` routing. The Figma Make version renders `<DesignSystemDashboard />` directly. **Never overwrite the GitHub version from Figma Make.**
+
 ---
 
 ## `src/app/hooks/` (10 files)
@@ -184,13 +186,11 @@ Main application entry point using `react-router-dom` with routes:
 | `README_ANIMATED_ARROW.md` | AnimatedArrow README |
 | `SHIMMER_ARROW_COMPATIBILITY_ANALYSIS.md` | Shimmer+Arrow compatibility proof |
 
-### Subdirectories in components/
+### Subdirectory: `links/`
 
-| Directory | Purpose | On GitHub? |
-|-----------|---------|------------|
-| `links/` | Link system README | Yes |
-| `figma/` | ImageWithFallback (Figma Make system) | No - Figma Make only |
-| `ui/` | 48 shadcn/ui components | No - Install locally via shadcn CLI |
+| File | Purpose |
+|------|--------|
+| `links/README.md` | Link & CTA component system overview |
 
 ---
 
@@ -211,6 +211,8 @@ Main application entry point using `react-router-dom` with routes:
 
 ## `src/imports/` (12 SVG files)
 
+These are SVG path data files used by components for vector graphics:
+
 | File | Purpose |
 |------|--------|
 | `svg-71vexskqy2.ts` | SVG import |
@@ -226,8 +228,6 @@ Main application entry point using `react-router-dom` with routes:
 | `svg-y9b0h1ep1a.ts` | SVG import |
 | `svg-yymkswet8x.ts` | SVG import |
 
-**Note:** 16 additional `.tsx` Figma frame imports exist locally in Figma Make but are NOT on GitHub (they are environment-specific).
-
 ---
 
 ## `src/styles/` (4 files)
@@ -241,14 +241,18 @@ Main application entry point using `react-router-dom` with routes:
 
 ---
 
-## Files NOT on GitHub (Figma Make Only)
+## Files NOT on GitHub (Figma Make Environment Only)
 
-| File/Directory | Reason |
-|----------------|--------|
-| `src/app/components/figma/ImageWithFallback.tsx` | Figma Make system component |
-| `src/app/components/ui/` (48 shadcn files) | Install via shadcn CLI locally |
-| `src/imports/*.tsx` (16 Figma frame imports) | Figma Make environment-specific |
-| `src/app/test-link-system.tsx` | Development scratch file |
+These files exist only in the Figma Make environment and should **never** be pushed to GitHub.
+
+| File/Directory | Reason | Verified |
+|----------------|--------|----------|
+| `src/app/components/figma/ImageWithFallback.tsx` | Figma Make system component (protected) | N/A |
+| `src/app/components/ui/` (48 shadcn files) | Figma Make scaffolding - **zero imports found** in any project component | Searched Feb 28, 2026 |
+| `src/imports/*.tsx` (16 Figma frame imports) | Figma Make environment-specific frame imports | Confirmed by user |
+| `src/app/test-link-system.tsx` | Development scratch file | N/A |
+
+**Why `ui/` stays in Figma Make only:** A full codebase search confirmed that zero components in the project import from the `ui/` directory. These are standard shadcn/ui library files (accordion, button, card, dialog, etc.) that came pre-installed with the Figma Make environment but are not used by any of our custom design system components.
 
 ---
 
@@ -264,9 +268,9 @@ Main application entry point using `react-router-dom` with routes:
 
 ### App.tsx Differences
 
-- **GitHub version:** Uses `react-router-dom` with 4 routes (correct for VS Code project)
-- **Figma Make version:** Simplified `<DesignSystemDashboard />` (correct for Figma Make environment)
-- **DO NOT overwrite** the GitHub version from Figma Make
+- **GitHub version:** Uses `react-router-dom` with 4 routes (correct for the project)
+- **Figma Make version:** Renders `<DesignSystemDashboard />` directly (correct for Figma Make)
+- **NEVER overwrite** the GitHub version from Figma Make
 
 ### Color System
 
@@ -277,27 +281,25 @@ Main application entry point using `react-router-dom` with routes:
 
 ---
 
-## Sync Checklist
+## Sync Checklist (Figma Make -> GitHub)
 
 When syncing from Figma Make to GitHub:
 
-1. **Always verify** App.tsx differences (routing vs simple render)
-2. **Never push** `figma/ImageWithFallback.tsx` or `ui/` directory
-3. **Never push** `src/imports/*.tsx` Figma frame files
-4. **Always push** component `.tsx` changes and `.md` documentation updates
-5. **Always push** `theme.css` and `fonts.css` token changes
-6. **Always push** the 3 AI context `.md` files when updated
-7. **Check** for new hooks in `src/app/hooks/` that need syncing
+1. **Always verify** App.tsx differences (routing vs simple render) - never overwrite GitHub version
+2. **Never push** `figma/ImageWithFallback.tsx`, `ui/` directory, or `src/imports/*.tsx` Figma frame files
+3. **Always push** component `.tsx` changes and `.md` documentation updates
+4. **Always push** `theme.css` and `fonts.css` token changes
+5. **Always push** the 3 AI context `.md` files when updated
+6. **Check** for new hooks in `src/app/hooks/` that need syncing
 
 ---
 
 ## Version History
 
-| Date | Version | Changes |
-|------|---------|--------|
-| Feb 28, 2026 | v3.2 | Font Pairing + Container Width + Responsive Padding tokens; 11 process artifacts deleted; AnimatedArrow + design-system showcase components + 10 doc .md files pushed |
+| Date | Changes |
+|------|---------|
+| Feb 28, 2026 | v3.2 sync: Font Pairing + Container Width + Responsive Padding tokens formalized; 11 process artifacts deleted; AnimatedArrow + design-system showcase components + 10 doc .md files pushed; ui/ confirmed Figma Make-only (zero imports) |
 
 ---
 
-**Total Files on GitHub:** ~95 files across 4 main directories  
-**Total Commits (this session):** ~18 commits (3 AI context updates + 11 deletions + 4 component/doc pushes)
+**Total Files on GitHub:** ~95 files across 4 main directories
