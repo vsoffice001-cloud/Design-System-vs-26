@@ -1,6 +1,6 @@
 # DESIGN SYSTEM - AI CONTEXT FILE
-**Version:** 3.1  
-**Date:** 2026-02-20  
+**Version:** 3.2  
+**Date:** 2026-02-28  
 **Purpose:** Complete 4W+H documentation for AI tools to automatically apply this design system
 
 ---
@@ -56,6 +56,45 @@ Import components from `/src/app/components/`, use CSS variables from `theme.css
 ---
 
 ## TYPOGRAPHY SYSTEM
+
+### **Font Pairing System (Two-Font Strategy)**
+
+#### **WHY**
+Contrast pairing creates editorial authority (Serif headings) while maintaining functional clarity (Sans body/UI). This is a proven editorial pattern used by NYT, Medium, and Stripe.
+
+#### **WHAT**
+```css
+--font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+--font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+--font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+```
+
+#### **WHEN**
+- ✅ **Serif** (`var(--font-serif)`) → h1-h3 headings, display text, hero titles, testimonial quotes, large editorial numbers
+- ✅ **Sans** (`var(--font-sans)`) → Body text, buttons, badges, labels, navigation, forms, tooltips, card descriptions
+- ✅ **Mono** (`var(--font-mono)`) → Code blocks, data tables, technical/metric values
+
+#### **WHEN NOT**
+- ❌ NEVER use Serif for body text, buttons, labels, navigation, or any UI chrome
+- ❌ NEVER use Sans for hero headings or section titles
+- ❌ NEVER mix more than 2 custom typefaces
+
+#### **Component-to-Font Mapping**
+| Component | Font Family | Reason |
+|-----------|------------|--------|
+| Hero h1, Section h2, h3 | `--font-serif` | Editorial authority |
+| Testimonial quotes | `--font-serif` | Literary feel |
+| Large display numbers | `--font-serif` | Visual weight |
+| Body paragraphs | `--font-sans` | Readability |
+| Buttons (all variants) | `--font-sans` | UI clarity |
+| Badge / SectionLabel | `--font-sans` | Functional labels |
+| Navigation / TOC | `--font-sans` | Compact readability |
+| Form labels / inputs | `--font-sans` | Form UX |
+| Card descriptions | `--font-sans` | Density |
+| Code blocks | `--font-mono` | Monospace alignment |
+| Metric values | `--font-mono` | Tabular data |
+
+---
 
 ### **Major Third Scale (1.25 Ratio)**
 
@@ -366,7 +405,7 @@ Buttons are primary interaction points. Need clear hierarchy, consistent sizing,
 ```tsx
 variant="primary"   // Black - Main actions
 variant="brand"     // Red (#b01f24) - CTAs ONLY
-variant="secondary" // Outlined - Supporting actions
+variant="secondary" // White + warm border - Supporting actions
 variant="ghost"     // Transparent - Tertiary on dark backgrounds
 ```
 
@@ -609,6 +648,90 @@ import { Label } from '@/app/components/Label';
 
 ## LAYOUT SYSTEM
 
+### **Container Width System**
+
+#### **WHY**
+Consistent content width constraints ensure optimal readability and visual rhythm. Based on Baymard Institute research: 50-75 characters per line is the optimal reading range.
+
+#### **WHAT**
+```css
+--container-page: 75rem;       /* 1200px - Full page shell, hero backgrounds, navbar */
+--container-content: 62.5rem;  /* 1000px - Standard sections, card grids, main content */
+--container-narrow: 56.25rem;  /* 900px  - CTAs, testimonials, focused content */
+--container-prose: 43.75rem;   /* 700px  - Paragraph text, body copy (~65-70 chars) */
+--container-compact: 37.5rem;  /* 600px  - Tight descriptions, methodology blurbs */
+```
+
+#### **WHEN**
+| Token | Use Case |
+|-------|----------|
+| `--container-page` | Outer page shell, full-width heroes, navigation |
+| `--container-content` | Standard section content, card grids, main content |
+| `--container-narrow` | Focused CTAs, testimonials, forms |
+| `--container-prose` | Long-form paragraphs (optimal line length ~65-70 chars at 16px) |
+| `--container-compact` | Short descriptions, methodology blurbs (~55-60 chars at 20px) |
+
+#### **WHEN NOT**
+- ❌ Don't use `--container-page` for body text (too wide, causes reader fatigue)
+- ❌ Don't use `--container-compact` for card grids (too narrow for multi-column)
+- ❌ Don't hardcode `max-w-[1200px]` — use `max-w-[var(--container-page)]` instead
+
+#### **HOW**
+```tsx
+// Standard section layout
+<section className="py-12 sm:py-16 md:py-20 bg-white">
+  <div className="mx-auto px-4 sm:px-6 md:px-8 max-w-[var(--container-content)]">
+    {/* Section content */}
+  </div>
+</section>
+
+// Prose/paragraph content (optimal readability)
+<div className="mx-auto max-w-[var(--container-prose)]">
+  <p className="text-sm text-black/70 leading-relaxed">
+    Long-form paragraph content...
+  </p>
+</div>
+```
+
+---
+
+### **Responsive Padding System (Mobile-First)**
+
+#### **WHY**
+Progressive enhancement from mobile to desktop. Tighter padding on mobile maximizes content area; generous padding on desktop creates editorial white space.
+
+#### **WHAT**
+```css
+/* Horizontal Padding */
+--padding-mobile: 1rem;    /* 16px - Mobile (0-639px) — Edge-to-edge feel */
+--padding-tablet: 1.5rem;  /* 24px - Tablet (640-1023px) — Breathing room */
+--padding-desktop: 2rem;   /* 32px - Desktop (1024px+) — Generous margins */
+
+/* Section Vertical Spacing */
+--section-py-mobile: 3rem;   /* 48px - py-12 */
+--section-py-tablet: 4rem;   /* 64px - sm:py-16 */
+--section-py-desktop: 5rem;  /* 80px - md:py-20 */
+```
+
+#### **WHEN**
+```tsx
+// Standard responsive section
+<section className="py-12 sm:py-16 md:py-20">
+  <div className="px-4 sm:px-6 md:px-8 mx-auto max-w-[var(--container-content)]">
+    {/* Content */}
+  </div>
+</section>
+```
+
+#### **Mobile-First UX Laws**
+- **Fitts's Law**: Touch targets min 44px, generous tap spacing on mobile
+- **Miller's Law**: Reduce visible options on small screens (progressive disclosure)
+- **Hick's Law**: Simpler choices on mobile = faster decisions
+- **Proximity**: Tighter grouping on mobile to show relationships in limited space
+- **Content stacking**: 1-column below 640px, 2-col at 768px, multi-col at 1024px+
+
+---
+
 ### **Section Pattern**
 
 #### **WHY**
@@ -649,84 +772,59 @@ Creates rhythm and visual interest through alternating backgrounds.
 
 ### **FOR TEAM MEMBERS: Copy-Paste These Exact Prompts**
 
----
-
-### **🎯 Prompt 1: Building a New Page**
-
-```
-I need to build a new page following our design system. Please:
-
-1. ✅ Read /DESIGN_SYSTEM_AI_CONTEXT.md FIRST
-2. ✅ Use typography tokens from theme.css:
-   - --text-sm (16px) for body text
-   - --text-2xl (39px) for section headings (h2)
-   - --text-3xl (48.8px) ONLY for hero h1
-3. ✅ Use color tokens:
-   - --brand-red (#b01f24) ONLY for CTAs
-   - --black for hero sections
-   - --warm-300 for highlighted sections
-4. ✅ Use Button component:
-   - variant="brand" ONLY for conversion CTAs
-   - size="md" as default (42px height)
-   - showArrow={true} ONLY for urgency/forms
-5. ✅ Use CTALink for exploratory navigation
-6. ✅ Follow section pattern (black → white → warm alternating)
-
-Reference files:
-- /src/app/components/Button.tsx
-- /src/app/components/CTALink.tsx
-- /src/styles/theme.css
-```
+See `/AI_DESIGN_SYSTEM_PROMPT.md` for full copy-paste prompts covering:
+- Building a New Page
+- Adding a CTA Button
+- Creating a Section
+- Typography Sizing
+- Color Usage
+- Button vs CTALink Decision
+- Complete Page Build
 
 ---
 
-### **🎯 Prompt 2: Adding a CTA Button**
+## 🎓 LEARNING RESOURCES
 
-```
-Add a CTA button following our design system:
+### **For AI Understanding:**
 
-✅ Use Button component from /src/app/components/Button.tsx
-✅ Use variant="brand" (Ken Bold Red #b01f24)
-✅ Use size="md" (42px height) - DO NOT use lg unless homepage hero
-✅ Add showArrow={true} ONLY if redirecting to form/urgency page
-✅ Shimmer animation is automatic (always active)
+1. **Read First:**
+   - `/DESIGN_SYSTEM_AI_CONTEXT.md` (this file)
+   - `/src/styles/theme.css` (all tokens)
 
-Example for conversion:
-<Button variant="brand" showArrow>Get Started Free</Button>
+2. **Component References:**
+   - `/src/app/components/Button.tsx`
+   - `/src/app/components/CTALink.tsx`
+   - `/src/app/components/InlineLink.tsx`
+   - `/src/app/components/ButtonDocumentation.tsx`
 
-Example for exploration:
-<CTALink href="#learn-more">Learn More</CTALink>
+3. **Section Examples:**
+   - `/src/app/components/HeroSection.tsx`
+   - `/src/app/components/ChallengesSection.tsx`
+   - `/src/app/components/MethodologySection.tsx`
 
-DO NOT use red for non-CTA purposes.
-```
+4. **Dashboard:**
+   - `/src/app/components/DesignSystemDashboard.tsx` (visual reference)
+   - `/src/app/components/FoundationsContent.tsx` (typography details)
 
 ---
 
-### **🎯 Prompt 3: Creating a Section**
+## ✅ CHECKLIST FOR AI
 
-```
-Create a new section following our design system pattern:
+Before generating ANY code, verify:
 
-1. ✅ Choose background:
-   - bg-black text-white: For hero moments
-   - bg-white: For standard content
-   - bg-warm-300: For highlighted/alternating sections
-
-2. ✅ Typography:
-   - Section heading: var(--text-2xl) 39px
-   - Body text: var(--text-sm) 16px
-   - Labels: var(--text-xs) 12.8px
-
-3. ✅ Spacing:
-   - py-24 (96px) for hero sections
-   - py-20 (80px) for standard sections
-   - mb-12 (48px) between major elements
-   - mb-6 (24px) within sections
-
-4. ✅ Read /src/app/components/HeroSection.tsx for reference
-
-Reference: /DESIGN_SYSTEM_AI_CONTEXT.md
-```
+- [ ] Read `/DESIGN_SYSTEM_AI_CONTEXT.md`
+- [ ] Using correct typography tokens (--text-sm, --text-2xl)
+- [ ] Using correct font families (Serif for headings, Sans for body/UI)
+- [ ] Using container width tokens (not hardcoded max-widths)
+- [ ] Using --brand-red ONLY for CTAs
+- [ ] Button size="md" as default (NOT lg)
+- [ ] showArrow={true} ONLY for urgency/forms
+- [ ] Shimmer animation automatic (don't disable)
+- [ ] Following section pattern (black/white/warm)
+- [ ] Using semantic component (Button vs CTALink vs InlineLink)
+- [ ] Spacing from base-10 scale
+- [ ] No hardcoded values (use tokens)
+- [ ] Responsive padding (px-4 sm:px-6 md:px-8)
 
 ---
 
@@ -741,6 +839,8 @@ Reference: /DESIGN_SYSTEM_AI_CONTEXT.md
 6. Use arbitrary spacing (stick to scale)
 7. Use Tailwind `text-2xl` classes (use CSS variables)
 8. Disable shimmer animation (always active)
+9. Use Sans for headings or Serif for body text
+10. Hardcode container max-widths instead of using tokens
 
 ### **✅ DO:**
 1. Use `variant="brand"` ONLY for conversion CTAs
@@ -751,6 +851,8 @@ Reference: /DESIGN_SYSTEM_AI_CONTEXT.md
 6. Use spacing scale (--space-4, --space-6, etc.)
 7. Use CSS variables for font sizes
 8. Let shimmer animation run (core brand identity)
+9. Use `--font-serif` for headings, `--font-sans` for body/UI
+10. Use `--container-*` tokens for max-widths
 
 ---
 
@@ -761,7 +863,7 @@ AI-generated code should score:
 - ✅ Token Usage: 100% (no hardcoded values)
 - ✅ Component Reuse: 90%+ (import from library)
 - ✅ Color Compliance: 100% (red for CTAs only)
-- ✅ Typography Compliance: 100% (correct scale usage)
+- ✅ Typography Compliance: 100% (correct scale + font pairing)
 - ✅ Accessibility: WCAG AA minimum
 - ✅ Performance: 60fps animations
 - ✅ Documentation: 4W+H framework applied
@@ -773,7 +875,11 @@ AI-generated code should score:
 - **Repository:** `vsoffice001-cloud/Design-System-vs-26`
 - **Theme Tokens:** `/src/styles/theme.css`
 - **Button Component:** `/src/app/components/Button.tsx`
-- **Badge Component:** `/src/app/components/Badge.tsx`
-- **Label Component:** `/src/app/components/Label.tsx`
 - **Link Components:** `/src/app/components/CTALink.tsx`, `/src/app/components/InlineLink.tsx`
 - **Dashboard:** `/src/app/components/DesignSystemDashboard.tsx`
+
+---
+
+**Last Updated:** 2026-02-28  
+**Maintained By:** Design System Team  
+**Version:** 3.2 - Complete 4W+H Integration + Font Pairing + Container Width + Full Color Palette Documentation
