@@ -20,7 +20,7 @@ You are working with a professional design system. Follow these rules STRICTLY:
 ### Visual Identity
 - **Aesthetic**: Minimalist editorial design (Stripe/Shopify quality)
 - **Color Palette**: Pure black/white + Ken Bold Red (#b01f24) for CTAs ONLY
-- **Typography**: Major Third scale (1.25 ratio), DM Sans font family
+- **Typography**: Major Third scale (1.25 ratio), DM Sans + Noto Serif font pairing
 - **Spacing**: Base-10 system (4px increments)
 
 ### Brand Signatures (ALWAYS ACTIVE)
@@ -33,6 +33,40 @@ You are working with a professional design system. Follow these rules STRICTLY:
 ---
 
 ## 🔤 TYPOGRAPHY SYSTEM
+
+### Font Pairing System (Two-Font Strategy)
+
+Our design uses a **contrast pairing**: geometric sans-serif (DM Sans) for functionality, classic serif (Noto Serif) for editorial authority.
+
+#### CSS Tokens
+```css
+--font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+--font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+--font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+```
+
+#### Pairing Rules
+✅ **Serif** (`var(--font-serif)`) → Headings (h1-h3), display text, hero titles, testimonial quotes, large editorial numbers
+✅ **Sans** (`var(--font-sans)`) → Body text, UI elements, buttons, badges, labels, navigation, forms, tooltips
+✅ **Mono** (`var(--font-mono)`) → Code blocks, data tables, technical values
+❌ NEVER use Serif for body text, buttons, labels, or navigation
+❌ NEVER use Sans for hero headings or section titles
+❌ NEVER mix more than 2 custom typefaces
+
+#### Component-to-Font Mapping
+| Component | Font Family | Why |
+|-----------|------------|-----|
+| Hero h1, Section h2, h3 | `--font-serif` | Editorial authority |
+| Testimonial quotes | `--font-serif` | Literary feel |
+| Large display numbers | `--font-serif` | Visual weight |
+| Body paragraphs | `--font-sans` | Readability |
+| Buttons (all variants) | `--font-sans` | UI clarity |
+| Badge / SectionLabel | `--font-sans` | Functional labels |
+| Navigation / TOC | `--font-sans` | Compact readability |
+| Form labels / inputs | `--font-sans` | Form UX |
+| Card descriptions | `--font-sans` | Density |
+| Code blocks | `--font-mono` | Monospace alignment |
+| Metric values | `--font-mono` | Tabular data |
 
 ### Major Third Type Scale
 - `--text-xs`: 12.8px - Labels, metadata, "CASE STUDY" badge
@@ -134,7 +168,7 @@ Each has full 50–900 scales in `theme.css`. Distinct from decorative accents.
 ### Variants
 1. **Primary** - Black solid, main actions
 2. **Brand** - Red (#b01f24), CTAs/conversion ⭐ HIGH IMPACT
-3. **Secondary** - Outlined, supporting actions
+3. **Secondary** - White bg + warm border, supporting actions
 4. **Ghost** - Transparent, tertiary on dark backgrounds
 
 ### Sizes
@@ -288,6 +322,41 @@ import { Badge } from '@/app/components/Badge';
 ❌ **NEVER** use arbitrary heights or sizing
 ❌ **NEVER** use Label.tsx for section headers (use SectionLabel from Badge.tsx)
 
+### Usage Examples
+
+**Section Labels (SectionLabel Wrapper):**
+```tsx
+<SectionLabel theme="brand">Key Insights</SectionLabel>
+```
+
+**Step Numbers (Pill with Shimmer):**
+```tsx
+<Badge variant="pill" size="sm" theme="warm" bordered shimmer>
+  Step 1
+</Badge>
+```
+
+**Interactive Objectives:**
+```tsx
+<Badge variant="pill" size="sm" theme="neutral" bordered interactive>
+  Objective 1
+</Badge>
+```
+
+**Status Indicators:**
+```tsx
+<Badge variant="rounded" size="sm" theme="success" bordered>
+  Completed
+</Badge>
+```
+
+**Category Tags:**
+```tsx
+<Badge variant="rounded" size="sm" theme="neutral" bordered>
+  Strategy
+</Badge>
+```
+
 ### Common Patterns
 - **Section eyebrows**: `SectionLabel` wrapper with pillar theme
 - **Step indicators**: `pill` + `sm` + `warm` + `bordered` + `shimmer`
@@ -376,6 +445,65 @@ import { Label } from '@/app/components/Label';
 ---
 
 ## 📐 LAYOUT SYSTEM
+
+### Container Width System
+
+Five semantic container widths for consistent content constraints. Narrower = more focused reading.
+
+#### CSS Tokens
+```css
+--container-page: 75rem;       /* 1200px - Full page shell, hero backgrounds, navbar */
+--container-content: 62.5rem;  /* 1000px - Standard sections, card grids, main content */
+--container-narrow: 56.25rem;  /* 900px  - CTAs, testimonials, focused content */
+--container-prose: 43.75rem;   /* 700px  - Paragraph text, body copy (~65-70 chars) */
+--container-compact: 37.5rem;  /* 600px  - Tight descriptions, methodology blurbs */
+```
+
+#### When to Use What
+| Token | Use Case | Example |
+|-------|----------|---------|
+| `--container-page` | Outer page shell, full-width heros, navigation | `max-w-[var(--container-page)]` |
+| `--container-content` | Standard section content, card grids | `max-w-[var(--container-content)]` |
+| `--container-narrow` | Focused CTAs, testimonials, forms | `max-w-[var(--container-narrow)]` |
+| `--container-prose` | Long-form paragraphs (optimal line length) | `max-w-[var(--container-prose)]` |
+| `--container-compact` | Short descriptions, methodology text | `max-w-[var(--container-compact)]` |
+
+#### Readability Law (Baymard Institute)
+- Optimal line length: 50-75 characters per line
+- At 16px body: ~700px = 65-70 chars (ideal → `--container-prose`)
+- At 20px body: ~600px = 55-60 chars (acceptable → `--container-compact`)
+- Never exceed 80 chars per line — causes reader fatigue
+
+### Responsive Padding System (Mobile-First)
+
+#### CSS Tokens
+```css
+/* Horizontal Padding */
+--padding-mobile: 1rem;    /* 16px - Mobile (0-639px) */
+--padding-tablet: 1.5rem;  /* 24px - Tablet (640-1023px) */
+--padding-desktop: 2rem;   /* 32px - Desktop (1024px+) */
+
+/* Section Vertical Spacing */
+--section-py-mobile: 3rem;   /* 48px - py-12 */
+--section-py-tablet: 4rem;   /* 64px - sm:py-16 */
+--section-py-desktop: 5rem;  /* 80px - md:py-20 */
+```
+
+#### Responsive Pattern
+```tsx
+<section className="py-12 sm:py-16 md:py-20 bg-white">
+  <div className="mx-auto px-4 sm:px-6 md:px-8 max-w-[var(--container-content)]">
+    {/* Content */}
+  </div>
+</section>
+```
+
+#### Mobile-First UX Laws
+- **Fitts's Law**: Touch targets min 44px, generous tap spacing on mobile
+- **Miller's Law**: Reduce visible options on small screens (progressive disclosure)
+- **Hick's Law**: Simpler choices on mobile = faster decisions
+- **Proximity**: Tighter grouping on mobile to show relationships in limited space
+- **Content stacking**: 1-column below 640px, 2-col at 768px, multi-col at 1024px+
 
 ### Section Structure
 ```tsx
@@ -563,8 +691,8 @@ When starting a new project, ensure you have:
 
 ---
 
-**Last Updated:** 2026-02-20  
-**Design System Version:** 3.1  
+**Last Updated:** 2026-02-28  
+**Design System Version:** 3.2  
 **Repository:** vsoffice001-cloud/Design-System-vs-26
 ```
 
@@ -622,22 +750,22 @@ When starting a new project, ensure you have:
 --warm-500: #eae5e3;
 --warm-600: #d9d1ce;
 
-/* Red Scale (50–900) */
+/* Red Scale */
 --red-50: #fef2f2;
---red-600: #b01f24;    /* = --brand-red */
---red-700: #8f181d;    /* = --brand-red-hover */
+--red-600: #b01f24;
+--red-700: #8f181d;
 --red-900: #5f1014;
 
-/* Accent Colors (full scales in theme.css) */
---purple-600: #806ce0;       /* Premium, insights */
---periwinkle-500: #c3c6f9;   /* Trust, reliability */
---coral-600: #ea7a5f;        /* Warmth, energy */
---perano-500: #dfeafa;        /* Calm, data */
+/* Accent Colors */
+--purple-600: #806ce0;
+--periwinkle-500: #c3c6f9;
+--coral-600: #ea7a5f;
+--perano-500: #dfeafa;
 
-/* Utility Colors (full scales in theme.css) */
---green-500: #10b981;        /* Success */
---amber-500: #f59e0b;        /* Warning */
---rose-500: #f43f5e;         /* Error (NOT brand red) */
+/* Utility Colors */
+--green-500: #10b981;
+--amber-500: #f59e0b;
+--rose-500: #f43f5e;
 ```
 
 ---
