@@ -118,6 +118,70 @@ An animated arrow icon that slides right on hover. Used exclusively with CTAs th
 
 ---
 
+## LOGO COMPONENT (Design System Primitive)
+
+### WHY
+The Ken Research logo was duplicated across 4+ files (NavLayout, Footer, MobileMenu, LogoButton) with inconsistent sizing, different SVG sources, and scattered dimension constants. A single DS primitive eliminates all duplication and provides one source of truth for brand rendering. The component uses the original Figma SVG paths directly, so there's zero visual drift from the approved brand mark.
+
+### WHAT
+A design system primitive that renders the Ken Research logo with:
+- **5 size variants** (xs/sm/md/lg/xl) — height-driven, width scales proportionally via aspect ratios
+- **3 display modes** (full/mark/wordmark) — full = K mark + "KEN RESEARCH" text, mark = K icon only, wordmark = text only
+- **3 color variants** (default/white/mono) — adapts to light backgrounds, dark backgrounds, or single-color contexts (print)
+
+Internally composed of two sub-components (LogoMark + LogoWordmark) rendering inline SVGs from constant path data. Zero external dependencies.
+
+### WHEN
+- Use everywhere the Ken Research logo appears — navbar, footer, mobile menu, auth pages, loading screens, email templates
+- Use `size="sm"` for navbar (mobile + desktop, 20px height)
+- Use `size="lg"` for footer (32px height)
+- Use `size="md"` for desktop sticky headers, email headers (24px height)
+- Use `size="xl"` for hero sections, splash screens (48px height)
+- Use `display="mark"` for favicon-sized contexts, sidebar collapsed state, loading spinners
+- Use `display="wordmark"` for tight horizontal spaces, breadcrumbs
+- Use `color="white"` on dark backgrounds (hero sections, dark cards)
+- Use `color="mono"` for print, partner logo rows, single-color contexts
+
+### WHEN NOT
+- Don't hardcode SVG paths or dimensions outside this component — use `<Logo>` instead
+- Don't override the aspect ratio via CSS (the component preserves Figma-accurate proportions)
+- Don't use `size="xl"` in constrained spaces (it's 48px tall)
+- Don't create separate logo components for different contexts — use props
+- Don't use `figma:asset` or `src/imports/` logo files — they are now dead code
+
+### HOW
+```tsx
+import { Logo } from '@/design-system/components/Logo';
+
+// Navbar (inside LogoButton atom)
+<LogoButton onClick={() => navigate('/')}>
+  <Logo size="sm" />
+</LogoButton>
+
+// Footer
+<Logo size="lg" />
+
+// Dark background hero
+<Logo size="xl" color="white" />
+
+// Print / partner row
+<Logo size="sm" color="mono" />
+
+// Icon only (loading screen, sidebar collapsed)
+<Logo display="mark" size="xl" />
+
+// Custom className passthrough
+<Logo size="md" className="opacity-80" />
+```
+
+**CSS Token Sync:** `--logo-height-xs` through `--logo-height-xl` in `theme.css` mirror `layout.logo.*` in `tokens.ts` and `SIZE_CONFIG` in `Logo.tsx`. Change one, change all three.
+
+**File:** `src/design-system/components/Logo.tsx`
+**Barrel:** `src/design-system/index.ts` (exported as `Logo`)
+**Consumers:** NavLayout, Footer, LogoButton (via children prop)
+
+---
+
 ## SECTION COMPONENTS
 
 ### HERO SECTION

@@ -34,7 +34,7 @@ This document lists every file in the GitHub repository, organized by directory,
 | File | Purpose |
 |------|--------|
 | `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font integration decisions |
-| `COMPONENT_GUIDELINES_4WH.md` | Component guidelines (What/Why/When/How) — **v3.3 updated, 4 new entries (Container, ResourceCard, SubtleVariantSwitcher, useResponsiveGutter)** |
+| `COMPONENT_GUIDELINES_4WH.md` | Component guidelines (What/Why/When/How) — **v3.3 updated, 5 entries (Container, ResourceCard, SubtleVariantSwitcher, useResponsiveGutter, Logo)** |
 | `DESIGN_SYSTEM_AI_PROMPT.md` | Design system AI prompt (4th doc) |
 | `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames |
 | `GITHUB_PUSH_GUIDE.md` | **NEW** — Checklist-based guide for pushing files to GitHub, organized by Atomic Design levels |
@@ -51,7 +51,8 @@ src/
  |   +-- App.tsx                    # Main app entry (uses react-router-dom)
  |   +-- components/                # All UI components
  |   +-- hooks/                     # Custom React hooks
- +-- design-system/                 # Design tokens & showcase components
+ +-- design-system/                 # Design tokens, showcase, & DS primitives
+ |   +-- components/                # NEW — Reusable DS primitive components
  +-- imports/                       # SVG imports from Figma
  +-- styles/                        # CSS files (theme, fonts, tailwind)
 ```
@@ -215,18 +216,30 @@ Main application entry point using `react-router-dom` with routes:
 
 ---
 
-## `src/design-system/` (8 files)
+## `src/design-system/` (9 files + 1 subdirectory)
+
+### Root Files
 
 | File | Purpose |
 |------|--------|
-| `tokens.ts` | All design tokens as TypeScript constants |
-| `index.ts` | Barrel export |
+| `tokens.ts` | All design tokens as TypeScript constants (v1.1.0 — added `layout.logo` + `LogoSize` type) |
+| `index.ts` | Barrel export (tokens + showcase components + Logo) |
 | `EXAMPLES.tsx` | Usage examples |
 | `ColorSwatch.tsx` | Color swatch display components |
 | `ComponentCard.tsx` | Component showcase card wrappers |
 | `SpacingScale.tsx` | Spacing scale visualization |
 | `TypeScale.tsx` | Typography scale visualization |
 | `README.md` | Design system components guide |
+
+### Subdirectory: `components/` (NEW — Mar 1, 2026)
+
+Reusable design system primitive components. These are consumed across the entire application — navbar, footer, auth, mobile menu, etc.
+
+| File | Purpose | Consumers |
+|------|---------|----------|
+| `Logo.tsx` | Brand logo with 5 sizes, 3 display modes, 3 color variants | NavLayout, Footer, LogoButton, MobileMenu |
+
+**Note:** On Figma Make, the `components/` subdirectory also contains Avatar, Button, Divider, MenuItem, SkipLink, StatusDot, and TextLink (navbar DS primitives). These are part of the Figma Make navbar architecture and have not yet been pushed to GitHub. Only Logo is tracked here currently.
 
 ---
 
@@ -255,7 +268,7 @@ These are SVG path data files used by components for vector graphics:
 
 | File | Purpose | Key Contents |
 |------|---------|-------------|
-| `theme.css` | All CSS custom properties | Font Pairing System, Container Widths, Responsive Padding, Typography Scale (Major Third 1.25), Color System (92-5-3 hierarchy), Button Size System, Badge Animations, **NEW:** --text-primary, --text-secondary, responsive --section-py-standard |
+| `theme.css` | All CSS custom properties | Font Pairing System, Container Widths, Responsive Padding, Typography Scale (Major Third 1.25), Color System (92-5-3 hierarchy), Button Size System, Badge Animations, **NEW:** --logo-height-xs through --logo-height-xl, --text-primary, --text-secondary, responsive --section-py-standard |
 | `fonts.css` | Font imports only | DM Sans (body/UI), Noto Serif (headings/display) |
 | `index.css` | CSS entry point | Imports |
 | `tailwind.css` | Tailwind directives | Base layer |
@@ -296,7 +309,7 @@ These files exist only in the Figma Make environment and should **never** be pus
 - **ResourcesSection.tsx** — 8 `figma:asset` imports replaced with Unsplash URLs
 - **ClientContextSection.tsx** — 1 `figma:asset` import replaced with prop-driven logo
 - **SubtleVariantSwitcher.tsx** — Inline SVG replaced with lucide-react `Settings` icon
-- **theme.css** — `--text-primary`, `--text-secondary` defined; `--section-py-standard` made responsive
+- **theme.css** — `--text-primary`, `--text-secondary` defined; `--section-py-standard` made responsive; `--logo-height-*` tokens added
 - **Barrel exports** — All case study sections + new components registered in index.ts and hooks/index.ts
 
 ---
@@ -319,10 +332,11 @@ When syncing from Figma Make to GitHub:
 
 | Date | Changes |
 |------|---------|
+| Mar 1, 2026 | **Logo DS primitive push (PR #1):** Logo.tsx added to new `design-system/components/` subdirectory; tokens.ts updated with `layout.logo` sizes + `LogoSize` type (v1.1.0); index.ts barrel updated; theme.css updated with `--logo-height-xs` through `--logo-height-xl`; COMPONENT_GUIDELINES_4WH.md updated with Logo 4W+H entry |
 | Mar 1, 2026 | **ResourcesSection system push (11 files):** 4 new files (Container.tsx, ResourceCard.tsx, SubtleVariantSwitcher.tsx, useResponsiveGutter.ts); 2 updated organisms (ResourcesSection — 8 Unsplash URLs replacing figma:asset, ClientContextSection — prop-driven logo); theme.css updated (--text-primary, --text-secondary, responsive --section-py-standard); barrel exports updated; GITHUB_PUSH_GUIDE.md and COMPONENT_GUIDELINES_4WH.md pushed |
 | Feb 28, 2026 | v3.3 sync: Added 6 new components (SectionHeading, SectionWrapper, Card, ScrollToTop, ScrollProgress, iconColors); Updated COMPONENT_GUIDELINES_4WH.md with 4W+H docs for all 6 + 2 new decision flowcharts; Updated index.ts barrel exports |
 | Feb 28, 2026 | v3.2 sync: Font Pairing + Container Width + Responsive Padding tokens formalized; 11 process artifacts deleted; AnimatedArrow + design-system showcase components + 10 doc .md files pushed; ui/ confirmed Figma Make-only (zero imports) |
 
 ---
 
-**Total Files on GitHub:** ~106 files across 4 main directories
+**Total Files on GitHub:** ~107 files across 4 main directories (+ 1 new subdirectory)

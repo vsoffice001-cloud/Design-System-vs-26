@@ -376,6 +376,34 @@
   --brand-red: #b01f24;
   --brand-red-hover: #8f181d;
   --brand-red-active: #771419;
+  
+  /* ========================================
+     LOGO SIZE SYSTEM
+     ======================================== 
+     
+     PURPOSE: Height-driven logo sizing. Width scales proportionally
+     via the mark/wordmark aspect ratios defined in Logo.tsx.
+     
+     The Logo component (design-system/components/Logo.tsx) uses JS
+     constants in SIZE_CONFIG that mirror these values for runtime
+     SVG rendering. If you change one, change the other.
+     
+     SYNC: tokens.ts layout.logo.* mirrors these values.
+     
+     USE CASES:
+     - xs (16px): Favicon, breadcrumbs, inline mentions
+     - sm (20px): Navbar (mobile + desktop), sidebar collapsed
+     - md (24px): Desktop navbar primary, sticky headers, email
+     - lg (32px): Footer, about page, partner sections
+     - xl (48px): Hero sections, splash screens, marketing
+     
+     ======================================== */
+  
+  --logo-height-xs: 1rem;        /* 16px */
+  --logo-height-sm: 1.25rem;     /* 20px */
+  --logo-height-md: 1.5rem;      /* 24px */
+  --logo-height-lg: 2rem;        /* 32px */
+  --logo-height-xl: 3rem;        /* 48px */
 }
 
 @layer base {
