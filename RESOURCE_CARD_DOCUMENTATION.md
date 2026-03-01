@@ -3,7 +3,7 @@
 **Component:** `ResourceCard` + `ResourcesSection`  
 **Location:** `/src/app/components/ResourceCard.tsx` & `/src/app/components/ResourcesSection.tsx`  
 **Version:** 3.0 - Token-Driven, Dual-Mode, Production Ready  
-**Last Updated:** February 28, 2026
+**Last Updated:** March 1, 2026
 
 ---
 
@@ -91,7 +91,7 @@ ResourcesSection (layout + grid + background + header)
 │   │   ├── SubtleVariantSwitcher.tsx ← Optional variant toggle UI
 │   │   └── Button.tsx                ← CTA button at section bottom
 │   └── hooks/
-│       └── useResponsiveGutter.tsx   ← Responsive gutter: 24px → 32px at 768px+
+│       └── useResponsiveGutter.ts    ← Responsive gutter: 24px → 32px at 640px+
 └── styles/
     └── theme.css                     ← All --rc-* tokens (lines 1460-1539)
 ```
@@ -316,7 +316,7 @@ Section (<section> — full-width, relative, overflow-hidden)
           └── SubtleVariantSwitcher (optional, top-right position)
 ```
 
-**Grid gutter system:** The masonry grid uses the `useResponsiveGutter` hook (24px mobile → 32px at 768px+). A negative-margin technique on the grid wrapper compensates for half-gutter padding on each card, ensuring edge-to-edge alignment with the Container:
+**Grid gutter system:** The masonry grid uses the `useResponsiveGutter` hook (24px mobile → 32px at 640px+). A negative-margin technique on the grid wrapper compensates for half-gutter padding on each card, ensuring edge-to-edge alignment with the Container:
 
 ```tsx
 <div style={{
@@ -608,9 +608,9 @@ Responsive gutters: `px-4 sm:px-6 md:px-8` (16px → 24px → 32px).
 
 ### useResponsiveGutter Hook
 
-**File:** `/src/app/hooks/useResponsiveGutter.tsx`
+**File:** `/src/app/hooks/useResponsiveGutter.ts`
 
-Returns a number: `24` (< 768px) or `32` (>= 768px). Used for Masonry grid spacing.
+Returns a number: `24` (< 640px) or `32` (>= 640px). Used for Masonry grid spacing.
 
 ### Badge Component
 
@@ -890,4 +890,4 @@ import { ResourceCard } from '@/app/components/ResourceCard';
 
 **Status:** Production Ready  
 **Version:** 3.0  
-**Last Updated:** February 28, 2026
+**Last Updated:** March 1, 2026
