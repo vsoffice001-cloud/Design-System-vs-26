@@ -50,7 +50,7 @@ BUTTONS:
   - Hover: brand-red border #b01f24, brand-red text, red-tinted shimmer + shadow
   - Dark mode secondary: unchanged (bg-white/10, white text)
 
-BADGES (11 themes, 3 variants):
+BADGES (11 themes, 3 variants, CSS custom property driven):
 • Section labels: <SectionLabel theme="brand">KEY INSIGHTS</SectionLabel>
 • Step pills: <Badge variant="pill" size="sm" theme="warm" bordered shimmer>STEP 1</Badge>
 • Status: <Badge variant="rounded" size="sm" theme="success" bordered>COMPLETE</Badge>
@@ -173,8 +173,8 @@ import { SectionLabel } from '@/app/components/Badge';
 
 ---
 
-**Full documentation:** See DESIGN_SYSTEM_AI_CONTEXT.md (v3.2.1)  
+**Full documentation:** See `ai-context/` modules (v3.3.2)  
 **Component guidelines:** See COMPONENT_GUIDELINES_4WH.md  
-**File map (reading order):** See design-system-checklist.md (v2.0)  
+**File map (reading order):** See design-system-checklist.md (v2.1)  
 **Live examples:** Design System Dashboard  
 **Updated:** 2026-03-01
