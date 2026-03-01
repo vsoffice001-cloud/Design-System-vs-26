@@ -248,6 +248,25 @@ export const layout = {
     tablet: '1.5rem',  // sm:px-6
     desktop: '2rem',   // md:px-8
   },
+  
+  /**
+   * Logo sizes (height-driven, width scales proportionally)
+   * Maps to --logo-height-* CSS custom properties in theme.css
+   * 
+   * Use Case Matrix:
+   *   xs (16px) - Favicon, breadcrumbs, inline mentions
+   *   sm (20px) - Navbar (mobile + desktop), sidebar collapsed
+   *   md (24px) - Sticky headers, email templates
+   *   lg (32px) - Footer, about page, partner sections
+   *   xl (48px) - Hero sections, splash screens, marketing
+   */
+  logo: {
+    xs: 16,   // --logo-height-xs
+    sm: 20,   // --logo-height-sm
+    md: 24,   // --logo-height-md
+    lg: 32,   // --logo-height-lg
+    xl: 48,   // --logo-height-xl
+  },
 } as const;
 
 // ============================================
@@ -299,7 +318,7 @@ export const zIndex = {
  * Design System Metadata
  */
 export const designSystem = {
-  version: '1.0.0',
+  version: '1.1.0',
   name: 'Premium Editorial Design System',
   colorHierarchy: {
     foundation: '92%',  // Black/White/Warm
@@ -327,3 +346,4 @@ export type ShadowValue = typeof shadows[keyof typeof shadows];
 export type EasingValue = typeof easing[keyof typeof easing];
 export type DurationValue = typeof duration[keyof typeof duration];
 export type BreakpointValue = typeof breakpoints[keyof typeof breakpoints];
+export type LogoSize = keyof typeof layout.logo;
