@@ -4,7 +4,7 @@
 
 **WHY this file exists:** The main AI context at 53KB exceeds the GitHub MCP API response limit (~30KB). It cannot be read or updated via Figma Make. This addendum ensures no information is lost while remaining maintainable.
 
-**Current patch level:** v3.2.1 → v3.3  
+**Current patch level:** v3.2.1 → v3.3.1  
 **Date:** 2026-03-01
 
 ---
@@ -16,7 +16,7 @@ When building a new page, read these docs in this exact order:
 | Step | File | What You Get | Size |
 |------|------|-------------|------|
 | 1 | `DESIGN_SYSTEM_AI_CONTEXT.md` | Foundation rules (92-5-3, typography scale, page assembly, token cross-reference) | 53KB |
-| 2 | **`DESIGN_SYSTEM_UPDATES.md`** (this file) | Patches to the above — secondary button, new components, doc hierarchy | ~8KB |
+| 2 | **`DESIGN_SYSTEM_UPDATES.md`** (this file) | Patches to the above — secondary button, Badge migration, doc hierarchy | ~10KB |
 | 3 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H framework for every component with decision flowcharts | 28KB |
 | 4 | `design-system-checklist.md` | File map — which files to import, in what order, 10 groups | 20KB |
 | 5 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast Figma Make sessions | 6KB |
@@ -92,11 +92,90 @@ These components existed in the codebase but were missing from the AI context do
 
 ---
 
+## v3.3.1 Changes (2026-03-01) — Badge CSS Migration Phase 1-2
+
+### 6. Badge.tsx CSS Custom Property Migration (Phases 1-2 of 4)
+
+**What:** Migrating Badge.tsx from hardcoded JS token objects to CSS custom properties in theme.css.
+
+#### Migration Log
+
+| Phase | Commit | What Changed | Risk | Status |
+|-------|--------|-------------|------|--------|
+| **1** | `20fe785f` | Added 15 `--badge-*` CSS variables to theme.css (sizes + variants) | Zero (additive) | ✅ Done |
+| **2** | `8ff0679a` | Badge.tsx now consumes `--badge-*` size/variant tokens from CSS | Low (same values) | ✅ Done |
+| **3** | — | Add `--badge-[theme]-[mode]-*` color tokens to theme.css | Zero (additive) | ⏳ Next |
+| **4** | — | Badge.tsx consumes color tokens, remove THEME_COLORS JS object | Medium (176 values) | ⏳ Planned |
+
+#### Phase 1 Details: theme.css tokens added
+
+```css
+/* 12 size variables (4 sizes × 3 properties) */
+--badge-xs-font, --badge-xs-py, --badge-xs-px, --badge-xs-tracking
+--badge-sm-font, --badge-sm-py, --badge-sm-px, --badge-sm-tracking
+--badge-md-font, --badge-md-py, --badge-md-px, --badge-md-tracking
+--badge-lg-font, --badge-lg-py, --badge-lg-px, --badge-lg-tracking
+
+/* 3 shape variables */
+--badge-radius-minimal: 0px
+--badge-radius-rounded: 5px
+--badge-radius-pill: 9999px
+
+/* 2 animation variables */
+--badge-transition-duration: 300ms
+--badge-shimmer-duration: 700ms
+```
+
+#### Phase 2 Details: Badge.tsx refactored
+
+- `SIZE_TOKENS` JS object → `SIZE_CSS_VARS` (references `var(--badge-*)` variables)
+- `VARIANT_TOKENS` JS object → `VARIANT_CSS_VARS` (references `var(--badge-radius-*)` variables)
+- Transition durations now use `var(--badge-transition-duration)`
+- **Bug fix:** `--badge-hover-bg` and `--badge-hover-border` are now set as inline CSS custom properties on each badge element, which means the CSS hover rules in theme.css (`.badge:not(.badge-minimal):hover`) **now actually work**. Previously these were dead CSS rules referencing undefined variables.
+- `BADGE_TOKENS` export updated to reflect new structure (`sizeVars`, `variantVars`, `themes`)
+
+#### Phase 3-4 Plan: Color Token Migration
+
+**Approach:** Use inline CSS custom properties (set per-instance) rather than 22 CSS selector blocks.
+
+Badge.tsx currently sets `--badge-hover-bg` and `--badge-hover-border` as inline CSS vars (Phase 2 fix). Phase 3-4 will extend this pattern to all color properties:
+
+```tsx
+// Phase 4 target — Badge sets theme colors as CSS custom properties:
+style={{
+  '--badge-bg': colorTokens.background,
+  '--badge-border': colorTokens.border,
+  '--badge-text': colorTokens.text,
+  '--badge-hover-bg': colorTokens.hoverBackground,
+  '--badge-hover-border': colorTokens.hoverBorder,
+  '--badge-shimmer': colorTokens.shimmer,
+}}
+
+// theme.css consumes them:
+.badge { 
+  background-color: var(--badge-bg);
+  border-color: var(--badge-border);
+  color: var(--badge-text);
+}
+.badge:hover {
+  background-color: var(--badge-hover-bg);
+  border-color: var(--badge-hover-border);
+}
+```
+
+**Decision:** Keep THEME_COLORS in JS (not move 176 values to CSS selector blocks) because:
+1. Badge theme is prop-driven (runtime JS decision)
+2. Inline CSS vars give same override capability without massive CSS
+3. Consistent with how hover-bg/hover-border already works (Phase 2)
+
+---
+
 ## Pending Migrations
 
 | Task | Status | Details |
 |------|--------|--------|
-| Badge.tsx CSS custom properties | ❌ Not started | Migrate hardcoded `SIZE_TOKENS` / `THEME_COLORS` to `--badge-*` tokens in theme.css |
+| Badge.tsx CSS custom properties (sizes/variants) | ✅ Phase 1-2 done | `--badge-*` tokens in theme.css, Badge.tsx consuming them |
+| Badge.tsx CSS custom properties (colors) | ⏳ Phase 3-4 next | Inline CSS var pattern for all color properties |
 | DESIGN_SYSTEM_AI_CONTEXT.md modularization | ❌ Not started | Split 53KB monolith into focused modules (see plan below) |
 
 ### Modularization Plan for DESIGN_SYSTEM_AI_CONTEXT.md
@@ -123,5 +202,6 @@ These components existed in the codebase but were missing from the AI context do
 
 | Version | Date | Changes |
 |---------|------|---------|
+| v3.3.1 | 2026-03-01 | Badge CSS migration Phase 1-2: 15 `--badge-*` tokens added to theme.css, Badge.tsx refactored to consume CSS vars for sizes/variants, hover CSS bug fixed |
 | v3.3 | 2026-03-01 | Secondary button two-state, 6 missing page components documented, 3 missing hooks documented, 4 missing reference sections documented, checklist v2.0 created, 4WH + Quick Start updated |
 | v3.2.1 | (previous) | Base version in DESIGN_SYSTEM_AI_CONTEXT.md |
