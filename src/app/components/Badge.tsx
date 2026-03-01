@@ -1,7 +1,7 @@
 /**
- * ═══════════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════════════════════════════════════════════════
  * BADGE COMPONENT SYSTEM
- * ═══════════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════════════════════════════════════════════════
  * 
  * A unified, flexible badge component system supporting all label and pill
  * variants across the editorial design system. Replaces fragmented badge
@@ -14,18 +14,18 @@
  * • WCAG AAA Compliant: All color combinations tested for accessibility
  * • Performance Optimized: Pure CSS animations, minimal re-renders
  * 
- * ───────────────────────────────────────────────────────────────────────────
+ * ─────────────────────────────────────────────────────────────────────────
  * 📚 DOCUMENTATION INDEX
- * ───────────────────────────────────────────────────────────────────────────
+ * ─────────────────────────────────────────────────────────────────────────
  * 1. TYPES & INTERFACES - TypeScript definitions
- * 2. DESIGN TOKENS - Colors, typography, spacing
+ * 2. DESIGN TOKENS - Colors (JS), sizing via CSS custom properties
  * 3. MAIN COMPONENT - Badge with all variants
  * 4. CONVENIENCE WRAPPERS - Pre-configured badge types
  * 5. USE CASE GUIDE - When to use each variant
  * 
- * ───────────────────────────────────────────────────────────────────────────
+ * ─────────────────────────────────────────────────────────────────────────
  * 🎯 QUICK REFERENCE
- * ───────────────────────────────────────────────────────────────────────────
+ * ─────────────────────────────────────────────────────────────────────────
  * 
  * COMMON USE CASES:
  * 
@@ -52,9 +52,9 @@
 
 import { CSSProperties, ReactNode } from 'react';
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 // 1. TYPES & INTERFACES
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 
 /**
  * Shape variant determines border radius and overall style
@@ -156,66 +156,70 @@ export interface BadgeProps {
   onClick?: () => void;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 // 2. DESIGN TOKENS
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 
 /**
- * SIZE TOKENS
- * Based on Major Third scale (1.25 ratio)
+ * SIZE & VARIANT CSS VARIABLE MAP
  * 
- * UPDATED: Reduced xs/sm vertical padding for smaller, sleeker badges
- * - xs/sm: Tighter for minimal visual weight
- * - md/lg: Slightly larger for emphasis, but not excessive
+ * Size and shape tokens are now defined as CSS custom properties in theme.css.
+ * This map provides the variable names for each size/variant combination.
+ * 
+ * Source of truth: src/styles/theme.css (--badge-* section)
+ * 
+ * Phase 2 of 4: Sizes + variants migrated to CSS variables.
+ * Phase 3-4 will migrate THEME_COLORS to CSS variables.
  */
-const SIZE_TOKENS = {
+const SIZE_CSS_VARS = {
   xs: {
-    fontSize: 'clamp(9px, 0.8vw, 10px)',
-    padding: '4px 12px',        // REDUCED from 6px - sleeker, more compact (height: ~18px)
-    letterSpacing: '1.2px',
+    fontSize: 'var(--badge-xs-font)',
+    padding: 'var(--badge-xs-py) var(--badge-xs-px)',
+    letterSpacing: 'var(--badge-xs-tracking)',
   },
   sm: {
-    fontSize: 'var(--text-xs)', // 10-11px
-    padding: '6px 14px',        // REDUCED from 8px - tighter for common use (height: ~23px)
-    letterSpacing: '1.8px',
+    fontSize: 'var(--badge-sm-font)',
+    padding: 'var(--badge-sm-py) var(--badge-sm-px)',
+    letterSpacing: 'var(--badge-sm-tracking)',
   },
   md: {
-    fontSize: '13px',
-    padding: '8px 18px',        // REDUCED from 10px - balanced medium size (height: ~29px)
-    letterSpacing: '2px',
+    fontSize: 'var(--badge-md-font)',
+    padding: 'var(--badge-md-py) var(--badge-md-px)',
+    letterSpacing: 'var(--badge-md-tracking)',
   },
   lg: {
-    fontSize: '15px',
-    padding: '10px 22px',       // REDUCED from 13px - larger but not excessive (height: ~35px)
-    letterSpacing: '2.2px',
+    fontSize: 'var(--badge-lg-font)',
+    padding: 'var(--badge-lg-py) var(--badge-lg-px)',
+    letterSpacing: 'var(--badge-lg-tracking)',
   },
 } as const;
 
-/**
- * VARIANT TOKENS
- * Controls shape and spacing
- */
-const VARIANT_TOKENS = {
+const VARIANT_CSS_VARS = {
   minimal: {
-    borderRadius: '0px',
+    borderRadius: 'var(--badge-radius-minimal)',
     padding: '0px',
     background: 'transparent',
   },
   rounded: {
-    borderRadius: '5px',
+    borderRadius: 'var(--badge-radius-rounded)',
     padding: 'inherit', // Uses size-based padding
     background: 'default', // Set per theme
   },
   pill: {
-    borderRadius: '9999px',
+    borderRadius: 'var(--badge-radius-pill)',
     padding: 'inherit', // Uses size-based padding
     background: 'default', // Set per theme
   },
 } as const;
 
 /**
- * THEME COLOR TOKENS
- * All colors use semantic tokens from theme.css
+ * THEME COLOR TOKENS (Phase 3-4 migration target)
+ * 
+ * These remain as JS objects for now. Phase 3 will add --badge-[theme]-[mode]-*
+ * CSS custom properties to theme.css. Phase 4 will switch this component to
+ * consume them via data attributes.
+ * 
+ * All colors use semantic tokens from theme.css where available.
  * Structured as: [background, border, text, hoverBackground, hoverBorder]
  */
 const THEME_COLORS = {
@@ -439,26 +443,6 @@ const THEME_COLORS = {
       contrastRatio: '11.5:1',
     },
   },
-  /**
-   * MUTED THEME - Deliberately Subdued
-   * 
-   * WHY MUTED EXISTS (separate from neutral):
-   * Muted is for content that should be VISUALLY DE-PRIORITIZED — deprecated features,
-   * optional items, archived content, secondary metadata. Where neutral is the default
-   * "no opinion" state, muted actively communicates "this is less important."
-   * 
-   * VISUAL DIFFERENCE FROM NEUTRAL:
-   * - Lower opacity text (0.35 vs 0.6 on light, 0.5 vs 0.7 on dark)
-   * - Softer borders (0.08 vs 0.15 on light)
-   * - More transparent background (0.02 vs 0.04)
-   * - Combined with MutedBadge wrapper's 0.7 opacity = very subtle presence
-   * 
-   * WHEN TO USE:
-   * - Deprecated features or legacy items
-   * - Optional/non-essential metadata
-   * - Archived or inactive content
-   * - Background categorization that shouldn't draw attention
-   */
   muted: {
     light: {
       background: 'rgba(0, 0, 0, 0.02)',
@@ -483,31 +467,10 @@ const THEME_COLORS = {
   },
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 // 3. MAIN COMPONENT
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 
-/**
- * Badge Component
- * 
- * Unified badge system supporting all label and pill variants.
- * 
- * @example
- * // Section label
- * <Badge variant="minimal" size="sm">Challenges</Badge>
- * 
- * @example
- * // Step pill with shimmer
- * <Badge variant="pill" size="sm" theme="warm" bordered shimmer>
- *   Step 1
- * </Badge>
- * 
- * @example
- * // Interactive objective pill
- * <Badge variant="pill" size="sm" bordered interactive onClick={() => {}}>
- *   Objective 1
- * </Badge>
- */
 export function Badge({
   children,
   variant = 'minimal',
@@ -526,21 +489,21 @@ export function Badge({
   ariaLabel,
   onClick,
 }: BadgeProps) {
-  // Get design tokens
-  const sizeTokens = SIZE_TOKENS[size];
-  const variantTokens = VARIANT_TOKENS[variant];
+  // Get design tokens (sizes/variants from CSS vars, colors from JS)
+  const sizeVars = SIZE_CSS_VARS[size];
+  const variantVars = VARIANT_CSS_VARS[variant];
   const colorTokens = THEME_COLORS[theme][mode];
   
   // Determine if this is a minimal variant (affects text color)
   const isMinimal = variant === 'minimal';
   const textColor = isMinimal ? colorTokens.textMinimal : colorTokens.text;
   
-  // Determine padding
+  // Determine padding (minimal has no padding, others use size-based CSS vars)
   const padding = variant === 'minimal' 
-    ? variantTokens.padding 
-    : sizeTokens.padding;
+    ? variantVars.padding 
+    : sizeVars.padding;
   
-  // Build styles
+  // Build styles — sizes/shapes via CSS custom properties, colors via JS
   const badgeStyles: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -548,34 +511,39 @@ export function Badge({
     gap: '6px',
     position: 'relative',
     
-    // Typography
-    fontSize: sizeTokens.fontSize,
+    // Typography (from CSS custom properties)
+    fontSize: sizeVars.fontSize,
     fontWeight: fontWeight || (variant === 'minimal' ? 400 : 500),
     textTransform: uppercase ? 'uppercase' : 'none',
-    letterSpacing: letterSpacing || sizeTokens.letterSpacing,
+    letterSpacing: letterSpacing || sizeVars.letterSpacing,
     lineHeight: variant === 'minimal' ? '1.6' : '1',
     
-    // Colors
+    // Colors (from JS tokens — Phase 3-4 will migrate these)
     color: textColor,
     backgroundColor: isMinimal ? 'transparent' : colorTokens.background,
     borderColor: bordered ? colorTokens.border : 'transparent',
     borderWidth: bordered ? '1px' : '0px',
     borderStyle: 'solid',
     
-    // Shape
-    borderRadius: variantTokens.borderRadius,
+    // Shape (from CSS custom properties)
+    borderRadius: variantVars.borderRadius,
     padding: padding,
+    
+    // Set CSS custom properties for hover states (used by theme.css rules)
+    // This bridges JS color tokens to CSS hover rules
+    '--badge-hover-bg': colorTokens.hoverBackground,
+    '--badge-hover-border': colorTokens.hoverBorder,
     
     // Layout
     overflow: shimmer ? 'hidden' : 'visible',
     
     // Interaction
     cursor: interactive || onClick ? 'pointer' : 'default',
-    transition: 'background-color 300ms ease-out, border-color 300ms ease-out, transform 300ms ease-out',
+    transition: `background-color var(--badge-transition-duration, 300ms) ease-out, border-color var(--badge-transition-duration, 300ms) ease-out, transform var(--badge-transition-duration, 300ms) ease-out`,
     
     // User overrides
     ...style,
-  };
+  } as CSSProperties;
   
   // Interactive hover styles (applied via className)
   const interactiveClass = interactive 
@@ -618,50 +586,10 @@ export function Badge({
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 // 4. CONVENIENCE WRAPPERS
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 
-/**
- * Pre-configured badge types for common use cases.
- * These provide semantic naming while using the unified Badge component.
- */
-
-/**
- * SectionLabel - For page section headers
- * 
- * 🎯 USE CASE: Case study-style section headers (minimal, badge-like)
- * 
- * THEME PROP - PILLAR COLOR RULES:
- * • Report/Product/Research pages → theme="brand" (Ken Bold Red #b01f24)
- * • Service pages (survey, consulting) → pillar theme (e.g., theme="purple")
- * • Dark backgrounds → mode="dark" + theme="neutral" (white/80) or contextual
- * • Designer discretion otherwise (any theme allowed)
- * 
- * WHY THEME IS CONFIGURABLE:
- * Section labels serve as visual anchors that connect to page identity.
- * A report page's "KEY INSIGHTS" label in brand red instantly signals
- * "this is brand content." A survey page's label in purple signals
- * "this is the survey pillar." Locking to neutral would break this
- * contextual identity system.
- * 
- * FONT WEIGHT GUIDANCE:
- * • Default: 600 (semibold) — matches editorial heading hierarchy
- * • Use 400 for subtle/body-context section markers
- * 
- * @example
- * // Default (neutral) section label
- * <SectionLabel>Challenges</SectionLabel>
- * 
- * // Brand red for report pages
- * <SectionLabel theme="brand" fontWeight={600}>KEY INSIGHTS</SectionLabel>
- * 
- * // Dark background
- * <SectionLabel mode="dark">Client Context</SectionLabel>
- * 
- * // Service pillar theme
- * <SectionLabel theme="purple">SURVEY METHODOLOGY</SectionLabel>
- */
 export function SectionLabel({ 
   children, 
   theme = 'neutral',
@@ -695,9 +623,6 @@ export function SectionLabel({
   );
 }
 
-/**
- * StepPill - For methodology steps and sequential processes
- */
 export function StepPill({ 
   stepNumber,
   active = false,
@@ -724,9 +649,6 @@ export function StepPill({
   );
 }
 
-/**
- * ObjectivePill - For engagement objectives and goals
- */
 export function ObjectivePill({ 
   objectiveNumber,
   interactive = false,
@@ -757,10 +679,6 @@ export function ObjectivePill({
   );
 }
 
-/**
- * ObjectivePillInteractive - Interactive version with shimmer on hover
- * Legacy API compatibility wrapper
- */
 export function ObjectivePillInteractive({ 
   number,
   label = 'Objective',
@@ -788,9 +706,6 @@ export function ObjectivePillInteractive({
   );
 }
 
-/**
- * InfoCardLabel - For metadata labels in info cards
- */
 export function InfoCardLabel({ 
   children,
   mode = 'light',
@@ -817,9 +732,6 @@ export function InfoCardLabel({
   );
 }
 
-/**
- * CategoryBadge - For content categorization
- */
 export function CategoryBadge({ 
   children,
   theme = 'neutral',
@@ -845,9 +757,6 @@ export function CategoryBadge({
   );
 }
 
-/**
- * StatusBadge - For status indicators
- */
 export function StatusBadge({ 
   children,
   status = 'success',
@@ -873,9 +782,6 @@ export function StatusBadge({
   );
 }
 
-/**
- * InfoBadge - For informational badges
- */
 export function InfoBadge({ 
   children,
   variant = 'rounded',
@@ -901,9 +807,6 @@ export function InfoBadge({
   );
 }
 
-/**
- * MutedBadge - For subtle, low-emphasis badges
- */
 export function MutedBadge({ 
   children,
   variant = 'rounded',
@@ -930,9 +833,6 @@ export function MutedBadge({
   );
 }
 
-/**
- * ClickableBadge - For interactive, clickable badges
- */
 export function ClickableBadge({ 
   children,
   onClick,
@@ -965,41 +865,22 @@ export function ClickableBadge({
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// 5. CSS ANIMATION SUPPORT
-// ═══════════════════════════════════════════════════════════════════════════
-
-/**
- * Add this CSS to your global styles or component styles to enable
- * shimmer animation on parent hover:
- * 
- * .methodology-card:hover .badge-shimmer,
- * .objective-card:hover .badge-shimmer {
- *   transform: translateX(200%);
- * }
- * 
- * Or use the group utility:
- * <div className="group">
- *   <Badge shimmer>Content</Badge>
- * </div>
- * 
- * Then in CSS:
- * .group:hover .badge-shimmer {
- *   transform: translateX(200%);
- * }
- */
-
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 // EXPORTS
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 
 export default Badge;
 
 /**
- * Export design tokens for design system documentation
+ * Export design tokens for design system documentation.
+ * 
+ * NOTE: SIZE_TOKENS and VARIANT_TOKENS have been migrated to CSS custom
+ * properties (--badge-* in theme.css). The BADGE_TOKENS export now provides
+ * the CSS variable names for programmatic access, plus the JS color tokens
+ * (which will migrate in Phase 3-4).
  */
 export const BADGE_TOKENS = {
-  sizes: SIZE_TOKENS,
-  variants: VARIANT_TOKENS,
+  sizeVars: SIZE_CSS_VARS,
+  variantVars: VARIANT_CSS_VARS,
   themes: THEME_COLORS,
 } as const;
