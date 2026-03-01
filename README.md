@@ -17,7 +17,7 @@ This design system showcases a minimalist editorial aesthetic with:
 | # | File | What | Size |
 |---|------|------|------|
 | 1 | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth — 92-5-3 rules, typography, page assembly, token cross-reference | 53KB |
-| 2 | `DESIGN_SYSTEM_UPDATES.md` | Versioned patches to #1 (v3.2.1 → v3.3) — secondary button, new components | ~8KB |
+| 2 | `DESIGN_SYSTEM_UPDATES.md` | Versioned patches to #1 (v3.2.1 → v3.3.2) — secondary button, Badge migration | ~8KB |
 | 3 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H framework for every component with decision flowcharts | 28KB |
 | 4 | `design-system-checklist.md` | File map — which files to import, in what order, 10 groups, ~45 files | 20KB |
 | 5 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | 6KB |
@@ -27,13 +27,12 @@ This design system showcases a minimalist editorial aesthetic with:
 
 | File | What |
 |------|------|
-| `BADGES_DOCUMENTATION.md` | Badge system deep-dive (11 themes, 3 variants, 9 convenience wrappers) |
+| `GITHUB_REPO_MANIFEST.md` | Canonical file registry — every file, dependency chains, sync checklist |
+| `BADGES_DOCUMENTATION.md` | Badge system deep-dive (v3.0 — 11 themes, 3 variants, CSS custom property driven) |
 | `RESOURCE_CARD_DOCUMENTATION.md` | ResourceCard deep-dive (7 variants, 53 CSS tokens) |
 | `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font-size integration notes |
 | `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames |
-| `TECHNICAL_HANDOVER.md` | Technical handover document |
-| `PROJECT_STRUCTURE.md` | Project file tree and structure |
-| `GITHUB_REPO_MANIFEST.md` | Complete file registry with Atomic Design levels |
+| `TECHNICAL_HANDOVER.md` | Technical handover — historical reference only (Feb 17 content) |
 
 ### Dashboard Sections
 
@@ -56,16 +55,9 @@ The design system dashboard is organized into 7 main sections:
 ### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/vsoffice001-cloud/Design-System-vs-26.git
-
-# Navigate to project directory
 cd Design-System-vs-26
-
-# Install dependencies
 pnpm install
-
-# Start development server
 pnpm dev
 ```
 
@@ -88,7 +80,6 @@ Design-System-vs-26/
 │   ├── app/
 │   │   ├── components/       # React components (~45 files)
 │   │   │   ├── ui/          # Radix UI components (Figma Make only)
-│   │   │   ├── categories/  # Design system categories
 │   │   │   └── figma/       # Figma import utilities
 │   │   └── hooks/           # Custom React hooks (10 hooks)
 │   ├── design-system/       # Design tokens (tokens.ts)
@@ -98,7 +89,7 @@ Design-System-vs-26/
 │       ├── tailwind.css     # Tailwind configuration
 │       └── theme.css        # CSS custom properties
 ├── DESIGN_SYSTEM_AI_CONTEXT.md    # Source of truth (v3.2.1)
-├── DESIGN_SYSTEM_UPDATES.md       # Versioned patches (v3.3)
+├── DESIGN_SYSTEM_UPDATES.md       # Versioned patches (v3.3.2)
 ├── COMPONENT_GUIDELINES_4WH.md    # 4W+H component reference
 ├── design-system-checklist.md     # File map (v2.0)
 ├── QUICK_START_PROMPT.md          # Copy-paste AI prompt
@@ -139,6 +130,13 @@ Design-System-vs-26/
 - **Animated arrow** for urgency CTAs (ArrowUpRight diagonal)
 - **Secondary two-state**: Neutral at rest → Brand-red on hover
 
+### Badge System (v3.3.2 — CSS Custom Property Driven)
+- **11 themes**: neutral, warm, brand, coral, purple, periwinkle, success, warning, error, info, muted
+- **3 variants**: minimal, rounded, pill
+- **4 sizes**: xs, sm, md, lg
+- **All styling via `--badge-*` CSS custom properties**
+- 9 convenience wrappers (SectionLabel, StepPill, StatusBadge, etc.)
+
 ### Page-Level Components
 - **Navbar** — Fixed top, expanded/compact states, section pills
 - **ReadingProgressBar** — Section-specific progress for case studies
@@ -162,4 +160,4 @@ Proprietary - Design system for internal use
 
 ---
 
-**Built with elite design system patterns | DS v3.3 | Updated 2026-03-01**
+**Built with elite design system patterns | DS v3.3.2 | Updated 2026-03-01**
