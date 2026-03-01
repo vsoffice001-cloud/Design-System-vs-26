@@ -1,4 +1,3 @@
-import yashLogo from "figma:asset/faa51f6035eb6438eb4b8b0be770366215f25dc2.png";
 import { AnimatedArrow } from '@/app/components/AnimatedArrow';
 
 // Content block types
@@ -8,11 +7,14 @@ type ContentBlock =
   | { type: 'list'; items: string[] };
 
 interface ClientContextSectionProps {
+  /** Company logo image URL. Falls back to a styled text mark when not provided. */
+  logo?: string;
   contentBlocks?: ContentBlock[];
   showLink?: boolean;
 }
 
 export function ClientContextSection({ 
+  logo,
   contentBlocks = [
     {
       type: 'heading',
@@ -20,7 +22,7 @@ export function ClientContextSection({
     },
     {
       type: 'paragraph',
-      text: "India's power transmission sector is undergoing accelerated modernization, driven by utility expansions, renewable energy integration, and grid reliability mandates. In this environment, the demand for transformer bushings—especially high-voltage and condenser variants—has become increasingly strategic."
+      text: "India's power transmission sector is undergoing accelerated modernization, driven by utility expansions, renewable energy integration, and grid reliability mandates. In this environment, the demand for transformer bushings\u2014especially high-voltage and condenser variants\u2014has become increasingly strategic."
     },
     {
       type: 'paragraph',
@@ -44,7 +46,7 @@ export function ClientContextSection({
 }: ClientContextSectionProps) {
   return (
     <section className="py-12 sm:py-16 md:py-20 bg-white">
-      <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
+      <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         {/* Section Label */}
         <div className="mb-8 md:mb-10">
           <span className="font-medium text-black/40 uppercase tracking-[3px]" style={{ fontSize: '14px' }}>
@@ -57,7 +59,13 @@ export function ClientContextSection({
           {/* Left: Logo & Identity */}
           <div className="md:col-span-4">
             <div className="md:sticky md:top-8">
-              <img src={yashLogo} alt="YASH Industries Logo" className="h-11 md:h-12 mb-6 rounded-[2.5px]" />
+              {logo ? (
+                <img src={logo} alt="YASH Industries Logo" className="h-11 md:h-12 mb-6 rounded-[2.5px]" />
+              ) : (
+                <div className="h-11 md:h-12 mb-6 rounded-[2.5px] bg-black/10 flex items-center justify-center text-black/40 font-medium">
+                  Y
+                </div>
+              )}
               
               <div className="space-y-3">
                 <div>
@@ -68,7 +76,7 @@ export function ClientContextSection({
                     WHY 11px:
                     1. Sidebar Spatial Constraint: This column is only 33% width (md:col-span-4)
                     2. Better readability than 9.5px while still subtle
-                    3. Creates hierarchy: 11px labels → 13px secondary → 17px primary
+                    3. Creates hierarchy: 11px labels -> 13px secondary -> 17px primary
                     4. Follows "smaller space = smaller type" editorial principle
                     
                     ALTERNATIVE CONSIDERED:
@@ -115,7 +123,7 @@ export function ClientContextSection({
                     
                     WHY HARDCODED:
                     1. Visual Hierarchy: Creates three-tier hierarchy
-                       - Labels (9.5px) < Industry (13px) < Company Name (17px)
+                       - Labels (11px) < Industry (13px) < Company Name (17px)
                     2. Information Density: Longer descriptive text needs compact size
                     3. Secondary Information: Less important than company name
                     4. Sidebar Balance: Prevents text from dominating narrow space
@@ -124,7 +132,7 @@ export function ClientContextSection({
                     - var(--text-sm) (16px): Too large, competes with company name
                     - var(--text-xs) (12.8px): Almost works, but creates awkward gap to 17px
                     
-                    VERDICT: 13px creates perfect hierarchical step between 9.5px and 17px
+                    VERDICT: 13px creates perfect hierarchical step between 11px and 17px
                   */}
                   <p className="text-black/70 leading-[1.5]" style={{ fontSize: '13px' }}>
                     Power Transmission & Electrical Equipment
@@ -156,22 +164,11 @@ export function ClientContextSection({
                          - 2.8vw: Smooth viewport-based scaling
                       4. Hierarchical Position: Sits between body text and subheadings
                       
-                      ALTERNATIVE CONSIDERED:
-                      - var(--text-base) (20px): Fixed size, no responsive scaling
-                      - clamp(1rem, 2.5vw, var(--text-lg)): Range too wide (16px-25px)
-                      
-                      WHY THIS SPECIFIC RANGE:
-                      Testing showed:
-                      - 16px-25px: Too jarring on mobile-to-desktop transition
-                      - 18px-22px: Not enough visual impact
-                      - 19px-24px: Perfect balance of readability and prominence
-                      
                       VERDICT: Keep clamp() for editorial lead paragraph treatment
-                      Note: This is a "featured paragraph" pattern common in editorial design
                     */}
                     <p 
                       className="leading-[1.45] font-normal text-black" 
-                      style={{ fontFamily: "'Noto Serif', serif", fontSize: 'clamp(19px, 2.8vw, 24px)' }}
+                      style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(19px, 2.8vw, 24px)' }}
                     >
                       {block.text}
                     </p>
@@ -219,7 +216,7 @@ export function ClientContextSection({
                     <span className="font-medium text-black/40 uppercase tracking-[2px] block mb-2" style={{ fontSize: '11px' }}>
                       Competitive Advantages
                     </span>
-                    <h4 className="font-normal text-black leading-[1.3]" style={{ fontFamily: "'Noto Serif', serif", fontSize: '20px' }}>
+                    <h4 className="font-normal text-black leading-[1.3]" style={{ fontFamily: 'var(--font-serif)', fontSize: '20px' }}>
                       Key Capabilities & Differentiators
                     </h4>
                   </div>
@@ -235,7 +232,7 @@ export function ClientContextSection({
                           {/* Minimal Number Prefix */}
                           <span 
                             className="font-medium text-black/30 group-hover:text-black/50 transition-colors duration-300 flex-shrink-0 pt-0.5" 
-                            style={{ fontSize: '13px', fontFamily: "'Noto Serif', serif", minWidth: '24px' }}
+                            style={{ fontSize: '13px', fontFamily: 'var(--font-serif)', minWidth: '24px' }}
                           >
                             {String(itemIndex + 1).padStart(2, '0')}
                           </span>
@@ -276,7 +273,7 @@ export function ClientContextSection({
                     
                     <div className="relative">
                       <p 
-                        className="leading-[1.6] text-black/70 max-w-[700px]" 
+                        className="leading-[1.6] text-black/70 max-w-[var(--container-prose)]" 
                         style={{ fontSize: 'var(--text-sm)' }}
                       >
                         {block.text}

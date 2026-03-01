@@ -1,66 +1,20 @@
 /**
- * ═══════════════════════════════════════════════════════════════════════════
+ * \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
  * RESOURCES SECTION COMPONENT
- * ═══════════════════════════════════════════════════════════════════════════
+ * \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
  * 
  * A complete, reusable section for displaying resource cards in a responsive
  * Masonry grid layout. Supports both dark and light modes, two card styles,
  * and a built-in variant switcher for design exploration.
  * 
- * ───────────────────────────────────────────────────────────────────────────
- * 📐 LAYOUT SYSTEM
- * ───────────────────────────────────────────────────────────────────────────
+ * LAYOUT SYSTEM:
+ * Container: var(--container-content) \u2014 1000px max-width, centered
+ * Grid: Responsive Masonry -> 1 col (mobile) -> 2 col (640px) -> 3 col (1024px)
+ * Gutters: 24px mobile -> 32px desktop (from useResponsiveGutter hook)
  * 
- * Container: var(--container-content) — 1000px max-width, centered
- * Grid: Responsive Masonry → 1 col (mobile) → 2 col (640px) → 3 col (1024px)
- * Gutters: 24px mobile → 32px desktop (from useResponsiveGutter hook)
- * 
- * ───────────────────────────────────────────────────────────────────────────
- * 🎨 MODE SYSTEM
- * ───────────────────────────────────────────────────────────────────────────
- * 
- * Mode     | Section Background          | Text      | Cards
- * ---------|-------------------------------|-----------|------------------
- * 'dark'   | Multi-layer dark gradient     | White     | Dark-mode cards
- * 'light'  | White / warm editorial        | Black     | Light-mode cards
- * 
- * ───────────────────────────────────────────────────────────────────────────
- * 📖 USAGE EXAMPLES
- * ───────────────────────────────────────────────────────────────────────────
- * 
- * Dark mode (case study page, original):
- * ```tsx
- * <ResourcesSection
- *   mode="dark"
- *   cardStyle="bordered"
- *   enableVariantSwitcher
- * />
- * ```
- * 
- * Light mode (blog listing, resource hub):
- * ```tsx
- * <ResourcesSection
- *   mode="light"
- *   cardStyle="bordered"
- *   title="Latest Insights"
- *   description="Explore our thought leadership..."
- *   sectionLabel="Blog"
- *   ctaLabel="View All Posts"
- * />
- * ```
- * 
- * Custom data (any project):
- * ```tsx
- * <ResourcesSection
- *   mode="light"
- *   cardStyle="default"
- *   customResources={myResources}
- *   title="Our Work"
- *   sectionLabel="Case Studies"
- * />
- * ```
- * 
- * ═══════════════════════════════════════════════════════════════════════════
+ * MODE SYSTEM:
+ * 'dark'  | Multi-layer dark gradient | White text | Dark-mode cards
+ * 'light' | White / warm editorial    | Black text | Light-mode cards
  */
 
 import { useState } from 'react';
@@ -71,21 +25,17 @@ import { SubtleVariantSwitcher } from '@/app/components/SubtleVariantSwitcher';
 import { useResponsiveGutter } from '@/app/hooks/useResponsiveGutter';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 
-// ── Asset imports for default demo data ──
-import imgImageTheFutureOfAiInSupplyChainManagement from "figma:asset/52dc2d242efb6fec4b3045208719c859f0824631.png";
-import imgImageBuildingResilientSupplyChainsIn2024 from "figma:asset/4fe63e827054e6912bad635b5391ff745e22d77f.png";
-import imgImageWarehouseAutomationRoiAndImplementation from "figma:asset/a44aa28887331d03c4dafe9f372fdb0febcdaf66.png";
-import imgImageDigitalTransformationInLogistics from "figma:asset/2b0467c7313458787fc41f08fd635142dde3ac18.png";
-import imgImageSustainableTransportationSolutions from "figma:asset/62c347c2bc4229776df858579ceda831fbe8f8a2.png";
-import imgImageIndustry40AndSmartManufacturing from "figma:asset/3537476d7254fe993352d1d092ac755b514bb596.png";
-import imgImageOptimizingLastMileDelivery from "figma:asset/34997642bce0299c69bbed7c2bf1ad28601f1a57.png";
-import imgImageBuildingHighPerformanceLogisticsTeams from "figma:asset/701feef993c39372216e98938187e7a5ba9e78d9.png";
+// Asset URLs for default demo data (Unsplash, replacing figma:asset virtual imports)
+const imgAiSupplyChain = "https://images.unsplash.com/photo-1767966769495-dbb5e14cab5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwc3VwcGx5JTIwY2hhaW4lMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc3MjMyNDQ0MHww&ixlib=rb-4.1.0&q=80&w=1080";
+const imgResilientSupplyChains = "https://images.unsplash.com/photo-1554769944-3138b076c38a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXNpbGllbnQlMjBzdXBwbHklMjBjaGFpbiUyMGxvZ2lzdGljcyUyMG5ldHdvcmt8ZW58MXx8fHwxNzcyMzI0NDQwfDA&ixlib=rb-4.1.0&q=80&w=1080";
+const imgWarehouseAutomation = "https://images.unsplash.com/photo-1761195696590-3490ea770aa1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjBhdXRvbWF0aW9uJTIwcm9ib3RpY3N8ZW58MXx8fHwxNzcyMjcxMzU1fDA&ixlib=rb-4.1.0&q=80&w=1080";
+const imgDigitalTransformation = "https://images.unsplash.com/photo-1758542113402-b46079642dc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwdHJhbnNmb3JtYXRpb24lMjBsb2dpc3RpY3MlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc3MjMyNDQ0MXww&ixlib=rb-4.1.0&q=80&w=1080";
+const imgSustainableTransport = "https://images.unsplash.com/photo-1766214788250-514a7b3c0216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMHRyYW5zcG9ydGF0aW9uJTIwZWxlY3RyaWMlMjBmbGVldHxlbnwxfHx8fDE3NzIzMjQ0NDF8MA&ixlib=rb-4.1.0&q=80&w=1080";
+const imgSmartManufacturing = "https://images.unsplash.com/photo-1730705788367-dbd288c40ee7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwSW9UJTIwc2Vuc29ycyUyMG1hbnVmYWN0dXJpbmclMjBwbGFudHxlbnwxfHx8fDE3NzIzMjQ0NDl8MA&ixlib=rb-4.1.0&q=80&w=1080";
+const imgLastMileDelivery = "https://images.unsplash.com/photo-1758441698991-ba4ee77bfa88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXN0JTIwbWlsZSUyMGRlbGl2ZXJ5JTIwdXJiYW4lMjBsb2dpc3RpY3N8ZW58MXx8fHwxNzcyMzI0NDQyfDA&ixlib=rb-4.1.0&q=80&w=1080";
+const imgLogisticsTeams = "https://images.unsplash.com/photo-1758518727707-b023e285b709?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB0ZWFtJTIwbGVhZGVyc2hpcCUyMGJ1c2luZXNzJTIwbWVldGluZ3xlbnwxfHx8fDE3NzIzMjQ0NDN8MA&ixlib=rb-4.1.0&q=80&w=1080";
 
-// ═══════════════════════════════════════════════════════════════════════════
-// TYPES (Exported for external use)
-// ═══════════════════════════════════════════════════════════════════════════
-
-/** Single resource item — pass an array of these via `customResources` */
+/** Single resource item */
 export interface ResourceItem {
   image: string;
   category: string;
@@ -97,16 +47,11 @@ export interface ResourceItem {
   variant?: ResourceCardVariant;
 }
 
-/** Section-level color mode */
 export type ResourcesSectionMode = 'light' | 'dark';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// DEFAULT DEMO DATA
-// ═══════════════════════════════════════════════════════════════════════════
 
 const DEFAULT_RESOURCES: ResourceItem[] = [
   {
-    image: imgImageTheFutureOfAiInSupplyChainManagement,
+    image: imgAiSupplyChain,
     category: "TECHNOLOGY",
     date: "Jan 15, 2024",
     title: "The Future of AI in Supply Chain Management",
@@ -116,7 +61,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'full-featured'
   },
   {
-    image: imgImageDigitalTransformationInLogistics,
+    image: imgDigitalTransformation,
     category: "STRATEGY",
     date: "Jan 8, 2024",
     title: "Digital Transformation in Logistics",
@@ -124,7 +69,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'minimal'
   },
   {
-    image: imgImageWarehouseAutomationRoiAndImplementation,
+    image: imgWarehouseAutomation,
     category: "AUTOMATION",
     date: "Jan 10, 2024",
     title: "Warehouse Automation: ROI and Implementation",
@@ -132,7 +77,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'standard'
   },
   {
-    image: imgImageSustainableTransportationSolutions,
+    image: imgSustainableTransport,
     category: "SUSTAINABILITY",
     date: "Jan 5, 2024",
     title: "Sustainable Transportation Solutions",
@@ -140,7 +85,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'category-featured'
   },
   {
-    image: imgImageOptimizingLastMileDelivery,
+    image: imgLastMileDelivery,
     category: "OPERATIONS",
     date: "Dec 30, 2023",
     title: "Optimizing Last-Mile Delivery",
@@ -156,7 +101,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'featured-focus'
   },
   {
-    image: imgImageIndustry40AndSmartManufacturing,
+    image: imgSmartManufacturing,
     category: "MANUFACTURING",
     date: "Jan 3, 2024",
     title: "Industry 4.0 and Smart Manufacturing",
@@ -164,7 +109,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'latest'
   },
   {
-    image: imgImageBuildingResilientSupplyChainsIn2024,
+    image: imgResilientSupplyChains,
     category: "INSIGHTS",
     date: "Jan 12, 2024",
     title: "Building Resilient Supply Chains in 2024",
@@ -196,7 +141,7 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
     variant: 'clean'
   },
   {
-    image: imgImageBuildingHighPerformanceLogisticsTeams,
+    image: imgLogisticsTeams,
     category: "LEADERSHIP",
     date: "Dec 28, 2023",
     title: "Building High-Performance Logistics Teams",
@@ -205,173 +150,53 @@ const DEFAULT_RESOURCES: ResourceItem[] = [
   }
 ];
 
-// ═══════════════════════════════════════════════════════════════════════════
-// BACKGROUND LAYERS
-// ═══════════════════════════════════════════════════════════════════════════
-
-/** Dark mode background — multi-layer gradient mesh */
 function DarkBackground() {
   return (
     <>
-      {/* Base Dark Gradient */}
-      <div 
-        className="absolute inset-0"
-        style={{ background: 'linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%)' }}
-      />
-      {/* Top Left - Periwinkle Blob */}
-      <div 
-        className="absolute top-0 left-0 w-[600px] h-[600px] opacity-30 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at top left, rgba(76, 95, 215, 0.15) 0%, rgba(76, 95, 215, 0.08) 30%, transparent 60%)',
-          filter: 'blur(80px)',
-          mixBlendMode: 'screen'
-        }}
-      />
-      {/* Top Right - Purple Blob */}
-      <div 
-        className="absolute top-0 right-0 w-[700px] h-[700px] opacity-35 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at top right, rgba(124, 58, 237, 0.18) 0%, rgba(124, 58, 237, 0.1) 30%, transparent 60%)',
-          filter: 'blur(90px)',
-          mixBlendMode: 'screen'
-        }}
-      />
-      {/* Bottom Left - Green Blob */}
-      <div 
-        className="absolute bottom-0 left-0 w-[550px] h-[550px] opacity-25 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.14) 0%, rgba(5, 150, 105, 0.07) 30%, transparent 60%)',
-          filter: 'blur(75px)',
-          mixBlendMode: 'screen'
-        }}
-      />
-      {/* Bottom Right - Warm Blob */}
-      <div 
-        className="absolute bottom-0 right-0 w-[650px] h-[650px] pointer-events-none"
-        style={{
-          opacity: 0.28,
-          background: 'radial-gradient(circle at bottom right, rgba(194, 65, 12, 0.16) 0%, rgba(194, 65, 12, 0.08) 30%, transparent 60%)',
-          filter: 'blur(85px)',
-          mixBlendMode: 'screen'
-        }}
-      />
-      {/* Center Depth */}
-      <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-20 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, transparent 60%)',
-          filter: 'blur(60px)'
-        }}
-      />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%)' }} />
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] opacity-30 pointer-events-none" style={{ background: 'radial-gradient(circle at top left, rgba(76, 95, 215, 0.15) 0%, rgba(76, 95, 215, 0.08) 30%, transparent 60%)', filter: 'blur(80px)', mixBlendMode: 'screen' }} />
+      <div className="absolute top-0 right-0 w-[700px] h-[700px] opacity-35 pointer-events-none" style={{ background: 'radial-gradient(circle at top right, rgba(124, 58, 237, 0.18) 0%, rgba(124, 58, 237, 0.1) 30%, transparent 60%)', filter: 'blur(90px)', mixBlendMode: 'screen' }} />
+      <div className="absolute bottom-0 left-0 w-[550px] h-[550px] opacity-25 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.14) 0%, rgba(5, 150, 105, 0.07) 30%, transparent 60%)', filter: 'blur(75px)', mixBlendMode: 'screen' }} />
+      <div className="absolute bottom-0 right-0 w-[650px] h-[650px] pointer-events-none" style={{ opacity: 0.28, background: 'radial-gradient(circle at bottom right, rgba(194, 65, 12, 0.16) 0%, rgba(194, 65, 12, 0.08) 30%, transparent 60%)', filter: 'blur(85px)', mixBlendMode: 'screen' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, transparent 60%)', filter: 'blur(60px)' }} />
     </>
   );
 }
 
-/** Light mode background — warm editorial with subtle blobs */
 function LightBackground() {
   return (
-    <div 
-      className="absolute inset-0"
-      style={{
-        background: 'var(--bg-composition-warm-editorial)',
-      }}
-    />
+    <div className="absolute inset-0" style={{ background: 'var(--bg-composition-warm-editorial)' }} />
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION HEADER
-// ═══════════════════════════════════════════════════════════════════════════
-
-function SectionHeader({ 
-  mode, sectionLabel, title, description 
-}: { 
-  mode: ResourcesSectionMode; 
-  sectionLabel: string;
-  title: string; 
-  description: string;
-}) {
+function SectionHeader({ mode, sectionLabel, title, description }: { mode: ResourcesSectionMode; sectionLabel: string; title: string; description: string; }) {
   const isDark = mode === 'dark';
-  
   return (
     <div style={{ marginBottom: 'var(--section-header-mb)' }}>
-      <span 
-        className="font-normal uppercase tracking-[1.8px] block" 
-        style={{ 
-          fontSize: '15px', 
-          lineHeight: '1.6',
-          color: isDark ? 'var(--label-on-black)' : 'var(--label-on-white)',
-          marginBottom: 'var(--pair-label-heading)',
-        }}
-      >
+      <span className="font-normal uppercase tracking-[1.8px] block" style={{ fontSize: '15px', lineHeight: '1.6', color: isDark ? 'var(--label-on-black)' : 'var(--label-on-white)', marginBottom: 'var(--pair-label-heading)' }}>
         {sectionLabel}
       </span>
-      
-      <h2 
-        className="leading-[1.15] font-light tracking-tight" 
-        style={{ 
-          fontFamily: "'Noto Serif', serif", 
-          fontSize: 'clamp(1.5rem, 4.5vw, var(--text-2xl))',
-          color: isDark ? 'rgba(255, 255, 255, 1)' : 'var(--text-primary)',
-          marginBottom: 'var(--pair-heading-description)',
-        }}
-      >
+      <h2 className="leading-[1.15] font-light tracking-tight" style={{ fontFamily: "'Noto Serif', serif", fontSize: 'clamp(1.5rem, 4.5vw, var(--text-2xl))', color: isDark ? 'rgba(255, 255, 255, 1)' : 'var(--text-primary)', marginBottom: 'var(--pair-heading-description)' }}>
         {title}
       </h2>
-      
-      <p 
-        className="leading-[1.7]" 
-        style={{ 
-          fontSize: 'var(--text-sm)',
-          color: isDark ? 'rgba(255, 255, 255, 0.60)' : 'var(--text-secondary)',
-          maxWidth: 'var(--text-measure)',
-        }}
-      >
+      <p className="leading-[1.7]" style={{ fontSize: 'var(--text-sm)', color: isDark ? 'rgba(255, 255, 255, 0.60)' : 'var(--text-secondary)', maxWidth: 'var(--text-measure)' }}>
         {description}
       </p>
     </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// MAIN COMPONENT
-// ═══════════════════════════════════════════════════════════════════════════
-
 export interface ResourcesSectionProps {
-  /**
-   * Color mode — controls section background & card coloring.
-   * @default 'dark'
-   */
   mode?: ResourcesSectionMode;
-
-  /** Card visual style: 'default' or 'bordered' @default 'default' */
   cardStyle?: ResourceCardStyle;
-
-  /** Show variant switcher for card style toggling @default false */
   enableVariantSwitcher?: boolean;
-
-  /** Section eyebrow label @default 'Related Resources' */
   sectionLabel?: string;
-
-  /** Section heading @default 'Industry Insights & Resources' */
   title?: string;
-
-  /** Section description paragraph */
   description?: string;
-
-  /** CTA button label @default 'View All Resources' */
   ctaLabel?: string;
-
-  /** CTA click handler (if provided, renders as button) */
   onCtaClick?: () => void;
-
-  /** Custom resources array (replaces default demo data) */
   customResources?: ResourceItem[];
-
-  /** Custom Masonry column breakpoints @default { 350: 1, 640: 2, 1024: 3 } */
   customColumns?: Record<number, number>;
-
-  /** HTML id for the section element @default 'resources' */
   sectionId?: string;
 }
 
@@ -388,54 +213,25 @@ export function ResourcesSection({
   customColumns,
   sectionId = 'resources',
 }: ResourcesSectionProps) {
-  
   const [cardStyle, setCardStyle] = useState<ResourceCardStyle>(initialCardStyle);
   const isDark = mode === 'dark';
-
   const cardStyleVariants = [
     { id: 'default', label: 'Default', description: 'No border, transparent background' },
     { id: 'bordered', label: 'Bordered', description: 'Light border with frosted card' }
   ];
-
   const displayResources = customResources || DEFAULT_RESOURCES;
   const responsiveGutter = useResponsiveGutter();
-  
+
   return (
-    <section 
-      id={sectionId}
-      className="relative overflow-hidden"
-      style={{ 
-        paddingTop: 'var(--section-py-standard)', 
-        paddingBottom: 'var(--section-py-standard)' 
-      }}
-    >
-      {/* ── Background Layer ── */}
+    <section id={sectionId} className="relative overflow-hidden" style={{ paddingTop: 'var(--section-py-standard)', paddingBottom: 'var(--section-py-standard)' }}>
       {isDark ? <DarkBackground /> : <LightBackground />}
-      
-      {/* ── Content Layer ── */}
       <Container className="relative z-10">
-
-        {/* Section Header */}
-        <SectionHeader 
-          mode={mode}
-          sectionLabel={sectionLabel}
-          title={title}
-          description={description}
-        />
-
-        {/* Masonry Grid */}
+        <SectionHeader mode={mode} sectionLabel={sectionLabel} title={title} description={description} />
         <div style={{ marginTop: 0, marginLeft: `-${responsiveGutter / 2}px`, marginRight: `-${responsiveGutter / 2}px`, marginBottom: '80px' }}>
-          <ResponsiveMasonry
-            columnsCountBreakPoints={customColumns || { 350: 1, 640: 2, 1024: 3 }}
-          >
+          <ResponsiveMasonry columnsCountBreakPoints={customColumns || { 350: 1, 640: 2, 1024: 3 }}>
             <Masonry gutter="0px">
               {displayResources.map((resource, index) => (
-                <div 
-                  key={`${resource.title}-${index}`} 
-                  style={{ 
-                    padding: `0 ${responsiveGutter / 2}px ${responsiveGutter}px ${responsiveGutter / 2}px` 
-                  }}
-                >
+                <div key={`${resource.title}-${index}`} style={{ padding: `0 ${responsiveGutter / 2}px ${responsiveGutter}px ${responsiveGutter / 2}px` }}>
                   <ResourceCard
                     image={resource.image}
                     category={resource.category}
@@ -453,21 +249,12 @@ export function ResourcesSection({
             </Masonry>
           </ResponsiveMasonry>
         </div>
-
-        {/* CTA Button */}
         <div className="flex justify-center">
-          <Button
-            variant="ghost"
-            size="md"
-            animatedArrow
-            onClick={onCtaClick}
-          >
+          <Button variant="ghost" size="md" showArrow onClick={onCtaClick}>
             {ctaLabel}
           </Button>
         </div>
       </Container>
-
-      {/* Variant Switcher */}
       {enableVariantSwitcher && (
         <SubtleVariantSwitcher
           sectionName="Resources"
