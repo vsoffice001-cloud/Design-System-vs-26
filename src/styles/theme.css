@@ -183,156 +183,153 @@
   --brand-red-active: #771419;
   
   /* Ken Bold Red - Full Tints & Shades Scale */
-  --red-50: #fef2f2;    /* Lightest - Subtle backgrounds, alert highlights */
-  --red-100: #fee2e2;   /* Very light - Notice backgrounds, hover states */
-  --red-200: #fecaca;   /* Light - Disabled states, soft accents */
-  --red-300: #fca5a7;   /* Medium light - Borders, dividers */
-  --red-400: #f87176;   /* Medium - Icons, secondary buttons */
-  --red-500: #dc3238;   /* Standard - Links, active states */
-  --red-600: #b01f24;   /* PRIMARY BRAND - CTAs, buttons, key accents */
-  --red-700: #8f181d;   /* Hover - Button hover states */
-  --red-800: #771419;   /* Active - Button active/pressed states */
-  --red-900: #5f1014;   /* Darkest - Text on light backgrounds, deep shadows */
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-300: #fca5a7;
+  --red-400: #f87176;
+  --red-500: #dc3238;
+  --red-600: #b01f24;
+  --red-700: #8f181d;
+  --red-800: #771419;
+  --red-900: #5f1014;
   
   /* Black & White - Foundation */
   --black: #000000;
   --white: #ffffff;
   
   /* Black Tints (White mixed in) */
-  --black-50: #fafafa;   /* Near white - Very subtle backgrounds */
-  --black-100: #f5f5f5;  /* Lightest gray - Card backgrounds */
-  --black-200: #e5e5e5;  /* Very light gray - Borders, dividers */
-  --black-300: #d4d4d4;  /* Light gray - Disabled states */
-  --black-400: #a3a3a3;  /* Medium gray - Placeholder text */
-  --black-500: #737373;  /* Gray - Secondary text */
-  --black-600: #525252;  /* Dark gray - Body text alternative */
-  --black-700: #404040;  /* Darker gray - Headings alternative */
-  --black-800: #262626;  /* Very dark - Strong text */
-  --black-900: #171717;  /* Almost black - Deep backgrounds */
-  --black: #000000;      /* Pure black - Primary text, hero backgrounds */
+  --black-50: #fafafa;
+  --black-100: #f5f5f5;
+  --black-200: #e5e5e5;
+  --black-300: #d4d4d4;
+  --black-400: #a3a3a3;
+  --black-500: #737373;
+  --black-600: #525252;
+  --black-700: #404040;
+  --black-800: #262626;
+  --black-900: #171717;
+  --black: #000000;
   
-  /* White Tints (Black mixed in) - Same as Black Tints, reversed */
-  --white: #ffffff;      /* Pure white - Primary backgrounds */
-  --white-900: #fafafa;  /* Slightly off-white */
-  --white-800: #f5f5f5;  /* Off-white */
+  /* White Tints (Black mixed in) */
+  --white: #ffffff;
+  --white-900: #fafafa;
+  --white-800: #f5f5f5;
   
   /* ========================================
      ACCENT COLORS - Strategic Use
      ======================================== */
   
-  /* Color 1: Warm - Already in use, expanded scale */
-  --warm-50: #fefdfd;    /* Barely there - Subtle overlays */
-  --warm-100: #fcfbfa;   /* Very subtle - Hover backgrounds */
-  --warm-200: #f9f7f6;   /* Soft - Card backgrounds */
-  --warm-300: #f5f2f1;   /* BASE - Current section backgrounds */
-  --warm-400: #f0ebe9;   /* Medium - Alternative backgrounds */
-  --warm-500: #eae5e3;   /* Borders - Current usage */
-  --warm-600: #d9d1ce;   /* Timeline base - Current usage */
-  --warm-700: #c8bcb8;   /* Timeline nodes - Current usage */
-  --warm-800: #b7a9a3;   /* Dark warm - Text on light warm */
-  --warm-900: #a6968e;   /* Darkest warm - Strong accents */
+  /* Color 1: Warm */
+  --warm-50: #fefdfd;
+  --warm-100: #fcfbfa;
+  --warm-200: #f9f7f6;
+  --warm-300: #f5f2f1;
+  --warm-400: #f0ebe9;
+  --warm-500: #eae5e3;
+  --warm-600: #d9d1ce;
+  --warm-700: #c8bcb8;
+  --warm-800: #b7a9a3;
+  --warm-900: #a6968e;
   
-  /* Color 2: True V (Purple) - Premium, Innovation, Insights */
-  --purple-50: #f7f6fe;   /* Lightest - Subtle highlights, backgrounds */
-  --purple-100: #efedfd;  /* Very light - Hover states, cards */
-  --purple-200: #dfdcfb;  /* Light - Borders, dividers */
-  --purple-300: #c4bef7;  /* Medium light - Icons, badges */
-  --purple-400: #a89ff2;  /* Medium - Secondary accents */
-  --purple-500: #9488ec;  /* Standard - Interactive elements */
-  --purple-600: #806ce0;  /* BASE - Premium features, insights sections */
-  --purple-700: #6c5bc0;  /* Hover - Button hover states */
-  --purple-800: #5a4ba0;  /* Active - Button active states */
-  --purple-900: #483c80;  /* Darkest - Text, deep accents */
+  /* Color 2: True V (Purple) */
+  --purple-50: #f7f6fe;
+  --purple-100: #efedfd;
+  --purple-200: #dfdcfb;
+  --purple-300: #c4bef7;
+  --purple-400: #a89ff2;
+  --purple-500: #9488ec;
+  --purple-600: #806ce0;
+  --purple-700: #6c5bc0;
+  --purple-800: #5a4ba0;
+  --purple-900: #483c80;
   
-  /* Color 3: Periwinkle - Soft, Trust, Reliability */
-  --periwinkle-50: #fafbfe;   /* Lightest - Subtle backgrounds */
-  --periwinkle-100: #f5f6fd;  /* Very light - Card backgrounds */
-  --periwinkle-200: #ebedfb;  /* Light - Hover states */
-  --periwinkle-300: #dfe1f9;  /* Medium light - Soft accents */
-  --periwinkle-400: #d3d5f9;  /* Medium - Borders, dividers */
-  --periwinkle-500: #c3c6f9;  /* BASE - Trust indicators, secondary sections */
-  --periwinkle-600: #a7abf0;  /* Standard - Interactive elements */
-  --periwinkle-700: #8b90e0;  /* Hover - Links, buttons */
-  --periwinkle-800: #7075c8;  /* Active - Active states */
-  --periwinkle-900: #5a5fa0;  /* Darkest - Text on light backgrounds */
+  /* Color 3: Periwinkle */
+  --periwinkle-50: #fafbfe;
+  --periwinkle-100: #f5f6fd;
+  --periwinkle-200: #ebedfb;
+  --periwinkle-300: #dfe1f9;
+  --periwinkle-400: #d3d5f9;
+  --periwinkle-500: #c3c6f9;
+  --periwinkle-600: #a7abf0;
+  --periwinkle-700: #8b90e0;
+  --periwinkle-800: #7075c8;
+  --periwinkle-900: #5a5fa0;
   
-  /* Color 3.5: Coral/Terracotta - Warmth, Energy, Approachability */
-  --coral-50: #fffbf9;    /* Warmest white - Base backgrounds */
-  --coral-100: #fff5f1;   /* Very light warm */
-  --coral-200: #ffebe4;   /* Light blush - Perceptible coral wash */
-  --coral-300: #fdd7cb;   /* Soft coral - Gentle peachy tone */
-  --coral-400: #fbb8a7;   /* Medium coral - Clear peachy presence */
-  --coral-500: #f99b85;   /* Bright coral - Warm accent */
-  --coral-600: #ea7a5f;   /* BASE - Terracotta coral */
-  --coral-700: #d96548;   /* Deep coral - Hover state */
-  --coral-800: #c15138;   /* Rich terracotta - Active state */
-  --coral-900: #a23f2d;   /* Burnt terracotta - Darkest accent */
+  /* Color 3.5: Coral/Terracotta */
+  --coral-50: #fffbf9;
+  --coral-100: #fff5f1;
+  --coral-200: #ffebe4;
+  --coral-300: #fdd7cb;
+  --coral-400: #fbb8a7;
+  --coral-500: #f99b85;
+  --coral-600: #ea7a5f;
+  --coral-700: #d96548;
+  --coral-800: #c15138;
+  --coral-900: #a23f2d;
   
-  /* Color 4: Perano (Light Blue) - Calm, Professional, Data */
-  --perano-50: #fcfdfe;    /* Lightest - Barely visible backgrounds */
-  --perano-100: #f9fbfe;   /* Very light - Subtle highlights */
-  --perano-200: #f4f8fd;   /* Light - Card backgrounds */
-  --perano-300: #eff5fc;   /* Medium light - Hover states */
-  --perano-400: #e9f2fb;   /* Medium - Soft accents */
-  --perano-500: #dfeafa;   /* BASE - Data sections, calm backgrounds */
-  --perano-600: #c8dff5;   /* Standard - Borders, dividers */
-  --perano-700: #a7c9ed;   /* Hover - Interactive elements */
-  --perano-800: #86b3e5;   /* Active - Active states */
-  --perano-900: #6b94c0;   /* Darkest - Text, strong accents */
+  /* Color 4: Perano (Light Blue) */
+  --perano-50: #fcfdfe;
+  --perano-100: #f9fbfe;
+  --perano-200: #f4f8fd;
+  --perano-300: #eff5fc;
+  --perano-400: #e9f2fb;
+  --perano-500: #dfeafa;
+  --perano-600: #c8dff5;
+  --perano-700: #a7c9ed;
+  --perano-800: #86b3e5;
+  --perano-900: #6b94c0;
   
   /* ========================================
      UTILITY COLORS - Semantic States
      ======================================== */
   
-  /* Color 7: Green - Success, Growth, Positive Outcomes */
-  --green-50: #ecfdf5;     /* Success backgrounds */
-  --green-100: #d1fae5;    /* Success highlights */
-  --green-200: #a7f3d0;    /* Soft success states */
-  --green-300: #6ee7b7;    /* Success borders, soft accents */
-  --green-400: #34d399;    /* Success icons, secondary */
-  --green-500: #10b981;    /* BASE - Success messages */
-  --green-600: #059669;    /* Impact metrics */
-  --green-700: #047857;    /* Success hover */
-  --green-800: #065f46;    /* Success pressed */
-  --green-900: #064e3b;    /* Success text on light */
+  /* Color 7: Green - Success */
+  --green-50: #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-300: #6ee7b7;
+  --green-400: #34d399;
+  --green-500: #10b981;
+  --green-600: #059669;
+  --green-700: #047857;
+  --green-800: #065f46;
+  --green-900: #064e3b;
   
-  /* Color 8: Amber - Warning, Attention, Caution */
-  --amber-50: #fffbeb;     /* Warning backgrounds */
-  --amber-100: #fef3c7;    /* Alert highlights */
-  --amber-200: #fde68a;    /* Soft warning states */
-  --amber-300: #fcd34d;    /* Warning borders */
-  --amber-400: #fbbf24;    /* Warning icons, attention */
-  --amber-500: #f59e0b;    /* BASE - Warning messages */
-  --amber-600: #d97706;    /* Warning buttons */
-  --amber-700: #b45309;    /* Warning hover */
-  --amber-800: #92400e;    /* Warning pressed */
-  --amber-900: #78350f;    /* Warning text on light */
+  /* Color 8: Amber - Warning */
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --amber-800: #92400e;
+  --amber-900: #78350f;
   
-  /* Color 9: Rose - Error, Validation, Destructive (DISTINCT from Brand Red) */
-  --rose-50: #fff1f2;      /* Error backgrounds */
-  --rose-100: #ffe4e6;     /* Error highlights */
-  --rose-200: #fecdd3;     /* Soft error states */
-  --rose-300: #fda4af;     /* Error borders, soft validation */
-  --rose-400: #fb7185;     /* Error icons, field validation */
-  --rose-500: #f43f5e;     /* BASE - Error messages */
-  --rose-600: #e11d48;     /* Destructive actions, delete */
-  --rose-700: #be123c;     /* Error hover */
-  --rose-800: #9f1239;     /* Error active/pressed */
-  --rose-900: #881337;     /* Error text on light */
+  /* Color 9: Rose - Error */
+  --rose-50: #fff1f2;
+  --rose-100: #ffe4e6;
+  --rose-200: #fecdd3;
+  --rose-300: #fda4af;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --rose-800: #9f1239;
+  --rose-900: #881337;
 
   /* ========================================
-     LEGACY COLOR VARIABLES (Keep for backwards compatibility)
+     LEGACY COLOR VARIABLES
      ======================================== */
   
-  /* Warm Off-White for Highlighted Sections */
-  --bg-warm: #f5f2f1;          /* Base - Challenges, Methodology sections */
-  --bg-warm-500: #eae5e3;      /* Subtle borders, separator lines */
-  --bg-warm-600: #d9d1ce;      /* Timeline base, medium contrast */
-  --bg-warm-700: #c8bcb8;      /* Timeline nodes, stronger borders */
-  
-  /* Pure Black/White for Primary Sections */
-  --bg-pure-black: #000000;    /* Hero, Resources sections */
-  --bg-pure-white: #ffffff;    /* Standard white sections */
+  --bg-warm: #f5f2f1;
+  --bg-warm-500: #eae5e3;
+  --bg-warm-600: #d9d1ce;
+  --bg-warm-700: #c8bcb8;
+  --bg-pure-black: #000000;
+  --bg-pure-white: #ffffff;
   
   /* ========================================
      TYPOGRAPHY DEFAULTS
@@ -345,34 +342,23 @@
      BUTTON SIZE SYSTEM
      ======================================== */
   
-  /* Button Heights - Increased for better presence */
-  --button-height-sm: 2.5rem;     /* 40px - Small utility buttons */
-  --button-height-md: 3rem;       /* 48px - Standard buttons */
-  --button-height-lg: 3.5rem;     /* 56px - Primary CTAs */
-  --button-height-xl: 4rem;       /* 64px - Hero/Emphasis CTAs */
-  
-  /* Button Font Sizes */
-  --button-font-sm: 0.875rem;     /* 14px - Small buttons */
-  --button-font-md: 1rem;         /* 16px - Standard buttons */
-  --button-font-lg: 1.125rem;     /* 18px - Large buttons */
-  
-  /* Button Padding Horizontal */
-  --button-px-sm: 1.25rem;        /* 20px - Compact */
-  --button-px-md: 1.75rem;        /* 28px - Standard */
-  --button-px-lg: 2.25rem;        /* 36px - Spacious */
-  --button-px-xl: 2.5rem;         /* 40px - Extra Spacious */
-  
-  /* Button Padding Vertical (for auto-height buttons) */
-  --button-py-sm: 0.625rem;       /* 10px */
-  --button-py-md: 0.875rem;       /* 14px */
-  --button-py-lg: 1rem;           /* 16px */
-  
-  /* Button Min Widths */
-  --button-min-width-sm: 5rem;    /* 80px */
-  --button-min-width-md: 7rem;    /* 112px */
-  --button-min-width-lg: 9rem;    /* 144px */
-  
-  /* Brand Colors for Buttons */
+  --button-height-sm: 2.5rem;
+  --button-height-md: 3rem;
+  --button-height-lg: 3.5rem;
+  --button-height-xl: 4rem;
+  --button-font-sm: 0.875rem;
+  --button-font-md: 1rem;
+  --button-font-lg: 1.125rem;
+  --button-px-sm: 1.25rem;
+  --button-px-md: 1.75rem;
+  --button-px-lg: 2.25rem;
+  --button-px-xl: 2.5rem;
+  --button-py-sm: 0.625rem;
+  --button-py-md: 0.875rem;
+  --button-py-lg: 1rem;
+  --button-min-width-sm: 5rem;
+  --button-min-width-md: 7rem;
+  --button-min-width-lg: 9rem;
   --brand-red: #b01f24;
   --brand-red-hover: #8f181d;
   --brand-red-active: #771419;
@@ -381,22 +367,19 @@
      BADGE SIZE & SHAPE SYSTEM
      ======================================== 
      
-     PURPOSE: CSS custom properties for Badge component sizing and shape.
-     Replaces hardcoded JS SIZE_TOKENS and VARIANT_TOKENS objects.
+     PURPOSE: CSS custom properties for Badge component sizing, shape, and color.
      
-     SIZE SCALE: Based on Major Third ratio (1.25)
-     - xs: Info card labels, micro metadata (~18px height)
-     - sm: Section labels, step pills, most badges (~23px height)
-     - md: Emphasized badges, medium interactive (~29px height)
-     - lg: Large interactive badges, hero context (~35px height)
+     ARCHITECTURE (Phase 3 complete):
+     - Size tokens (--badge-xs/sm/md/lg-*): Defined here, consumed by Badge.tsx
+     - Shape tokens (--badge-radius-*): Defined here, consumed by CSS rules below
+     - Color tokens (--badge-bg/text/border/etc): Set INLINE by Badge.tsx per-instance,
+       consumed by CSS rules below. This keeps THEME_COLORS in JS (prop-driven)
+       while CSS handles the actual property application + hover transitions.
      
-     VARIANT SHAPES:
-     - minimal: No background, no border, no padding (section labels)
-     - rounded: 5px radius, background + optional border (category tags)
-     - pill: Fully rounded, usually bordered (step numbers, objectives)
-     
-     MIGRATION: Phase 1 of 4 — Badge.tsx still reads JS objects.
-     Phase 2 will switch Badge.tsx to consume these variables.
+     WHY INLINE CSS VARS FOR COLORS:
+     Badge theme is a runtime prop decision (11 themes × 2 modes = 22 combos).
+     Using inline --badge-* custom properties avoids 22 CSS selector blocks
+     while still letting CSS own hover/transition/animation behavior.
      
      ======================================== */
   
@@ -459,13 +442,10 @@
      
      ======================================== */
 
-  /* Card Shape */
   --rc-radius-image: 2.5px;
   --rc-radius-card: 10px;
   --rc-radius-card-inner: 9px;
   --rc-aspect-ratio: 4 / 3;
-
-  /* Card Spacing */
   --rc-content-px: 1rem;
   --rc-content-pt: 1rem;
   --rc-content-pb: 1.25rem;
@@ -533,22 +513,17 @@
 
   /* ========================================
      RESPONSIVE CSS VARIABLE OVERRIDES
-     ========================================
-     
-     Mobile-first: :root defines mobile values,
-     media queries progressively enhance for larger screens.
-     Matches Tailwind's sm:py-16 / md:py-20 pattern.
      ======================================== */
   
   @media (min-width: 640px) {
     :root {
-      --section-py-standard: 4rem;   /* 64px - matches sm:py-16 */
+      --section-py-standard: 4rem;
     }
   }
   
   @media (min-width: 768px) {
     :root {
-      --section-py-standard: 5rem;   /* 80px - matches md:py-20 */
+      --section-py-standard: 5rem;
     }
   }
 
@@ -556,7 +531,6 @@
      CUSTOM ANIMATIONS
      ======================================== */
   
-  /* Subtle pulse animation for active methodology step node */
   @keyframes pulse-subtle {
     0%, 100% {
       transform: scale(1);
@@ -568,49 +542,25 @@
     }
   }
   
-  /* Button spinner animation */
   @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
   
-  /* Button ripple effect */
   @keyframes ripple {
-    0% {
-      transform: scale(0);
-      opacity: 0.6;
-    }
-    100% {
-      transform: scale(2.5);
-      opacity: 0;
-    }
+    0% { transform: scale(0); opacity: 0.6; }
+    100% { transform: scale(2.5); opacity: 0; }
   }
   
-  /* Button shimmer effect - signature brand animation */
   @keyframes shimmer-sweep {
-    0% {
-      background-position: 200% 0;
-    }
-    100% {
-      background-position: -200% 0;
-    }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
   
-  /* Sticky CTA pulse ring animation */
   @keyframes pulse-ring {
-    0% {
-      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
-    }
-    70% {
-      box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
   }
   
   .animate-pulse-ring {
@@ -619,65 +569,38 @@
 
   /* ========================================
      MOTION & ANIMATION SYSTEM
-     ======================================== 
-     
-     Additional keyframes for the Motion tab demos
-     and micro-interactions throughout the system.
-     
      ======================================== */
 
-  /* Fade In Scale - Modal/Dialog entrances */
   @keyframes fade-in-scale {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   .animate-fade-in-scale {
     animation: fade-in-scale 300ms cubic-bezier(0, 0, 0.2, 1);
   }
 
-  /* Bounce Once - Notification or attention-getting */
   @keyframes bounce-once {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-25%);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-25%); }
   }
 
   .animate-bounce-once {
     animation: bounce-once 500ms ease-in-out;
   }
 
-  /* Bounce Subtle - Gentle bounce for notifications */
   @keyframes bounce-subtle {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10%);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10%); }
   }
 
   .animate-bounce-subtle {
     animation: bounce-subtle 1s ease-in-out 3;
   }
 
-  /* Loading Bar - Progress indicator */
   @keyframes loading-bar {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(400%);
-    }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
   }
 
   .animate-loading-bar {
@@ -685,17 +608,46 @@
   }
 
   /* ═════════════════════════════════════════════════════════════════════════
-     BADGE SYSTEM - Animations & Interactive States
+     BADGE SYSTEM - Color Application & Interactive States
+     
+     HOW THIS WORKS:
+     Badge.tsx sets --badge-* CSS custom properties INLINE per instance.
+     These CSS rules CONSUME those properties for base + hover states.
+     This gives CSS full control of property application & transitions,
+     while JS handles the theme/mode selection logic.
+     
+     PROPERTY FLOW:
+     Badge.tsx inline style → sets --badge-bg, --badge-text, --badge-border, etc.
+     CSS .badge rule → reads var(--badge-bg), var(--badge-text), etc.
+     CSS .badge:hover rule → reads var(--badge-hover-bg), var(--badge-hover-border)
      ═════════════════════════════════════════════════════════════════════════ */
+
+  /* Badge Base Color Application — consumes inline CSS custom properties */
+  .badge {
+    color: var(--badge-text);
+    border-style: solid;
+    border-color: var(--badge-border, transparent);
+    border-width: var(--badge-border-width, 0px);
+  }
+
+  .badge:not(.badge-minimal) {
+    background-color: var(--badge-bg, transparent);
+  }
 
   /* Shimmer Animation - Premium 700ms (40% slower than standard) */
   .badge-shimmer {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    transform: translateX(-100%);  /* Start position: completely off-screen left */
-    /* NO TRANSITION HERE - prevents reverse animation on unhover */
+    transform: translateX(-100%);
     z-index: 5;
+    /* Shimmer gradient uses --badge-shimmer set by Badge.tsx */
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      var(--badge-shimmer, rgba(255, 255, 255, 0.75)) 50%, 
+      transparent 100%);
+    width: 50%;
+    height: 100%;
   }
 
   /* Direct badge hover - triggers shimmer on badge itself */
@@ -713,7 +665,7 @@
     transition: transform var(--badge-shimmer-duration, 700ms) ease-out;
   }
 
-  /* Badge hover background/border transitions (uses badge-transition-duration) */
+  /* Badge hover background/border transitions */
   .badge:not(.badge-minimal):hover {
     background-color: var(--badge-hover-bg);
     border-color: var(--badge-hover-border);
@@ -792,7 +744,6 @@
   .badge-md svg { width: 16px; height: 16px; }
   .badge-lg svg { width: 18px; height: 18px; }
 
-  /* Ensure icons don't shrink */
   .badge svg {
     flex-shrink: 0;
   }
