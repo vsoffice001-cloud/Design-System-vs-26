@@ -37,9 +37,27 @@ export { AnimatedArrowDemo } from './AnimatedArrowDemo';
 export { ShimmerDemo } from './ShimmerDemo';
 
 // Layout Components
+export { Container } from './Container';
 export { Navbar } from './Navbar';
 export { DesignSystemDashboard } from './DesignSystemDashboard';
 export { DesignSystemSidebar } from './DesignSystemSidebar';
+
+// Resource System Components
+export { ResourceCard } from './ResourceCard';
+export { SubtleVariantSwitcher } from './SubtleVariantSwitcher';
+
+// Case Study Section Components (Organisms)
+export { HeroSection } from './HeroSection';
+export { ClientContextSection } from './ClientContextSection';
+export { ChallengesSection } from './ChallengesSection';
+export { EngagementObjectivesSection } from './EngagementObjectivesSection';
+export { MethodologySection } from './MethodologySection';
+export { ImpactSection } from './ImpactSection';
+export { ValuePillarsSection } from './ValuePillarsSection';
+export { TestimonialSection } from './TestimonialSection';
+export { ResourcesSection } from './ResourcesSection';
+export { FinalCTASection } from './FinalCTASection';
+export { NextSectionCTA } from './NextSectionCTA';
 
 // Content Components — Foundations
 export {
@@ -111,19 +129,6 @@ export { CollapsibleSection } from './CollapsibleSection';
 export { VariantSwitcher } from './VariantSwitcher';
 export { ReadingProgressBar } from './ReadingProgressBar';
 export { TableOfContents } from './TableOfContents';
-
-// 📐 LAYOUT & SECTION COMPONENTS
-export { SectionHeading } from './SectionHeading';
-export { SectionWrapper } from './SectionWrapper';
-export { Card } from './Card';
-
-// ⬆️ SCROLL COMPONENTS
-export { ScrollToTop } from './ScrollToTop';
-export { ScrollProgress } from './ScrollProgress';
-
-// 🎨 ICON COLOR SYSTEM
-export { iconColors, getIconColor } from './iconColors';
-export type { IconColorType } from './iconColors';
 
 // Modal/Overlay Components
 export { ContactModal } from './ContactModal';

@@ -1,263 +1,318 @@
 /**
  * ResourceCard Component
- * ======================
- * Token-driven card for resource content (articles, case studies, reports).
- * 7 content variants, 2 card styles, 2 color modes.
- * All colors from --rc-* CSS custom properties.
+ * 
+ * WHY: The Resources section needs cards with varying visual treatments
+ * to create Masonry-style visual interest. Different content types
+ * (featured articles, quick reads, category highlights) need distinct
+ * visual emphasis — a single card style creates monotony.
+ * 
+ * WHAT: A versatile resource card with 7 layout variants, 2 card styles
+ * (default/bordered), and 2 color modes (light/dark). Each variant
+ * controls image size, text emphasis, and metadata visibility.
+ * 
+ * WHEN:
+ * - Use in ResourcesSection Masonry grid
+ * - Use for blog listings, article grids, case study collections
+ * - Mix variants within a grid for visual rhythm
+ * 
+ * WHEN NOT:
+ * - Don't use for product cards (use Card component instead)
+ * - Don't use all cards as 'full-featured' — creates visual overload
+ * - Don't mix more than 3-4 variant types in one grid
+ * 
+ * VARIANTS:
+ * 1. 'standard'         — Default balanced card (image + meta + title + desc)
+ * 2. 'full-featured'    — Large image, all metadata, type badge, featured indicator
+ * 3. 'minimal'          — Compact: small image, title + category only
+ * 4. 'category-featured'— Category emphasis with colored accent bar
+ * 5. 'clean'            — No image, text-only with subtle background
+ * 6. 'featured-focus'   — Oversized image with overlaid gradient text
+ * 7. 'latest'           — Time-stamped card with "NEW" indicator
+ * 
+ * CARD STYLES:
+ * - 'default'  — No border, transparent background (blends into section)
+ * - 'bordered' — Light border with frosted glass background
  */
 
-import { useState } from 'react';
-import { Badge } from '@/app/components/Badge';
+// ═══════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════
 
-// Types
 export type ResourceCardVariant =
+  | 'standard'
   | 'full-featured'
-  | 'featured-focus'
   | 'minimal'
   | 'category-featured'
-  | 'latest'
   | 'clean'
-  | 'standard';
+  | 'featured-focus'
+  | 'latest';
 
 export type ResourceCardStyle = 'default' | 'bordered';
 export type ResourceCardMode = 'light' | 'dark';
-export type ResourceContentType = 'article' | 'blog' | 'case-study' | 'pov';
+export type ResourceContentType = 'article' | 'report' | 'whitepaper' | 'video' | 'podcast';
 
-export interface ResourceCardProps {
+interface ResourceCardProps {
   image: string;
-  category?: string;
-  date?: string;
+  category: string;
+  date: string;
   title: string;
-  description?: string;
-  href?: string;
-  onClick?: () => void;
+  description: string;
   type?: ResourceContentType;
   isFeatured?: boolean;
   variant?: ResourceCardVariant;
   cardStyle?: ResourceCardStyle;
   mode?: ResourceCardMode;
-  aspectRatio?: string;
-  className?: string;
 }
 
-// Variant Config
-const VARIANT_CONFIG: Record<ResourceCardVariant, {
-  showCategory: boolean;
-  showDate: boolean;
-  showDescription: boolean;
-  showFeaturedTag: boolean;
-  showLatestTag: boolean;
-}> = {
-  'full-featured':     { showCategory: true,  showDate: true,  showDescription: true,  showFeaturedTag: true,  showLatestTag: false },
-  'featured-focus':    { showCategory: false, showDate: false, showDescription: true,  showFeaturedTag: true,  showLatestTag: false },
-  'minimal':           { showCategory: true,  showDate: true,  showDescription: false, showFeaturedTag: false, showLatestTag: false },
-  'category-featured': { showCategory: true,  showDate: false, showDescription: false, showFeaturedTag: true,  showLatestTag: false },
-  'latest':            { showCategory: false, showDate: false, showDescription: true,  showFeaturedTag: false, showLatestTag: true  },
-  'clean':             { showCategory: false, showDate: false, showDescription: true,  showFeaturedTag: false, showLatestTag: false },
-  'standard':          { showCategory: true,  showDate: true,  showDescription: true,  showFeaturedTag: false, showLatestTag: false },
-};
+// ═══════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
 
-// Token Helpers
-function getModeTokens(mode: ResourceCardMode) {
-  const p = mode === 'dark' ? 'rc-dark' : 'rc-light';
-  return {
-    title:             `var(--${p}-title)`,
-    titleHover:        `var(--${p}-title-hover)`,
-    category:          `var(--${p}-category)`,
-    date:              `var(--${p}-date)`,
-    description:       `var(--${p}-description)`,
-    descriptionHover:  `var(--${p}-description-hover)`,
-    cardBg:            `var(--${p}-card-bg)`,
-    cardBorder:        `var(--${p}-card-border)`,
-    cardBorderHover:   `var(--${p}-card-border-hover)`,
-    cardBlur:          `var(--${p}-card-blur)`,
-    imagePlaceholder:  `var(--${p}-image-placeholder)`,
-    focusRing:         `var(--${p}-focus-ring)`,
-    focusOffset:       `var(--${p}-focus-offset)`,
+function TypeBadge({ type, mode }: { type: ResourceContentType; mode: ResourceCardMode }) {
+  const isDark = mode === 'dark';
+  const labels: Record<ResourceContentType, string> = {
+    article: 'Article',
+    report: 'Report',
+    whitepaper: 'Whitepaper',
+    video: 'Video',
+    podcast: 'Podcast',
   };
-}
 
-// CardBadge — glassmorphism badge overlay
-function CardBadge({ label }: { label: string }) {
   return (
-    <div 
-      className="absolute top-4 right-4 inline-block"
-      style={{
-        background: 'var(--rc-badge-bg)',
-        backdropFilter: 'blur(var(--rc-badge-blur))',
-        WebkitBackdropFilter: 'blur(var(--rc-badge-blur))',
-        borderRadius: '5px',
-        border: '1px solid var(--rc-badge-border)',
-        boxShadow: 'var(--rc-badge-shadow)',
-        zIndex: 10,
-      }}
+    <span
+      className={`
+        inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider
+        ${isDark
+          ? 'bg-white/10 text-white/70 border border-white/10'
+          : 'bg-black/5 text-black/50 border border-black/10'
+        }
+      `}
+      style={{ fontSize: '10px', letterSpacing: '1px' }}
     >
-      <Badge 
-        variant="minimal"
-        size="xs"
-        theme="neutral"
-        mode="dark"
-        className="text-white font-semibold uppercase tracking-[1.2px]"
-        style={{ 
-          fontSize: '10px',
-          padding: '6px 12px',
-          textShadow: 'var(--rc-badge-text-shadow)',
-        }}
-      >
-        {label}
-      </Badge>
-    </div>
+      {labels[type]}
+    </span>
   );
 }
 
-// Main Component
+function FeaturedIndicator({ mode }: { mode: ResourceCardMode }) {
+  const isDark = mode === 'dark';
+  return (
+    <span
+      className={`
+        inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium
+        ${isDark
+          ? 'bg-[var(--brand-red)] text-white'
+          : 'bg-[var(--brand-red)] text-white'
+        }
+      `}
+      style={{ fontSize: '10px' }}
+    >
+      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+      </svg>
+      Featured
+    </span>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
+
 export function ResourceCard({
   image,
   category,
   date,
   title,
   description,
-  href = '#',
-  onClick,
   type,
-  isFeatured,
+  isFeatured = false,
   variant = 'standard',
   cardStyle = 'default',
   mode = 'dark',
-  aspectRatio,
-  className = '',
 }: ResourceCardProps) {
-  
-  const [isHovered, setIsHovered] = useState(false);
-  const config = VARIANT_CONFIG[variant];
-  const tokens = getModeTokens(mode);
-  const isBordered = cardStyle === 'bordered';
+  const isDark = mode === 'dark';
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
+  // Card wrapper styling based on cardStyle
+  const cardWrapperClass = cardStyle === 'bordered'
+    ? isDark
+      ? 'border border-white/10 bg-white/[0.03] backdrop-blur-sm rounded-[5px]'
+      : 'border border-black/8 bg-white/80 backdrop-blur-sm rounded-[5px]'
+    : '';
 
-  return (
-    <a
-      href={href}
-      onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`group block cursor-pointer transition-all focus:outline-none focus:ring-2 ${className}`}
-      style={{
-        borderRadius: isBordered ? 'var(--rc-radius-card)' : 'var(--rc-radius-image)',
-        ...(isBordered ? {
-          background: tokens.cardBg,
-          backdropFilter: `blur(${tokens.cardBlur})`,
-          WebkitBackdropFilter: `blur(${tokens.cardBlur})`,
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: isHovered ? tokens.cardBorderHover : tokens.cardBorder,
-        } : {}),
-        '--tw-ring-color': tokens.focusRing,
-        '--tw-ring-offset-color': tokens.focusOffset,
-      } as React.CSSProperties}
-      aria-label={`Read ${type || 'article'}: ${title}`}
-    >
-      <article className={isBordered ? 'overflow-hidden' : ''}>
+  const textPrimary = isDark ? 'text-white' : 'text-black';
+  const textSecondary = isDark ? 'text-white/60' : 'text-black/60';
+  const textMuted = isDark ? 'text-white/40' : 'text-black/40';
 
-        {/* Image Container */}
-        <div 
-          className="relative overflow-hidden"
-          style={{
-            aspectRatio: aspectRatio || 'var(--rc-aspect-ratio)',
-            backgroundColor: tokens.imagePlaceholder,
-            borderRadius: isBordered 
-              ? 'var(--rc-radius-card-inner) var(--rc-radius-card-inner) 0 0'
-              : 'var(--rc-radius-image)',
-            marginBottom: isBordered ? '0' : 'var(--rc-image-mb)',
-          }}
-        >
-          <img 
-            src={image} 
-            alt={title}
-            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-            style={{ willChange: 'transform' }}
-          />
-
-          {/* Hover Overlay */}
-          <div 
-            className="absolute inset-0 transition-colors duration-300"
-            style={{ 
-              backgroundColor: isHovered ? 'var(--rc-image-overlay-hover)' : 'transparent',
-            }}
-          />
-          
-          {/* Badge Overlays */}
-          {config.showFeaturedTag && <CardBadge label="Featured" />}
-          {config.showLatestTag && <CardBadge label="Latest" />}
-        </div>
-
-        {/* Text Content */}
-        <div style={isBordered ? {
-          paddingLeft: 'var(--rc-content-px)',
-          paddingRight: 'var(--rc-content-px)',
-          paddingTop: 'var(--rc-content-pt)',
-          paddingBottom: 'var(--rc-content-pb)',
-        } : undefined}>
-
-          {/* Category & Date */}
-          {(config.showCategory || config.showDate) && (
-            <div style={{ marginBottom: 'var(--rc-meta-mb)' }}>
-              {config.showCategory && category && (
-                <span 
-                  className="font-medium uppercase block"
-                  style={{ 
-                    fontSize: 'var(--text-xs)', 
-                    letterSpacing: '1.5px',
-                    color: tokens.category,
-                    marginBottom: '4px',
-                  }}
-                >
-                  {category}
-                </span>
-              )}
-              {config.showDate && date && (
-                <span 
-                  className="block" 
-                  style={{ 
-                    fontSize: 'var(--text-xs)',
-                    color: tokens.date,
-                  }}
-                >
-                  {date}
-                </span>
-              )}
+  // ── VARIANT: full-featured ──
+  if (variant === 'full-featured') {
+    return (
+      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+        <article>
+          <div className="relative overflow-hidden rounded-t-[5px] aspect-[16/10]">
+            <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            <div className="absolute top-3 left-3 flex gap-2">
+              {type && <TypeBadge type={type} mode="dark" />}
+              {isFeatured && <FeaturedIndicator mode="dark" />}
             </div>
-          )}
-
-          {/* Title */}
-          <h3 
-            className="font-normal leading-[1.35] tracking-tight transition-colors"
-            style={{ 
-              fontSize: 'var(--text-sm)',
-              color: isHovered ? tokens.titleHover : tokens.title,
-              marginBottom: 'var(--rc-title-mb)',
-            }}
-          >
-            {title}
-          </h3>
-
-          {/* Description */}
-          {config.showDescription && description && (
-            <p 
-              className="leading-[1.6] transition-colors"
-              style={{ 
-                fontSize: 'var(--text-sm)',
-                color: isHovered ? tokens.descriptionHover : tokens.description,
-              }}
-            >
+          </div>
+          <div className={`p-4 ${cardStyle === 'bordered' ? '' : 'pt-4'}`}>
+            <div className="flex items-center gap-2 mb-2">
+              <span className={`font-medium uppercase tracking-[1.5px] ${textMuted}`} style={{ fontSize: 'var(--text-xs)' }}>{category}</span>
+              <span className={textMuted}>-</span>
+              <span className={textMuted} style={{ fontSize: 'var(--text-xs)' }}>{date}</span>
+            </div>
+            <h3 className={`font-normal leading-[1.35] tracking-tight mb-2 group-hover:opacity-80 transition-opacity ${textPrimary}`} style={{ fontSize: 'var(--text-sm)' }}>
+              {title}
+            </h3>
+            <p className={`leading-[1.6] ${textSecondary}`} style={{ fontSize: 'var(--text-xs)' }}>
               {description}
             </p>
-          )}
+          </div>
+        </article>
+      </a>
+    );
+  }
+
+  // ── VARIANT: minimal ──
+  if (variant === 'minimal') {
+    return (
+      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+        <article className={cardStyle === 'bordered' ? 'p-3' : ''}>
+          <div className="relative overflow-hidden rounded-[3px] aspect-[3/2] mb-3">
+            <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          </div>
+          <span className={`font-medium uppercase tracking-[1.5px] block mb-1.5 ${textMuted}`} style={{ fontSize: '10px' }}>{category}</span>
+          <h3 className={`font-normal leading-[1.35] tracking-tight group-hover:opacity-80 transition-opacity ${textPrimary}`} style={{ fontSize: 'var(--text-sm)' }}>
+            {title}
+          </h3>
+        </article>
+      </a>
+    );
+  }
+
+  // ── VARIANT: category-featured ──
+  if (variant === 'category-featured') {
+    return (
+      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+        <article>
+          <div className="relative overflow-hidden rounded-t-[5px] aspect-[4/3]">
+            <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+          </div>
+          <div className={`${cardStyle === 'bordered' ? 'p-4' : 'pt-4'}`}>
+            <div className={`w-8 h-0.5 mb-3 ${isDark ? 'bg-white/30' : 'bg-black/20'}`} />
+            <span className={`font-medium uppercase tracking-[2px] block mb-2 ${textMuted}`} style={{ fontSize: '10px' }}>{category}</span>
+            <h3 className={`font-normal leading-[1.35] tracking-tight mb-2 group-hover:opacity-80 transition-opacity ${textPrimary}`} style={{ fontSize: 'var(--text-sm)' }}>
+              {title}
+            </h3>
+            <p className={`leading-[1.6] ${textSecondary}`} style={{ fontSize: 'var(--text-xs)' }}>
+              {description}
+            </p>
+          </div>
+        </article>
+      </a>
+    );
+  }
+
+  // ── VARIANT: clean (no image) ──
+  if (variant === 'clean') {
+    return (
+      <a
+        href="#"
+        className={`group block cursor-pointer transition-all duration-300 ${
+          cardStyle === 'bordered'
+            ? cardWrapperClass
+            : isDark
+              ? 'bg-white/[0.03] rounded-[5px]'
+              : 'bg-black/[0.02] rounded-[5px]'
+        }`}
+      >
+        <article className="p-5">
+          <span className={`font-medium uppercase tracking-[1.5px] block mb-2 ${textMuted}`} style={{ fontSize: '10px' }}>{category}</span>
+          <h3 className={`font-normal leading-[1.35] tracking-tight mb-3 group-hover:opacity-80 transition-opacity ${textPrimary}`} style={{ fontSize: 'var(--text-sm)' }}>
+            {title}
+          </h3>
+          <p className={`leading-[1.6] ${textSecondary}`} style={{ fontSize: 'var(--text-xs)' }}>
+            {description}
+          </p>
+          <div className={`mt-4 text-xs font-medium ${textMuted}`}>{date}</div>
+        </article>
+      </a>
+    );
+  }
+
+  // ── VARIANT: featured-focus ──
+  if (variant === 'featured-focus') {
+    return (
+      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+        <article className="relative">
+          <div className="relative overflow-hidden rounded-[5px] aspect-[4/5]">
+            <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-5">
+              <span className="font-medium uppercase tracking-[1.5px] text-white/50 block mb-2" style={{ fontSize: '10px' }}>{category}</span>
+              <h3 className="font-normal text-white leading-[1.35] tracking-tight group-hover:opacity-90 transition-opacity" style={{ fontSize: 'var(--text-sm)' }}>
+                {title}
+              </h3>
+            </div>
+          </div>
+        </article>
+      </a>
+    );
+  }
+
+  // ── VARIANT: latest ──
+  if (variant === 'latest') {
+    return (
+      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+        <article>
+          <div className="relative overflow-hidden rounded-t-[5px] aspect-[16/9]">
+            <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            <div className="absolute top-3 right-3">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-white text-black text-xs font-medium" style={{ fontSize: '10px' }}>
+                NEW
+              </span>
+            </div>
+          </div>
+          <div className={`${cardStyle === 'bordered' ? 'p-4' : 'pt-4'}`}>
+            <div className="flex items-center gap-2 mb-2">
+              <span className={`font-medium uppercase tracking-[1.5px] ${textMuted}`} style={{ fontSize: '10px' }}>{category}</span>
+              <span className={textMuted} style={{ fontSize: '10px' }}>{date}</span>
+            </div>
+            <h3 className={`font-normal leading-[1.35] tracking-tight mb-2 group-hover:opacity-80 transition-opacity ${textPrimary}`} style={{ fontSize: 'var(--text-sm)' }}>
+              {title}
+            </h3>
+            <p className={`leading-[1.6] ${textSecondary}`} style={{ fontSize: 'var(--text-xs)' }}>
+              {description}
+            </p>
+          </div>
+        </article>
+      </a>
+    );
+  }
+
+  // ── VARIANT: standard (default) ──
+  return (
+    <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+      <article>
+        <div className="relative overflow-hidden rounded-[3px] mb-4 aspect-[4/3]">
+          <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+        </div>
+        <div className={cardStyle === 'bordered' ? 'px-4 pb-4' : ''}>
+          <div className="mb-2">
+            <span className={`font-medium uppercase tracking-[1.5px] block mb-1 ${textMuted}`} style={{ fontSize: 'var(--text-xs)' }}>{category}</span>
+            <span className={textMuted} style={{ fontSize: 'var(--text-xs)' }}>{date}</span>
+          </div>
+          <h3 className={`font-normal leading-[1.35] tracking-tight mb-2 group-hover:opacity-80 transition-opacity ${textPrimary}`} style={{ fontSize: 'var(--text-sm)' }}>
+            {title}
+          </h3>
+          <p className={`leading-[1.6] ${textSecondary}`} style={{ fontSize: 'var(--text-xs)' }}>
+            {description}
+          </p>
         </div>
       </article>
     </a>

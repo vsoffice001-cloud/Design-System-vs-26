@@ -19,3 +19,6 @@ export { useHeroVisibility } from './useHeroVisibility';
 // Utility Hooks
 export { useCounter } from './useCounter';
 export { useMagneticEffect } from './useMagneticEffect';
+
+// Layout Hooks
+export { useResponsiveGutter } from './useResponsiveGutter';
