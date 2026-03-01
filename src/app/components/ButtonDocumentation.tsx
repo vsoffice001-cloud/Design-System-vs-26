@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Download, Send, Heart, Edit, Trash2, Star, FileText, Share2, Bookmark, ArrowRight, ExternalLink, LogIn } from 'lucide-react';
+import { Download, Send, Heart, Edit, Trash2, Star, FileText, Share2, Bookmark, ArrowUpRight, ExternalLink, LogIn } from 'lucide-react';
 import { Button } from '@/app/components/Button';
 import { AnimatedArrow } from '@/app/components/AnimatedArrow';
 import { ButtonControlsGuide } from '@/app/components/ButtonControlsGuide';
@@ -175,11 +175,11 @@ export function ButtonDocumentation() {
   const [playgroundText, setPlaygroundText] = useState('Click Me');
 
   const iconMap = {
-    ArrowRight: <ArrowRight size={18} />,
+    ArrowUpRight: <ArrowUpRight size={18} />,
     Download: <Download size={18} />,
     Heart: <Heart size={18} />,
   };
-  const [playgroundSelectedIcon, setPlaygroundSelectedIcon] = useState<keyof typeof iconMap>('ArrowRight');
+  const [playgroundSelectedIcon, setPlaygroundSelectedIcon] = useState<keyof typeof iconMap>('ArrowUpRight');
 
   const generatePlaygroundCode = () => {
     const props: string[] = [];
@@ -259,8 +259,8 @@ export function ButtonDocumentation() {
       <DocSection
         title="Variants"
         why="Different visual weights communicate action hierarchy and guide users toward primary actions"
-        what="4 distinct button variants: Primary (black), Brand (red), Secondary (outlined), Ghost (transparent)"
-        when="Use Primary for main actions, Brand for CTAs, Secondary for supporting actions, Ghost for tertiary actions on dark backgrounds"
+        what="4 distinct button variants: Primary (black gradient), Brand (Ken Bold Red), Secondary (two-state: neutral at rest → brand-red on hover), Ghost (transparent)"
+        when="Use Primary for main actions, Brand for CTAs, Secondary for supporting actions (neutral border/text transitions to brand-red on hover — v3.3 two-state design), Ghost for tertiary actions on dark backgrounds"
       >
         <ComponentPreview 
           title="Primary - Black with Dark Gradient" 
@@ -297,10 +297,10 @@ export function ButtonDocumentation() {
         </ComponentPreview>
 
         <ComponentPreview 
-          title="Secondary - Outlined" 
-          description="Medium-emphasis actions. Can have multiple per section."
+          title="Secondary - Light Background (v3.3 Two-State)" 
+          description="Neutral at rest (black/12 border, black/70 text) → Brand-red on hover (brand-red border, text, shadow). 300ms ease-out transition."
         >
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 items-center">
             <Button variant="secondary" size="lg">
               Learn More
             </Button>
@@ -309,6 +309,30 @@ export function ButtonDocumentation() {
             </Button>
             <Button variant="secondary" size="lg" icon={<Heart size={18} />} iconPosition="left">
               Save for Later
+            </Button>
+            <Button variant="secondary" size="lg" disabled>
+              Disabled
+            </Button>
+          </div>
+        </ComponentPreview>
+
+        <ComponentPreview 
+          title="Secondary - Dark Background" 
+          description="Frosted glass base, white/30 border → solid white on hover. Subtle white shimmer sweep."
+          bg="dark"
+        >
+          <div className="flex flex-wrap gap-4 items-center">
+            <Button variant="secondary" background="dark" size="lg">
+              Learn More
+            </Button>
+            <Button variant="secondary" background="dark" size="lg" icon={<Download size={18} />}>
+              Export Data
+            </Button>
+            <Button variant="secondary" background="dark" size="lg" icon={<Heart size={18} />} iconPosition="left">
+              Save for Later
+            </Button>
+            <Button variant="secondary" background="dark" size="lg" disabled>
+              Disabled
             </Button>
           </div>
         </ComponentPreview>
@@ -325,7 +349,7 @@ export function ButtonDocumentation() {
             <Button variant="ghost" background="dark" size="lg" icon={<Edit size={18} />}>
               Edit Content
             </Button>
-            <Button variant="ghost" background="dark" size="lg" icon={<ArrowRight size={18} />}>
+            <Button variant="ghost" background="dark" size="lg" icon={<ArrowUpRight size={18} />}>
               Learn More
             </Button>
           </div>
@@ -405,29 +429,509 @@ export function ButtonDocumentation() {
 
         <CodeBlock 
           title="Size Usage Examples"
-          code={`// Report page hero - Use default md (no need to specify)
-<Button variant="brand" showArrow>
-  View Full Report
-</Button>
-
-// Homepage big hero - Explicitly use lg
-<Button variant="brand" size="lg" showArrow>
-  Transform Your Business
-</Button>
-
-// Compact UI - Use sm
-<Button variant="ghost" size="sm" icon={<Edit />}>
-  Edit
-</Button>
-
-// Maximum impact event page - Use xl sparingly
-<Button variant="brand" size="xl" showArrow>
-  Register Now
-</Button>`}
+          code={`// Report page hero - Use default md (no need to specify)\n<Button variant="brand" showArrow>\n  View Full Report\n</Button>\n\n// Homepage big hero - Explicitly use lg\n<Button variant="brand" size="lg" showArrow>\n  Transform Your Business\n</Button>\n\n// Compact UI - Use sm\n<Button variant="ghost" size="sm" icon={<Edit />}>\n  Edit\n</Button>\n\n// Maximum impact event page - Use xl sparingly\n<Button variant="brand" size="xl" showArrow>\n  Register Now\n</Button>`}
         />
       </DocSection>
 
-      {/* Rest of the ButtonDocumentation component remains unchanged */}
+      {/* ==================== ARROW ANIMATION RULES ==================== */}
+      <section className="border border-black/8 rounded-lg p-6">
+        <h3 className="text-2xl font-normal mb-4">Arrow Animation Rules</h3>
+        <p className="text-sm text-black/60 mb-6">
+          <code className="font-mono text-xs bg-black/5 px-1 rounded">showArrow={'{'}true{'}'}</code> adds an animated ArrowUpRight (45° diagonal). Use ONLY for urgency CTAs.
+        </p>
+
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-5">
+            <h4 className="font-semibold text-green-900 text-sm mb-3">Use showArrow for:</h4>
+            <ul className="text-sm text-green-800 space-y-2">
+              <li>• "Unlock Full Report"</li>
+              <li>• "Schedule Demo"</li>
+              <li>• "Get Started"</li>
+              <li>• "Register Now"</li>
+              <li>• Redirecting to forms/pages with urgency</li>
+            </ul>
+          </div>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-5">
+            <h4 className="font-semibold text-red-900 text-sm mb-3">NEVER use showArrow for:</h4>
+            <ul className="text-sm text-red-800 space-y-2">
+              <li>• "Learn More"</li>
+              <li>• "View Details"</li>
+              <li>• "Cancel" / "Back"</li>
+              <li>• "Close" / "Dismiss"</li>
+              <li>• Exploratory or non-urgent actions</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="bg-black/[0.02] border border-black/8 rounded-lg p-4">
+          <p className="text-xs text-black/60 mb-2">Icon Rules:</p>
+          <ul className="text-xs text-black/70 space-y-1">
+            <li>• Always <strong>ArrowUpRight</strong> (45° diagonal) — never ArrowRight or ChevronRight</li>
+            <li>• Arrow color matches text color and transitions on hover</li>
+            <li>• Animation: subtle bounce on hover, static at rest</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* ==================== STATES ==================== */}
+      <DocSection
+        title="States"
+        why="Clear visual feedback for different interaction states improves UX and prevents user confusion"
+        what="Default, hover, active, loading, and disabled states with smooth transitions"
+      >
+        <ComponentPreview title="Interactive States">
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs text-black/60 mb-3">Default & Hover - Hover to see shimmer and gradient shift</p>
+              <div className="flex flex-wrap gap-4">
+                <Button variant="primary" size="lg">Hover Me</Button>
+                <Button variant="brand" size="lg">Hover Me</Button>
+                <Button variant="secondary" size="lg">Hover Me</Button>
+              </div>
+            </div>
+          </div>
+        </ComponentPreview>
+
+        <ComponentPreview title="Loading State">
+          <div className="space-y-4">
+            <p className="text-xs text-black/60">Click buttons to trigger 2-second loading state</p>
+            <div className="flex flex-wrap gap-4">
+              <Button 
+                variant="primary" 
+                size="lg" 
+                loading={loadingStates['primary']}
+                onClick={() => handleLoadingDemo('primary')}
+              >
+                Submit Form
+              </Button>
+              <Button 
+                variant="brand" 
+                size="lg" 
+                loading={loadingStates['brand']}
+                onClick={() => handleLoadingDemo('brand')}
+              >
+                Process Payment
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="lg" 
+                loading={loadingStates['secondary']}
+                onClick={() => handleLoadingDemo('secondary')}
+              >
+                Save Draft
+              </Button>
+            </div>
+          </div>
+        </ComponentPreview>
+
+        <ComponentPreview title="Disabled State">
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-4">
+              <Button variant="primary" size="lg" disabled>Disabled Primary</Button>
+              <Button variant="brand" size="lg" disabled>Disabled Brand</Button>
+              <Button variant="secondary" size="lg" disabled>Disabled Secondary</Button>
+            </div>
+          </div>
+        </ComponentPreview>
+      </DocSection>
+
+      {/* ==================== SHIMMER ANIMATION ==================== */}
+      <section className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-normal mb-4">Shimmer Animation</h2>
+          <p className="text-sm text-black/70">
+            Our signature shimmer effect is always active on every button - it's our core brand identity.
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg p-6">
+          <h3 className="text-xl font-semibold text-red-900 mb-3">✨ Shimmer Effect (Core Brand Signature)</h3>
+          <p className="text-sm text-red-900 mb-4">
+            The shimmer effect is <strong>ALWAYS active</strong> on every button - it's our core brand identity. 
+            Like Apple's animations or Stripe's polish, this signature shine sets us apart from competitors.
+          </p>
+          <div className="bg-white rounded-lg p-4 space-y-3">
+            <div className="flex flex-wrap gap-4">
+              <Button variant="brand" size="lg">Hover to See Shimmer</Button>
+              <Button variant="primary" size="lg">Metallic Shimmer</Button>
+              <Button variant="secondary" size="lg">Coral Shimmer</Button>
+            </div>
+            <p className="text-xs text-black/60">
+              <strong>Specs:</strong> 700ms duration, gradient sweep left-to-right, GPU-accelerated, respects prefers-reduced-motion. 
+              Primary uses metallic dark gradient, Brand uses red gradient, Secondary uses coral-50 warmth sweep, Ghost uses translucent overlay.
+            </p>
+          </div>
+        </div>
+
+        <CodeBlock 
+          title="Shimmer Usage"
+          code={`// ✨ Shimmer is ALWAYS active (no prop needed)\n<Button variant="brand">\n  Shimmer Automatic\n</Button>\n\n// Custom shimmer duration (optional)\n<Button variant="brand" shimmerDuration={1000}>\n  Slow Shimmer\n</Button>`}
+        />
+      </section>
+
+      {/* ==================== ICONS ==================== */}
+      <DocSection
+        title="Icons"
+        why="Icons improve scannability and clarify button actions"
+        what="Support for left/right icon positioning and icon-only buttons"
+      >
+        <ComponentPreview title="Icon Positions">
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs text-black/60 mb-3">Icon Right (default)</p>
+              <div className="flex flex-wrap gap-4">
+                <Button variant="primary" size="lg" icon={<Download size={18} />}>
+                  Download Report
+                </Button>
+                <Button variant="secondary" size="lg" icon={<Share2 size={18} />}>
+                  Share Content
+                </Button>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs text-black/60 mb-3">Icon Left</p>
+              <div className="flex flex-wrap gap-4">
+                <Button variant="primary" size="lg" icon={<Send size={18} />} iconPosition="left">
+                  Send Message
+                </Button>
+                <Button variant="secondary" size="lg" icon={<Bookmark size={18} />} iconPosition="left">
+                  Save for Later
+                </Button>
+              </div>
+            </div>
+          </div>
+        </ComponentPreview>
+
+        <ComponentPreview title="Icon-Only Buttons">
+          <div className="space-y-4">
+            <p className="text-xs text-black/60">Square buttons with icons only. Requires ariaLabel for accessibility.</p>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button variant="primary" size="xl" iconOnly icon={<Download size={24} />} ariaLabel="Download file" />
+              <Button variant="primary" size="lg" iconOnly icon={<Download size={20} />} ariaLabel="Download file" />
+              <Button variant="secondary" size="md" iconOnly icon={<Edit size={18} />} ariaLabel="Edit item" />
+              <Button variant="ghost" size="sm" iconOnly icon={<Trash2 size={16} />} ariaLabel="Delete item" />
+            </div>
+          </div>
+        </ComponentPreview>
+      </DocSection>
+
+      {/* ==================== INTERACTIVE PLAYGROUND ==================== */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-normal">Interactive Playground</h2>
+        <p className="text-sm text-black/70">
+          Experiment with different button configurations and see the generated code.
+        </p>
+
+        <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-8 border border-black/8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Preview */}
+            <div>
+              <h4 className="text-sm font-bold text-black mb-4">Preview</h4>
+              <div className="bg-white rounded-lg p-8 border border-black/10 flex items-center justify-center min-h-[200px]">
+                <Button
+                  variant={playgroundVariant}
+                  size={playgroundSize}
+                  loading={playgroundLoading}
+                  disabled={playgroundDisabled}
+                  icon={playgroundIconPosition !== 'none' ? iconMap[playgroundSelectedIcon] : undefined}
+                  iconPosition={playgroundIconPosition !== 'none' ? playgroundIconPosition as any : undefined}
+                >
+                  {playgroundText}
+                </Button>
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div>
+              <h4 className="text-sm font-bold text-black mb-4">Controls</h4>
+              <div className="space-y-4">
+                {/* Variant */}
+                <div>
+                  <label className="text-xs font-bold text-black/70 mb-2 block">Variant</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['brand', 'primary', 'secondary', 'ghost'] as const).map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => setPlaygroundVariant(v)}
+                        className={`px-3 py-2 text-xs rounded border transition-all ${
+                          playgroundVariant === v
+                            ? 'bg-black text-white border-black'
+                            : 'bg-white text-black border-black/10 hover:border-black/30'
+                        }`}
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Size */}
+                <div>
+                  <label className="text-xs font-bold text-black/70 mb-2 block">Size</label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(['sm', 'md', 'lg', 'xl'] as const).map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setPlaygroundSize(s)}
+                        className={`px-3 py-2 text-xs rounded border transition-all uppercase ${
+                          playgroundSize === s
+                            ? 'bg-black text-white border-black'
+                            : 'bg-white text-black border-black/10 hover:border-black/30'
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Icon */}
+                <div>
+                  <label className="text-xs font-bold text-black/70 mb-2 block">Icon</label>
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    {(['ArrowUpRight', 'Download', 'Heart'] as const).map((icon) => (
+                      <button
+                        key={icon}
+                        onClick={() => setPlaygroundSelectedIcon(icon)}
+                        className={`px-3 py-2 text-xs rounded border transition-all flex items-center justify-center gap-2 ${
+                          playgroundSelectedIcon === icon
+                            ? 'bg-black text-white border-black'
+                            : 'bg-white text-black border-black/10 hover:border-black/30'
+                        }`}
+                      >
+                        {iconMap[icon]}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['none', 'left', 'right'] as const).map((pos) => (
+                      <button
+                        key={pos}
+                        onClick={() => setPlaygroundIconPosition(pos)}
+                        className={`px-3 py-2 text-xs rounded border transition-all ${
+                          playgroundIconPosition === pos
+                            ? 'bg-black text-white border-black'
+                            : 'bg-white text-black border-black/10 hover:border-black/30'
+                        }`}
+                      >
+                        {pos}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* States */}
+                <div>
+                  <label className="text-xs font-bold text-black/70 mb-2 block">States</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={playgroundLoading}
+                        onChange={(e) => setPlaygroundLoading(e.target.checked)}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-sm text-black">Loading</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={playgroundDisabled}
+                        onChange={(e) => setPlaygroundDisabled(e.target.checked)}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-sm text-black">Disabled</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Text */}
+                <div>
+                  <label className="text-xs font-bold text-black/70 mb-2 block">Button Text</label>
+                  <input
+                    type="text"
+                    value={playgroundText}
+                    onChange={(e) => setPlaygroundText(e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-black/10 rounded focus:outline-none focus:border-black"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Generated Code */}
+          <div className="mt-8">
+            <h4 className="text-sm font-bold text-black mb-4">Generated Code</h4>
+            <CodeBlock code={generatePlaygroundCode()} />
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== REAL-WORLD EXAMPLES ==================== */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-normal">Real-World Examples</h2>
+        <p className="text-sm text-black/70">
+          Common button patterns from production applications.
+        </p>
+
+        {/* Navbar CTA */}
+        <ComponentPreview title="1. Navbar CTA" description="Primary conversion action in navigation bar">
+          <div className="bg-white border-b border-black/8 p-4 flex items-center justify-between">
+            <div className="text-sm font-semibold">Company Logo</div>
+            <div className="flex items-center gap-6">
+              <a href="#" className="text-sm text-black/70 hover:text-black">Features</a>
+              <a href="#" className="text-sm text-black/70 hover:text-black">Pricing</a>
+              <Button variant="brand" size="sm">
+                Get Started
+              </Button>
+            </div>
+          </div>
+        </ComponentPreview>
+
+        <CodeBlock 
+          title="Navbar Pattern"
+          code={`<Button \n  variant="brand"     // ✅ Red for high visibility\n  size="sm"           // ✅ Small to fit navbar height\n>\n  Get Started\n</Button>`}
+        />
+
+        {/* Hero Section */}
+        <ComponentPreview title="2. Hero Section CTAs" description="Primary and secondary actions in hero">
+          <div className="bg-gradient-to-r from-gray-900 to-black p-12 text-center rounded-lg">
+            <h3 className="text-3xl text-white mb-3">Transform Your Business Today</h3>
+            <p className="text-white/70 mb-8 max-w-md mx-auto">
+              Join thousands of companies using our platform to scale faster
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button variant="brand" size="lg">
+                Get Started Free
+              </Button>
+              <Button variant="ghost" background="dark" size="lg" icon={<FileText size={18} />}>
+                View Demo
+              </Button>
+            </div>
+          </div>
+        </ComponentPreview>
+
+        <CodeBlock 
+          title="Hero Pattern"
+          code={`// Primary CTA - High conversion\n<Button \n  variant="brand" \n  size="lg"\n>\n  Get Started Free\n</Button>\n\n// Secondary action - Lower emphasis\n<Button \n  variant="ghost" \n  background="dark" \n  size="lg" \n  icon={<FileText size={18} />}\n>\n  View Demo\n</Button>`}
+        />
+
+        {/* Form Submit */}
+        <ComponentPreview title="3. Form Actions" description="Submit and cancel buttons in forms">
+          <div className="bg-white border border-black/8 rounded-lg p-6 max-w-md">
+            <h4 className="font-semibold mb-4">Contact Information</h4>
+            <div className="space-y-3 mb-6">
+              <input 
+                type="text" 
+                placeholder="Name" 
+                className="w-full px-3 py-2 border border-black/10 rounded text-sm"
+              />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                className="w-full px-3 py-2 border border-black/10 rounded text-sm"
+              />
+            </div>
+            <div className="flex gap-3">
+              <Button variant="primary" size="md" fullWidth type="submit">
+                Submit
+              </Button>
+              <Button variant="secondary" size="md">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </ComponentPreview>
+
+        <CodeBlock 
+          title="Form Pattern"
+          code={`// Primary action - Form submit\n<Button \n  variant="primary" \n  size="md" \n  fullWidth \n  type="submit"\n>\n  Submit\n</Button>\n\n// Secondary action - Cancel\n<Button variant="secondary" size="md">\n  Cancel\n</Button>`}
+        />
+      </section>
+
+      {/* ==================== PROPS API ==================== */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-normal">Props API Reference</h2>
+        <SpecTable specs={[
+          { property: 'variant', value: 'primary | secondary | ghost | brand', description: 'Visual style variant (default: primary)' },
+          { property: 'size', value: 'sm | md | lg | xl', description: 'Button size (default: lg)' },
+          { property: 'background', value: 'light | dark', description: 'Background context for ghost/secondary variants (default: light)' },
+          { property: 'icon', value: 'ReactNode', description: 'Optional icon element from lucide-react' },
+          { property: 'iconPosition', value: 'left | right', description: 'Icon placement (default: right)' },
+          { property: 'iconOnly', value: 'boolean', description: 'Icon-only button mode (square shape, requires ariaLabel)' },
+          { property: 'shimmerDuration', value: 'number', description: '✨ Shimmer speed in ms - always active (default: 700)' },
+          { property: 'loading', value: 'boolean', description: 'Loading state with spinner (default: false)' },
+          { property: 'disabled', value: 'boolean', description: 'Disabled state (default: false)' },
+          { property: 'fullWidth', value: 'boolean', description: 'Full container width (default: false)' },
+          { property: 'ripple', value: 'boolean', description: 'Material ripple effect on click (default: true)' },
+          { property: 'onClick', value: '() => void', description: 'Click handler function' },
+          { property: 'className', value: 'string', description: 'Additional CSS classes' },
+          { property: 'type', value: 'button | submit | reset', description: 'HTML button type (default: button)' },
+          { property: 'ariaLabel', value: 'string', description: 'Accessibility label (required for iconOnly)' },
+        ]} />
+      </section>
+
+      {/* ==================== ACCESSIBILITY ==================== */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-normal">Accessibility (WCAG AA)</h2>
+        <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+          <h4 className="font-semibold text-purple-900 mb-4">♿ Accessibility Features</h4>
+          <ul className="space-y-3 text-sm text-purple-900">
+            <li className="flex items-start gap-2">
+              <span className="font-bold">✓</span>
+              <span><strong>Keyboard Navigation:</strong> All buttons focusable with Tab, activatable with Enter/Space</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold">✓</span>
+              <span><strong>Focus Indicators:</strong> Visible focus ring (2px black outline + 2px offset)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold">✓</span>
+              <span><strong>Screen Readers:</strong> Semantic button elements with aria-label support</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold">✓</span>
+              <span><strong>Touch Targets:</strong> Minimum 40px × 40px (WCAG 2.5.5)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold">✓</span>
+              <span><strong>Color Contrast:</strong> All variants meet WCAG AA (4.5:1 minimum)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold">✓</span>
+              <span><strong>Reduced Motion:</strong> Respects prefers-reduced-motion preference</span>
+            </li>
+          </ul>
+        </div>
+
+        <CodeBlock 
+          title="Accessibility Best Practices"
+          code={`// ✅ GOOD: Icon-only with aria-label\n<Button \n  iconOnly \n  icon={<Download size={20} />}\n  ariaLabel="Download annual report PDF"\n/>\n\n// ✅ GOOD: Proper form button\n<Button type="submit" disabled={!formValid}>\n  Submit Form\n</Button>\n\n// ❌ BAD: Icon-only without aria-label\n<Button iconOnly icon={<Download size={20} />} />\n// Screen readers can't describe this!`}
+        />
+      </section>
+
+      {/* ==================== PERFORMANCE ==================== */}
+      <div className="bg-gradient-to-r from-green-50 to-teal-50 border border-green-200 rounded-lg p-6">
+        <h3 className="font-semibold text-green-900 mb-4">⚡ Performance & Optimization</h3>
+        <div className="space-y-2 text-sm text-green-900">
+          <div className="flex items-start gap-2">
+            <span className="font-bold">✓</span>
+            <span><strong>Hardware Acceleration:</strong> Transitions use transform + opacity (GPU-accelerated)</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="font-bold">✓</span>
+            <span><strong>60fps Interactions:</strong> All hover and active states maintain 60fps</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="font-bold">✓</span>
+            <span><strong>CSS-Only Effects:</strong> No JavaScript for visual transitions (better performance)</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="font-bold">✓</span>
+            <span><strong>No Layout Shifts:</strong> Fixed icon dimensions prevent CLS</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
