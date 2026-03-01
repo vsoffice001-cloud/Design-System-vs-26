@@ -1,5 +1,5 @@
 # DESIGN SYSTEM - AI CONTEXT FILE
-**Version:** 3.3.1  
+**Version:** 3.3.2  
 **Date:** 2026-03-01  
 **Purpose:** Complete 4W+H documentation for AI tools to automatically apply this design system
 
@@ -28,8 +28,9 @@ When any team member asks you to build a page, component, or feature:
 7. [Layout System](#layout-system)
 8. [Animation System](#animation-system)
 9. [Component Library](#component-library)
-10. [Page Assembly Guide — Reports / Product Pages](#page-assembly-guide)
-11. [AI Implementation Prompts](#ai-implementation-prompts)
+10. [Token Cross-Reference & Usage Rules](#token-cross-reference)
+11. [Page Assembly Guide — Reports / Product Pages](#page-assembly-guide)
+12. [AI Implementation Prompts](#ai-implementation-prompts)
 
 ---
 
@@ -645,6 +646,129 @@ import { useSectionProgress } from '@/app/hooks';  // Section scroll progress
 
 ---
 
+## 🗂️ TOKEN CROSS-REFERENCE & USAGE RULES
+
+Token **values** live in source files. This section tells you **where to find them** and adds **usage decision guides** that don't exist anywhere else in the repo.
+
+### **Source File Map**
+
+| Token Category | Source File | What It Contains |
+|---|---|---|
+| Colors, shadows, radius, spacing, opacity, z-index, easing, duration | `src/design-system/tokens.ts` | All raw values as TS constants |
+| CSS custom properties (colors, typography, containers) | `src/styles/theme.css` | CSS variables consumed by components |
+| Card variants, padding, shadow, hover | `src/app/components/Card.tsx` | JSDoc + `CardProps` interface |
+| Badge 11 themes, 3 variants, 4 sizes, convenience wrappers | `src/app/components/Badge.tsx` | Full THEME_COLORS map + use-case guide in header |
+| SectionWrapper backgrounds, spacing tiers, maxWidth | `src/app/components/SectionWrapper.tsx` | JSDoc + `SectionWrapperProps` interface |
+| SectionHeading levels, eyebrow, alignment | `src/app/components/SectionHeading.tsx` | JSDoc + `SectionHeadingProps` interface |
+| Icon color constants | `src/app/components/iconColors.ts` | `content: '#806ce0'`, `utility: '#737373'` |
+| Showcase / token visualization | `src/app/components/All*Content.tsx` | 6 showcase components (Colors, Typography, Spacing, BorderRadius, Elevation, LayoutGrid) |
+
+**Rule:** Never duplicate token values in this file. Read the source. This section only adds decision logic.
+
+---
+
+### **🎯 Shadow / Elevation Usage Guide**
+
+> **Values:** See `tokens.ts` → `shadows` object for exact CSS.  
+> **Card integration:** `Card` component exposes `shadow` prop ('none' | 'sm' | 'md' | 'lg').
+
+| Level | When to Use | Example Elements |
+|---|---|---|
+| `none` | Flat elements, no depth needed | Cards inside already-elevated containers, minimal list items |
+| `sm` | Resting state, gentle separation | Default cards at rest, static content blocks, bordered elements |
+| `md` | Raised state, focused content | **DEFAULT for Card** — standard content cards, feature cards |
+| `lg` | High emphasis, hero-level content | Cards on hover (via `Card hover` prop), modals, dropdowns, popovers |
+| `brandButton` | Brand CTA buttons ONLY | `Button variant="brand"` — auto-applied by Button.tsx, never manual |
+| `accent.purple` | Icon containers with periwinkle accent | `boxShadow: '0 8px 24px rgba(128, 108, 224, 0.06)'` — icon holder glow |
+| `accent.warm` | Warm-toned subtle depth | `boxShadow: '0 4px 12px rgba(217, 209, 206, 0.08)'` — editorial warmth |
+
+**Rules:**
+- ✅ Card's `shadow` prop handles sm/md/lg automatically — prefer it over manual boxShadow
+- ✅ Card's `hover` prop auto-upgrades shadow to lg on hover — don't add manual hover shadows
+- ✅ Use `accent.purple` shadow ONLY on icon containers that also have `rgba(128, 108, 224, 0.1)` background
+- ❌ Never use `brandButton` shadow manually — it's baked into `Button.tsx`
+- ❌ Never stack multiple shadow types on the same element
+
+---
+
+### **📐 Border Radius Usage Guide**
+
+> **Values:** See `tokens.ts` → `borderRadius` object.  
+> **Rule:** Never mix radius sizes within the same component.
+
+| Tier | Value | When to Use | Applied By |
+|---|---|---|---|
+| `image` | `2.5px` | Photos, thumbnails, visual media, hero images | Manual `rounded-[2.5px]` or inline style |
+| `small` | `5px` | Buttons, small interactive elements, badges (`rounded` variant), input fields | `Button.tsx` (auto), `Badge variant="rounded"` (auto) |
+| `large` | `10px` | Cards, containers, modals, icon containers, dropdown panels | `Card.tsx` (auto `rounded-[10px]`), manual for custom containers |
+| `pill` | `9999px` | Pill badges, toggle switches, fully-rounded elements | `Badge variant="pill"` (auto) |
+
+**Rules:**
+- ✅ Use `Card` component for content containers — it auto-applies `rounded-[10px]`
+- ✅ Use `Badge variant="rounded"` for 5px, `Badge variant="pill"` for full-round
+- ✅ `Button.tsx` handles its own radius — never override it
+- ❌ Never use `rounded-lg`, `rounded-xl`, or other Tailwind radius classes — use exact pixel values
+- ❌ Never put `rounded-[10px]` on an image (use `rounded-[2.5px]`)
+- ❌ Never put `rounded-[2.5px]` on a card (use `rounded-[10px]` or `Card` component)
+
+---
+
+### **🏷️ Badge Theme Selection Guide (Report / Product Pages)**
+
+> **Full theme color configs:** See `Badge.tsx` → `THEME_COLORS` object.  
+> **Convenience wrappers:** See `Badge.tsx` → `SectionLabel`, `StepPill`, `CategoryBadge`, `StatusBadge`, etc.
+
+#### When to Use Each Theme:
+
+| Theme | Use For | Section Context | Example |
+|---|---|---|---|
+| `neutral` | Default — no semantic meaning | Everywhere (safe default) | `<Badge theme="neutral">OVERVIEW</Badge>` |
+| `brand` | Report/product page section labels | Section eyebrows on report pages | `<SectionLabel theme="brand">KEY FINDINGS</SectionLabel>` |
+| `warm` | Step numbers, methodology sequences | Methodology, process sections | `<StepPill stepNumber={1} />` |
+| `purple` | Innovation, insights, premium content | Feature highlights, premium badges | `<Badge theme="purple" bordered>AI-POWERED</Badge>` |
+| `periwinkle` | Trust, reliability, calm indicators | Trust signals, certifications | `<Badge theme="periwinkle" bordered>VERIFIED</Badge>` |
+| `coral` | Warmth, energy, engagement | Engagement metrics, warm CTAs | `<Badge theme="coral" bordered>TRENDING</Badge>` |
+| `info` | Informational, data-related | Data sections, statistics context | `<Badge theme="info" bordered>DATA POINT</Badge>` |
+| `success` | Positive status, completed states | Status indicators, results | `<StatusBadge status="success">COMPLETED</StatusBadge>` |
+| `warning` | Caution, attention needed | Alerts, important notes | `<StatusBadge status="warning">REVIEW</StatusBadge>` |
+| `error` | Negative status, critical issues | Error states, critical alerts | `<StatusBadge status="error">FAILED</StatusBadge>` |
+| `muted` | De-emphasized, deprecated, optional | Archived content, legacy items | `<MutedBadge>DEPRECATED</MutedBadge>` |
+
+#### Report Page Section → Badge Theme Mapping:
+
+| Page Section | SectionLabel Theme | Card Badges | Why |
+|---|---|---|---|
+| Hero | `neutral` mode="dark" | `neutral` mode="dark" | Hero uses neutral to keep focus on h1 + CTA |
+| Content sections | `brand` | `neutral` or `purple` | Brand red label = "this is our report content" |
+| Methodology | `brand` or `warm` | `warm` (StepPill) | Warm for sequential warmth, brand for authority |
+| Metrics / Impact | `brand` | `info` or `success` | Data context = info; positive results = success |
+| Testimonial | `neutral` | — | Minimal chrome — let the quote speak |
+| Resources (dark) | `neutral` mode="dark" | `neutral` mode="dark" | Dark bg, keep badges understated |
+| Final CTA | `brand` | — | Match report identity in closing |
+
+#### `mode` Decision:
+
+| Section Background | Badge `mode` |
+|---|---|
+| Black / dark gradient | `mode="dark"` |
+| White / warm (#f5f2f1) | `mode="light"` (default, can omit) |
+
+---
+
+### **📦 Card Variant → Background Pairing**
+
+> **Full props:** See `Card.tsx` → `CardProps` interface.
+
+| Section Background | Card `variant` | Why |
+|---|---|---|
+| `warm` (#f5f2f1) | `variant="white"` | White cards pop against warm — visual separation |
+| `white` | `variant="warm"` or `variant="outlined"` | Warm/outlined gives subtle depth without sameness |
+| `black` | Don't use `Card` — hand-code dark cards | Card.tsx has no dark variant; use custom frosted-glass styles |
+
+**Default props for most cards:** `padding="md"` `shadow="sm"` (or `shadow="md"` for emphasis) `hover` for interactive cards.
+
+---
+
 ## 📚 PAGE ASSEMBLY GUIDE — REPORTS / PRODUCT PAGES
 
 This section tells you exactly **which components, elements, props, typography tokens, hooks, and grid patterns** to use when building a report landing page or product page. Combine this with the [Color Recipe](#section-by-section-color-recipe) above for the full picture.
@@ -940,7 +1064,7 @@ import { Container } from '@/app/components/Container';
       fontSize: 'var(--text-xl)',
       lineHeight: '1.6'
     }}>
-      “This analysis transformed our strategic approach to healthcare AI investments...”
+      "This analysis transformed our strategic approach to healthcare AI investments..."
     </blockquote>
 
     {/* Attribution — sans, muted */}
@@ -1122,6 +1246,9 @@ Before generating ANY code, verify:
 - [ ] Each section uses correct components from Page Assembly Guide
 - [ ] SectionHeading level={1} used ONCE (hero only)
 - [ ] Card variant matches section background (white cards on warm bg, warm cards on white bg)
+- [ ] Shadow level matches element importance (sm resting, md default, lg emphasis/hover)
+- [ ] Border radius matches element type (2.5px images, 5px buttons/badges, 10px cards)
+- [ ] Badge theme matches section context (see Badge Theme Selection Guide)
 
 ---
 
@@ -1145,6 +1272,10 @@ Before generating ANY code, verify:
 16. ❌ Hand-code headings instead of using `<SectionHeading>`
 17. ❌ Hand-code content boxes instead of using `<Card>`
 18. ❌ Use `SectionHeading level={1}` more than once per page
+19. ❌ Use `rounded-lg` or Tailwind radius classes instead of exact pixel values (2.5/5/10px)
+20. ❌ Apply `shadow="lg"` as default — use `shadow="sm"` or `shadow="md"`
+21. ❌ Apply manual `boxShadow` when `Card`'s `shadow` prop handles it
+22. ❌ Use random Badge themes — match theme to section context per Badge Selection Guide
 
 ---
 
@@ -1152,6 +1283,7 @@ Before generating ANY code, verify:
 
 - **Repository:** `vsoffice001-cloud/Design-System-vs-26`
 - **Theme Tokens:** `/src/styles/theme.css`
+- **TypeScript Tokens:** `/src/design-system/tokens.ts`
 - **Component Library:** `/src/app/components/index.ts`
 - **Button:** `/src/app/components/Button.tsx`
 - **Icon Colors:** `/src/app/components/iconColors.ts`
@@ -1159,15 +1291,17 @@ Before generating ANY code, verify:
 - **SectionWrapper:** `/src/app/components/SectionWrapper.tsx`
 - **SectionHeading:** `/src/app/components/SectionHeading.tsx`
 - **Card:** `/src/app/components/Card.tsx`
+- **Badge (+ SectionLabel):** `/src/app/components/Badge.tsx`
 - **ResourceCard:** `/src/app/components/ResourceCard.tsx`
 - **ScrollToTop:** `/src/app/components/ScrollToTop.tsx`
 - **ScrollProgress:** `/src/app/components/ScrollProgress.tsx`
 - **Links:** `/src/app/components/CTALink.tsx`, `/src/app/components/InlineLink.tsx`
 - **Hooks:** `/src/app/hooks/index.ts`
 - **Dashboard:** `/src/app/components/DesignSystemDashboard.tsx`
+- **Token Showcases:** `/src/app/components/All*Content.tsx` (6 files)
 
 ---
 
 **Last Updated:** 2026-03-01  
 **Maintained By:** Design System Team  
-**Version:** 3.3.1 — Added Page Assembly Guide with component-level recipes for 7 section types
+**Version:** 3.3.2 — Added Token Cross-Reference & Usage Rules (shadow/elevation guide, border radius guide, badge theme selection matrix, card-background pairing)

@@ -21,11 +21,11 @@ This document lists every file in the GitHub repository, organized by directory,
 | `README.md` | Project readme | Stable |
 | `GITHUB_REPO_MANIFEST.md` | **This file** - Repository inventory | Updated Mar 1, 2026 |
 
-### Root - AI Context Files (v3.3)
+### Root - AI Context Files (v3.3.2)
 
 | File | Purpose | Version |
 |------|---------|--------|
-| `DESIGN_SYSTEM_AI_CONTEXT.md` | Primary AI context — full system reference with 92-5-3 Color Usage Guide | v3.3 (Color Guide + Layout/Scroll components) |
+| `DESIGN_SYSTEM_AI_CONTEXT.md` | Primary AI context — full system reference with 92-5-3 Color Usage Guide, Page Assembly Guide, Token Cross-Reference & Usage Rules | v3.3.2 |
 
 ### Root - Design System Reference Docs
 
@@ -47,13 +47,13 @@ This document lists every file in the GitHub repository, organized by directory,
 
 ```
 src/
- +-- app/
- |   +-- App.tsx                    # Main app entry (uses react-router-dom)
- |   +-- components/                # All UI components
- |   +-- hooks/                     # Custom React hooks
- +-- design-system/                 # Design tokens & showcase components
- +-- imports/                       # SVG imports from Figma
- +-- styles/                        # CSS files (theme, fonts, tailwind)
+ ├── app/
+ │   ├── App.tsx                    # Main app entry (uses react-router-dom)
+ │   ├── components/                # All UI components
+ │   └── hooks/                     # Custom React hooks
+ ├── design-system/                 # Design tokens & showcase components
+ ├── imports/                       # SVG imports from Figma
+ └── styles/                        # CSS files (theme, fonts, tailwind)
 ```
 
 ---
@@ -319,6 +319,8 @@ When syncing from Figma Make to GitHub:
 
 | Date | Changes |
 |------|---------|
+| Mar 1, 2026 | **v3.3.2 Token Cross-Reference:** Added shadow/elevation usage guide, border radius decision table, badge theme selection matrix for report pages, card-background pairing rules — all as decision logic only (values stay in tokens.ts/component files) |
+| Mar 1, 2026 | **v3.3.1 Page Assembly Guide:** Added component-level recipes for 7 section types (Hero, Content+Cards, Methodology, Metrics, Testimonial, Resources, Final CTA) with full JSX, plus Component Selection and Typography Token quick-reference tables |
 | Mar 1, 2026 | **v3.3 Color Usage Guide:** Expanded DESIGN_SYSTEM_AI_CONTEXT.md with full 92-5-3 Color Usage Guide for reports/product pages (Element-Color Classification, Purple boundaries, gradient workaround, section color recipe, secondary button warm tone) |
 | Mar 1, 2026 | **v3.3 barrel + docs restore:** Fixed index.ts and COMPONENT_GUIDELINES_4WH.md overwrite — restored SectionHeading, SectionWrapper, Card, ScrollToTop, ScrollProgress, iconColors exports + 4W+H entries + 2 decision flowcharts |
 | Mar 1, 2026 | **ResourcesSection system push (11 files):** 4 new files (Container.tsx, ResourceCard.tsx, SubtleVariantSwitcher.tsx, useResponsiveGutter.ts); 2 updated organisms (ResourcesSection — 8 Unsplash URLs replacing figma:asset, ClientContextSection — prop-driven logo); theme.css updated (--text-primary, --text-secondary, responsive --section-py-standard); barrel exports updated; GITHUB_PUSH_GUIDE.md and COMPONENT_GUIDELINES_4WH.md pushed |
