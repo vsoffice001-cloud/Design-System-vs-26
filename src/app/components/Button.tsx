@@ -129,7 +129,10 @@ export function Button({
   // Arrow color based on variant
   const getArrowColor = () => {
     if (variant === 'primary' || variant === 'brand') return 'white';
-    if (variant === 'secondary') return background === 'dark' ? 'white' : 'black';
+    if (variant === 'secondary') {
+      if (background === 'dark') return 'white';
+      return isHovering ? 'var(--brand-red)' : 'rgba(0,0,0,0.7)';
+    }
     if (variant === 'ghost') return background === 'dark' ? 'white' : 'black';
     return 'black';
   };
@@ -205,7 +208,7 @@ export function Button({
       if (background === 'dark') {
         return 'bg-white/10 text-white border border-white/30 hover:border-white hover:bg-white/[0.15] active:bg-white/[0.2] disabled:border-white/10 disabled:text-white/40';
       }
-      return 'bg-white text-black border border-[var(--warm-500)] hover:border-black hover:bg-[var(--coral-50)] active:bg-[var(--coral-100)] disabled:border-[var(--warm-300)] disabled:text-black/40';
+      return 'bg-white border disabled:text-black/40';
     }
     if (variant === 'ghost') {
       if (background === 'dark') {
@@ -231,8 +234,18 @@ export function Button({
     boxShadow: isHovering ? '0 12px 32px rgba(176, 31, 36, 0.25)' : '0 4px 16px rgba(176, 31, 36, 0.15)'
   } : {};
 
-  const secondaryGhostStyle = (variant === 'secondary' || variant === 'ghost') ? fontSizeStyles[size] : {};
-
+  const secondaryGhostStyle = (variant === 'secondary' || variant === 'ghost') ? {
+    ...fontSizeStyles[size],
+    ...(variant === 'secondary' && background !== 'dark' ? {
+      color: isHovering ? 'var(--brand-red)' : 'rgba(0,0,0,0.7)',
+      borderColor: isHovering ? 'var(--brand-red)' : 'rgba(0,0,0,0.12)',
+      boxShadow: isHovering 
+        ? '0 4px 16px rgba(176, 31, 36, 0.12)' 
+        : '0 2px 8px rgba(0,0,0,0.04)',
+      transition: 'color 300ms ease-out, border-color 300ms ease-out, box-shadow 300ms ease-out',
+    } : {}),
+  } : {};
+  
   const inlineStyle = variant === 'primary' ? primaryBgStyle : variant === 'brand' ? brandBgStyle : secondaryGhostStyle;
   
   const widthStyles = fullWidth ? 'w-full' : iconOnly ? '' : 'w-full sm:w-auto';
@@ -298,13 +311,15 @@ export function Button({
         />
       )}
       
-      {/* ✨ SHIMMER EFFECT - SECONDARY VARIANT - Coral warmth gradient */}
+      {/* ✨ SHIMMER EFFECT - SECONDARY VARIANT - Neutral → Brand Red on hover */}
       {variant === 'secondary' && (
         <div
           className={`absolute inset-0 w-[200%] pointer-events-none transition-transform ease-out motion-reduce:transition-none ${isHovering ? '-translate-x-1/2' : 'translate-x-0'}`}
           style={{ 
             transitionDuration: `${shimmerDuration}ms`,
-            backgroundImage: `linear-gradient(to right, transparent, ${background === 'dark' ? 'rgba(255,255,255,0.15)' : 'var(--coral-50)'}, transparent)`
+            backgroundImage: isHovering 
+              ? `linear-gradient(to right, transparent, rgba(176, 31, 36, 0.08), transparent)`
+              : `linear-gradient(to right, transparent, ${background === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.8)'}, transparent)`
           }}
         />
       )}
