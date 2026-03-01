@@ -45,6 +45,10 @@ BUTTONS:
 • Arrow: ArrowUpRight (45° diagonal) - ONLY for urgent CTAs to forms
   - showArrow prop on Button, or automatic in CTALink
   - NEVER use ArrowRight or ChevronRight
+• Secondary variant (v3.3 two-state):
+  - Resting: neutral border rgba(0,0,0,0.12), text rgba(0,0,0,0.7), white shimmer
+  - Hover: brand-red border #b01f24, brand-red text, red-tinted shimmer + shadow
+  - Dark mode secondary: unchanged (bg-white/10, white text)
 
 BADGES (11 themes, 3 variants):
 • Section labels: <SectionLabel theme="brand">KEY INSIGHTS</SectionLabel>
@@ -58,6 +62,16 @@ LAYOUT COMPONENTS:
 • SectionHeading.tsx — Heading molecule (eyebrow + h1/h2/h3)
 • Card.tsx — Content container (variant/padding/shadow/hover)
 • ResourceCard.tsx — Content card (7 variants, 2 modes, 53 --rc-* tokens)
+
+PAGE-LEVEL COMPONENTS (wire once at page root):
+• Navbar.tsx — Fixed top nav, 2 states (expanded/compact)
+• ReadingProgressBar.tsx — Section-specific progress (case studies)
+• ScrollProgress.tsx — Generic scroll progress (any page)
+• ScrollToTop.tsx — Floating back-to-top button
+• StickyCTA.tsx — Context-aware floating CTA
+• ContactModal.tsx — Contact form overlay
+• NextSectionCTA.tsx — "Scroll to next" guidance
+• TableOfContents.tsx — Sidebar TOC with active highlighting
 
 SECTIONS:
 • Alternate: Black → White → Warm → White
@@ -90,11 +104,47 @@ Quality target: 9.5/10 (Stripe/Material Design level)
 // Navbar (compact)
 <Button variant="brand" size="sm">Sign Up</Button>
 
+// Secondary (two-state: neutral at rest, brand-red on hover)
+<Button variant="secondary">Learn More</Button>
+<Button variant="secondary" showArrow>Explore Features</Button>
+
+// Secondary on dark background (unchanged)
+<Button variant="secondary" background="dark">Learn More</Button>
+
 // Text + Arrow Link (AnimatedArrow included automatically)
 <CTALink href="/learn">Explore More</CTALink>
 
 // Inline paragraph link
 <InlineLink href="/about">our approach</InlineLink>
+```
+
+---
+
+## PAGE SHELL TEMPLATE
+
+```tsx
+import { Navbar } from '@/app/components/Navbar';
+import { ReadingProgressBar } from '@/app/components/ReadingProgressBar';
+import { ScrollToTop } from '@/app/components/ScrollToTop';
+import { StickyCTA } from '@/app/components/StickyCTA';
+import { ContactModal } from '@/app/components/ContactModal';
+
+export default function ReportPage() {
+  const [showContact, setShowContact] = useState(false);
+
+  return (
+    <>
+      <ReadingProgressBar />
+      <Navbar />
+      <main id="main-content">
+        {/* Sections here */}
+      </main>
+      <ScrollToTop />
+      <StickyCTA />
+      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+    </>
+  );
+}
 ```
 
 ---
@@ -125,5 +175,6 @@ import { SectionLabel } from '@/app/components/Badge';
 
 **Full documentation:** See DESIGN_SYSTEM_AI_CONTEXT.md (v3.2.1)  
 **Component guidelines:** See COMPONENT_GUIDELINES_4WH.md  
+**File map (reading order):** See design-system-checklist.md (v2.0)  
 **Live examples:** Design System Dashboard  
 **Updated:** 2026-03-01
