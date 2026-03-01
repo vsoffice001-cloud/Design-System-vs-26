@@ -3,31 +3,22 @@
  * BADGE COMPONENT SYSTEM
  * ═════════════════════════════════════════════════════════════════════════
  * 
- * A unified, flexible badge component system supporting all label and pill
- * variants across the editorial design system. Replaces fragmented badge
- * components with a single, scalable API.
+ * Unified badge system for the editorial design system.
  * 
- * DESIGN PRINCIPLES:
- * • Single Source of Truth: One component, multiple variants
- * • Semantic Props: Clear, self-documenting API
- * • Design Token Based: Uses CSS custom properties for consistency
- * • WCAG AAA Compliant: All color combinations tested for accessibility
- * • Performance Optimized: Pure CSS animations, minimal re-renders
+ * ARCHITECTURE (CSS Custom Property Driven):
+ * • Sizes & shapes: Defined in theme.css (--badge-xs/sm/md/lg-*, --badge-radius-*)
+ * • Colors: THEME_COLORS JS object selects values per theme/mode props,
+ *   then sets them as inline CSS custom properties (--badge-bg, --badge-text, etc.)
+ * • CSS rules in theme.css consume all --badge-* properties for base + hover + shimmer
  * 
- * ─────────────────────────────────────────────────────────────────────────
- * 📚 DOCUMENTATION INDEX
- * ─────────────────────────────────────────────────────────────────────────
- * 1. TYPES & INTERFACES - TypeScript definitions
- * 2. DESIGN TOKENS - Colors (JS), sizing via CSS custom properties
- * 3. MAIN COMPONENT - Badge with all variants
- * 4. CONVENIENCE WRAPPERS - Pre-configured badge types
- * 5. USE CASE GUIDE - When to use each variant
+ * WHY THIS PATTERN:
+ * CSS owns property application + transitions + hover states.
+ * JS owns theme selection logic (11 themes × 2 modes = 22 combos).
+ * No 22-selector CSS explosion. No inline style specificity fights.
  * 
  * ─────────────────────────────────────────────────────────────────────────
  * 🎯 QUICK REFERENCE
  * ─────────────────────────────────────────────────────────────────────────
- * 
- * COMMON USE CASES:
  * 
  * Section Headers:
  * <Badge variant="minimal" size="sm" theme="neutral">Challenges</Badge>
@@ -40,14 +31,8 @@
  *   Objective 1
  * </Badge>
  * 
- * Info Card Labels:
- * <Badge variant="minimal" size="xs" theme="neutral">Client</Badge>
- * 
  * Status Indicators:
  * <Badge variant="rounded" size="sm" theme="success" bordered>Completed</Badge>
- * 
- * Category Tags:
- * <Badge variant="rounded" size="sm" theme="neutral" bordered>Strategy</Badge>
  */
 
 import { CSSProperties, ReactNode } from 'react';
@@ -56,103 +41,49 @@ import { CSSProperties, ReactNode } from 'react';
 // 1. TYPES & INTERFACES
 // ═════════════════════════════════════════════════════════════════════════
 
-/**
- * Shape variant determines border radius and overall style
- */
 export type BadgeVariant = 
   | 'minimal'   // No background, no border (section labels)
   | 'rounded'   // 5px radius, optional background (category tags)
   | 'pill';     // Fully rounded, usually bordered (step numbers, objectives)
 
-/**
- * Size scale following Major Third ratio (1.25)
- */
 export type BadgeSize = 
   | 'xs'  // 9-10px - info card labels
   | 'sm'  // 11px - section labels, pills
   | 'md'  // 13px - emphasized badges
   | 'lg'; // 15px - large interactive badges
 
-/**
- * Color themes mapped to design system tokens
- */
 export type BadgeTheme = 
   | 'neutral'     // Black/white based (default)
   | 'warm'        // Warm editorial colors
   | 'brand'       // Brand Red (#b01f24)
-  | 'coral'       // Coral/Terracotta - Warmth & Energy (COLOR PALETTE #2)
-  | 'purple'      // Purple - Premium, Innovation & Insights (COLOR PALETTE #4)
-  | 'periwinkle'  // Periwinkle - Trust, Reliability & Calm (COLOR PALETTE #5)
+  | 'coral'       // Coral/Terracotta
+  | 'purple'      // Purple - Premium, Innovation
+  | 'periwinkle'  // Periwinkle - Trust, Reliability
   | 'success'     // Green for positive states
   | 'warning'     // Amber for caution
   | 'error'       // Red for negative states
-  | 'info'        // Blue/Perano for informational (COLOR PALETTE #6)
-  | 'muted';      // Deliberately subdued - deprecated, optional, de-emphasized content
+  | 'info'        // Blue/Perano for informational
+  | 'muted';      // Deliberately subdued
 
-/**
- * Background mode determines light vs dark styling
- */
 export type BadgeMode = 'light' | 'dark';
 
-/**
- * Main Badge Component Props
- */
 export interface BadgeProps {
-  /** Text or content to display */
   children: ReactNode;
-  
-  /** Shape variant (default: 'minimal') */
   variant?: BadgeVariant;
-  
-  /** Size scale (default: 'sm') */
   size?: BadgeSize;
-  
-  /** Color theme (default: 'neutral') */
   theme?: BadgeTheme;
-  
-  /** Light or dark background mode (default: 'light') */
   mode?: BadgeMode;
-  
-  /** Show border (default: false) */
   bordered?: boolean;
-  
-  /** Enable shimmer animation on hover (default: false) */
   shimmer?: boolean;
-  
-  /** Enable interactive hover states (default: false) */
   interactive?: boolean;
-  
-  /** Force uppercase text (default: true) */
   uppercase?: boolean;
-  
-  /** Custom letter spacing override */
   letterSpacing?: string;
-  
-  /** Font weight override (default: 400 for minimal, 500 for rounded/pill)
-   * 
-   * BEST PRACTICES:
-   * - 400 (normal): Body-context badges, subtle labels, info card labels
-   * - 500 (medium): Default for pill/rounded badges, category tags, status pills
-   * - 600 (semibold): Section labels, chapter labels, emphasis badges, headings context
-   * 
-   * WHY configurable: Section labels on report pages use semibold (600) to match
-   * the editorial heading hierarchy, while body-context badges stay at 400-500.
-   */
+  /** Font weight: 400 (body), 500 (default pill/rounded), 600 (section labels) */
   fontWeight?: 400 | 500 | 600;
-  
-  /** HTML tag to render (default: 'span') */
   as?: 'span' | 'div' | 'p';
-  
-  /** Additional CSS classes */
   className?: string;
-  
-  /** Custom inline styles */
   style?: CSSProperties;
-  
-  /** Accessibility label */
   ariaLabel?: string;
-  
-  /** Click handler for interactive badges */
   onClick?: () => void;
 }
 
@@ -161,15 +92,8 @@ export interface BadgeProps {
 // ═════════════════════════════════════════════════════════════════════════
 
 /**
- * SIZE & VARIANT CSS VARIABLE MAP
- * 
- * Size and shape tokens are now defined as CSS custom properties in theme.css.
- * This map provides the variable names for each size/variant combination.
- * 
- * Source of truth: src/styles/theme.css (--badge-* section)
- * 
- * Phase 2 of 4: Sizes + variants migrated to CSS variables.
- * Phase 3-4 will migrate THEME_COLORS to CSS variables.
+ * SIZE CSS VARIABLE MAP
+ * References --badge-* tokens defined in theme.css
  */
 const SIZE_CSS_VARS = {
   xs: {
@@ -194,33 +118,33 @@ const SIZE_CSS_VARS = {
   },
 } as const;
 
+/**
+ * VARIANT CSS VARIABLE MAP
+ * References --badge-radius-* tokens defined in theme.css
+ */
 const VARIANT_CSS_VARS = {
   minimal: {
     borderRadius: 'var(--badge-radius-minimal)',
     padding: '0px',
-    background: 'transparent',
   },
   rounded: {
     borderRadius: 'var(--badge-radius-rounded)',
-    padding: 'inherit', // Uses size-based padding
-    background: 'default', // Set per theme
+    padding: 'inherit',
   },
   pill: {
     borderRadius: 'var(--badge-radius-pill)',
-    padding: 'inherit', // Uses size-based padding
-    background: 'default', // Set per theme
+    padding: 'inherit',
   },
 } as const;
 
 /**
- * THEME COLOR TOKENS (Phase 3-4 migration target)
+ * THEME COLOR TOKENS
  * 
- * These remain as JS objects for now. Phase 3 will add --badge-[theme]-[mode]-*
- * CSS custom properties to theme.css. Phase 4 will switch this component to
- * consume them via data attributes.
+ * JS selects the correct color set based on theme + mode props.
+ * Values are set as CSS custom properties on the badge element.
+ * CSS rules in theme.css consume them for base + hover + shimmer.
  * 
- * All colors use semantic tokens from theme.css where available.
- * Structured as: [background, border, text, hoverBackground, hoverBorder]
+ * All WCAG contrast ratios documented per theme.
  */
 const THEME_COLORS = {
   neutral: {
@@ -232,7 +156,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(0, 0, 0, 0.08)',
       hoverBorder: 'rgba(0, 0, 0, 0.25)',
       shimmer: 'rgba(255, 255, 255, 0.75)',
-      contrastRatio: '8.9:1',
     },
     dark: {
       background: 'rgba(255, 255, 255, 0.1)',
@@ -242,7 +165,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(255, 255, 255, 0.15)',
       hoverBorder: 'rgba(255, 255, 255, 0.35)',
       shimmer: 'rgba(255, 255, 255, 0.4)',
-      contrastRatio: '12.6:1',
     },
   },
   warm: {
@@ -254,7 +176,6 @@ const THEME_COLORS = {
       hoverBackground: 'var(--warm-100)',
       hoverBorder: 'var(--warm-800)',
       shimmer: 'rgba(168, 150, 142, 0.12)',
-      contrastRatio: '7.2:1',
     },
     dark: {
       background: 'var(--warm-900)',
@@ -264,7 +185,6 @@ const THEME_COLORS = {
       hoverBackground: 'var(--warm-800)',
       hoverBorder: 'var(--warm-600)',
       shimmer: 'rgba(255, 255, 255, 0.3)',
-      contrastRatio: '11.8:1',
     },
   },
   brand: {
@@ -276,7 +196,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(176, 31, 36, 0.12)',
       hoverBorder: 'var(--brand-red)',
       shimmer: 'rgba(255, 255, 255, 0.5)',
-      contrastRatio: '7.8:1',
     },
     dark: {
       background: 'rgba(176, 31, 36, 0.2)',
@@ -286,7 +205,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(176, 31, 36, 0.3)',
       hoverBorder: 'rgba(176, 31, 36, 0.8)',
       shimmer: 'rgba(255, 220, 220, 0.4)',
-      contrastRatio: '10.2:1',
     },
   },
   coral: {
@@ -298,7 +216,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(234, 122, 95, 0.12)',
       hoverBorder: 'rgba(234, 122, 95, 0.6)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '8.2:1',
     },
     dark: {
       background: 'rgba(234, 122, 95, 0.15)',
@@ -308,7 +225,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(234, 122, 95, 0.22)',
       hoverBorder: 'rgba(234, 122, 95, 0.7)',
       shimmer: 'rgba(255, 245, 241, 0.4)',
-      contrastRatio: '11.2:1',
     },
   },
   purple: {
@@ -320,7 +236,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(128, 108, 224, 0.12)',
       hoverBorder: 'rgba(128, 108, 224, 0.6)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '8.8:1',
     },
     dark: {
       background: 'rgba(128, 108, 224, 0.15)',
@@ -330,7 +245,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(128, 108, 224, 0.22)',
       hoverBorder: 'rgba(128, 108, 224, 0.7)',
       shimmer: 'rgba(223, 220, 251, 0.4)',
-      contrastRatio: '11.5:1',
     },
   },
   periwinkle: {
@@ -342,7 +256,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(195, 198, 249, 0.18)',
       hoverBorder: 'rgba(195, 198, 249, 0.7)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '7.8:1',
     },
     dark: {
       background: 'rgba(195, 198, 249, 0.15)',
@@ -352,7 +265,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(195, 198, 249, 0.22)',
       hoverBorder: 'rgba(195, 198, 249, 0.7)',
       shimmer: 'rgba(235, 237, 251, 0.4)',
-      contrastRatio: '11.8:1',
     },
   },
   success: {
@@ -364,7 +276,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(34, 197, 94, 0.12)',
       hoverBorder: 'rgba(34, 197, 94, 0.6)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '8.1:1',
     },
     dark: {
       background: 'rgba(34, 197, 94, 0.15)',
@@ -374,7 +285,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(34, 197, 94, 0.22)',
       hoverBorder: 'rgba(34, 197, 94, 0.7)',
       shimmer: 'rgba(220, 255, 230, 0.4)',
-      contrastRatio: '11.5:1',
     },
   },
   warning: {
@@ -386,7 +296,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(245, 158, 11, 0.12)',
       hoverBorder: 'rgba(245, 158, 11, 0.6)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '8.5:1',
     },
     dark: {
       background: 'rgba(245, 158, 11, 0.15)',
@@ -396,7 +305,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(245, 158, 11, 0.22)',
       hoverBorder: 'rgba(245, 158, 11, 0.7)',
       shimmer: 'rgba(255, 250, 230, 0.4)',
-      contrastRatio: '12.1:1',
     },
   },
   error: {
@@ -408,7 +316,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(239, 68, 68, 0.12)',
       hoverBorder: 'rgba(239, 68, 68, 0.6)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '9.2:1',
     },
     dark: {
       background: 'rgba(239, 68, 68, 0.15)',
@@ -418,7 +325,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(239, 68, 68, 0.22)',
       hoverBorder: 'rgba(239, 68, 68, 0.7)',
       shimmer: 'rgba(255, 230, 230, 0.4)',
-      contrastRatio: '11.8:1',
     },
   },
   info: {
@@ -430,7 +336,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(34, 139, 230, 0.12)',
       hoverBorder: 'rgba(34, 139, 230, 0.6)',
       shimmer: 'rgba(255, 255, 255, 0.6)',
-      contrastRatio: '8.5:1',
     },
     dark: {
       background: 'rgba(34, 139, 230, 0.15)',
@@ -440,7 +345,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(34, 139, 230, 0.22)',
       hoverBorder: 'rgba(34, 139, 230, 0.7)',
       shimmer: 'rgba(200, 220, 255, 0.4)',
-      contrastRatio: '11.5:1',
     },
   },
   muted: {
@@ -452,7 +356,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(0, 0, 0, 0.04)',
       hoverBorder: 'rgba(0, 0, 0, 0.12)',
       shimmer: 'rgba(255, 255, 255, 0.5)',
-      contrastRatio: '5.2:1',
     },
     dark: {
       background: 'rgba(255, 255, 255, 0.04)',
@@ -462,7 +365,6 @@ const THEME_COLORS = {
       hoverBackground: 'rgba(255, 255, 255, 0.08)',
       hoverBorder: 'rgba(255, 255, 255, 0.18)',
       shimmer: 'rgba(255, 255, 255, 0.25)',
-      contrastRatio: '6.8:1',
     },
   },
 } as const;
@@ -489,21 +391,19 @@ export function Badge({
   ariaLabel,
   onClick,
 }: BadgeProps) {
-  // Get design tokens (sizes/variants from CSS vars, colors from JS)
+  // Get design tokens
   const sizeVars = SIZE_CSS_VARS[size];
   const variantVars = VARIANT_CSS_VARS[variant];
   const colorTokens = THEME_COLORS[theme][mode];
   
-  // Determine if this is a minimal variant (affects text color)
   const isMinimal = variant === 'minimal';
   const textColor = isMinimal ? colorTokens.textMinimal : colorTokens.text;
   
-  // Determine padding (minimal has no padding, others use size-based CSS vars)
-  const padding = variant === 'minimal' 
-    ? variantVars.padding 
-    : sizeVars.padding;
+  // Padding: minimal has none, others use size-based CSS vars
+  const padding = isMinimal ? variantVars.padding : sizeVars.padding;
   
-  // Build styles — sizes/shapes via CSS custom properties, colors via JS
+  // Build styles — ALL visual properties via CSS custom properties
+  // CSS rules in theme.css consume these for base + hover + shimmer
   const badgeStyles: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -511,28 +411,25 @@ export function Badge({
     gap: '6px',
     position: 'relative',
     
-    // Typography (from CSS custom properties)
+    // Typography (from CSS custom properties in theme.css)
     fontSize: sizeVars.fontSize,
-    fontWeight: fontWeight || (variant === 'minimal' ? 400 : 500),
+    fontWeight: fontWeight || (isMinimal ? 400 : 500),
     textTransform: uppercase ? 'uppercase' : 'none',
     letterSpacing: letterSpacing || sizeVars.letterSpacing,
-    lineHeight: variant === 'minimal' ? '1.6' : '1',
+    lineHeight: isMinimal ? '1.6' : '1',
     
-    // Colors (from JS tokens — Phase 3-4 will migrate these)
-    color: textColor,
-    backgroundColor: isMinimal ? 'transparent' : colorTokens.background,
-    borderColor: bordered ? colorTokens.border : 'transparent',
-    borderWidth: bordered ? '1px' : '0px',
-    borderStyle: 'solid',
-    
-    // Shape (from CSS custom properties)
+    // Shape (from CSS custom properties in theme.css)
     borderRadius: variantVars.borderRadius,
     padding: padding,
     
-    // Set CSS custom properties for hover states (used by theme.css rules)
-    // This bridges JS color tokens to CSS hover rules
+    // Color CSS custom properties — consumed by .badge rules in theme.css
+    '--badge-text': textColor,
+    '--badge-bg': isMinimal ? 'transparent' : colorTokens.background,
+    '--badge-border': bordered ? colorTokens.border : 'transparent',
+    '--badge-border-width': bordered ? '1px' : '0px',
     '--badge-hover-bg': colorTokens.hoverBackground,
     '--badge-hover-border': colorTokens.hoverBorder,
+    '--badge-shimmer': colorTokens.shimmer,
     
     // Layout
     overflow: shimmer ? 'hidden' : 'visible',
@@ -541,16 +438,11 @@ export function Badge({
     cursor: interactive || onClick ? 'pointer' : 'default',
     transition: `background-color var(--badge-transition-duration, 300ms) ease-out, border-color var(--badge-transition-duration, 300ms) ease-out, transform var(--badge-transition-duration, 300ms) ease-out`,
     
-    // User overrides
+    // User overrides (must be last to allow prop-level customization)
     ...style,
   } as CSSProperties;
   
-  // Interactive hover styles (applied via className)
-  const interactiveClass = interactive 
-    ? 'badge-interactive' 
-    : '';
-  
-  // Mode class for dark/light specific styles
+  const interactiveClass = interactive ? 'badge-interactive' : '';
   const modeClass = `badge-${mode}`;
   
   return (
@@ -562,20 +454,9 @@ export function Badge({
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
-      {/* Shimmer Overlay */}
+      {/* Shimmer Overlay — gradient handled by CSS via var(--badge-shimmer) */}
       {shimmer && (
-        <div 
-          className="badge-shimmer absolute inset-0 pointer-events-none"
-          style={{
-            background: `linear-gradient(90deg, 
-              transparent 0%, 
-              ${colorTokens.shimmer} 50%, 
-              transparent 100%)`,
-            width: '50%',
-            height: '100%',
-            zIndex: 5,
-          }}
-        />
+        <div className="badge-shimmer" />
       )}
       
       {/* Content */}
@@ -613,10 +494,7 @@ export function SectionLabel({
       mode={mode}
       fontWeight={fontWeight}
       className={className}
-      style={{
-        marginBottom: '12px',
-        ...style,
-      }}
+      style={{ marginBottom: '12px', ...style }}
     >
       {children}
     </Badge>
@@ -722,10 +600,7 @@ export function InfoCardLabel({
       theme="neutral" 
       mode={mode}
       className={className}
-      style={{
-        marginBottom: 'clamp(6px, 0.6vw, 8px)',
-        opacity: 0.7,
-      }}
+      style={{ marginBottom: 'clamp(6px, 0.6vw, 8px)', opacity: 0.7 }}
     >
       {children}
     </Badge>
@@ -871,14 +746,6 @@ export function ClickableBadge({
 
 export default Badge;
 
-/**
- * Export design tokens for design system documentation.
- * 
- * NOTE: SIZE_TOKENS and VARIANT_TOKENS have been migrated to CSS custom
- * properties (--badge-* in theme.css). The BADGE_TOKENS export now provides
- * the CSS variable names for programmatic access, plus the JS color tokens
- * (which will migrate in Phase 3-4).
- */
 export const BADGE_TOKENS = {
   sizeVars: SIZE_CSS_VARS,
   variantVars: VARIANT_CSS_VARS,
