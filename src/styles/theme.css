@@ -378,6 +378,62 @@
   --brand-red-active: #771419;
 
   /* ========================================
+     BADGE SIZE & SHAPE SYSTEM
+     ======================================== 
+     
+     PURPOSE: CSS custom properties for Badge component sizing and shape.
+     Replaces hardcoded JS SIZE_TOKENS and VARIANT_TOKENS objects.
+     
+     SIZE SCALE: Based on Major Third ratio (1.25)
+     - xs: Info card labels, micro metadata (~18px height)
+     - sm: Section labels, step pills, most badges (~23px height)
+     - md: Emphasized badges, medium interactive (~29px height)
+     - lg: Large interactive badges, hero context (~35px height)
+     
+     VARIANT SHAPES:
+     - minimal: No background, no border, no padding (section labels)
+     - rounded: 5px radius, background + optional border (category tags)
+     - pill: Fully rounded, usually bordered (step numbers, objectives)
+     
+     MIGRATION: Phase 1 of 4 — Badge.tsx still reads JS objects.
+     Phase 2 will switch Badge.tsx to consume these variables.
+     
+     ======================================== */
+  
+  /* Badge Size: XS (info card labels) */
+  --badge-xs-font: clamp(9px, 0.8vw, 10px);
+  --badge-xs-py: 4px;
+  --badge-xs-px: 12px;
+  --badge-xs-tracking: 1.2px;
+  
+  /* Badge Size: SM (section labels, step pills — most common) */
+  --badge-sm-font: var(--text-xs);  /* 12.8px — ties into typography scale */
+  --badge-sm-py: 6px;
+  --badge-sm-px: 14px;
+  --badge-sm-tracking: 1.8px;
+  
+  /* Badge Size: MD (emphasized badges) */
+  --badge-md-font: 13px;
+  --badge-md-py: 8px;
+  --badge-md-px: 18px;
+  --badge-md-tracking: 2px;
+  
+  /* Badge Size: LG (large interactive badges) */
+  --badge-lg-font: 15px;
+  --badge-lg-py: 10px;
+  --badge-lg-px: 22px;
+  --badge-lg-tracking: 2.2px;
+  
+  /* Badge Variant Shapes */
+  --badge-radius-minimal: 0px;
+  --badge-radius-rounded: 5px;
+  --badge-radius-pill: 9999px;
+  
+  /* Badge Animation */
+  --badge-transition-duration: 300ms;
+  --badge-shimmer-duration: 700ms;
+
+  /* ========================================
      RESOURCE CARD TOKEN SYSTEM
      ======================================== 
      
@@ -645,7 +701,7 @@
   /* Direct badge hover - triggers shimmer on badge itself */
   .badge:hover .badge-shimmer {
     transform: translateX(200%);
-    transition: transform 700ms ease-out;
+    transition: transform var(--badge-shimmer-duration, 700ms) ease-out;
   }
 
   /* Parent hover triggers - for methodology cards, objective cards, step pills */
@@ -654,13 +710,15 @@
   .step-pill:hover .badge-shimmer,
   .group:hover .badge-shimmer {
     transform: translateX(200%);
-    transition: transform 700ms ease-out;
+    transition: transform var(--badge-shimmer-duration, 700ms) ease-out;
   }
 
-  /* Badge hover background/border transitions (300ms for snappy feel) */
+  /* Badge hover background/border transitions (uses badge-transition-duration) */
   .badge:not(.badge-minimal):hover {
     background-color: var(--badge-hover-bg);
     border-color: var(--badge-hover-border);
+    transition: background-color var(--badge-transition-duration, 300ms) ease-out,
+                border-color var(--badge-transition-duration, 300ms) ease-out;
   }
 
   /* Interactive badge hover states (clickable badges get scale effect) */
@@ -680,15 +738,15 @@
 
   /* Badge variants ensure proper shape rendering */
   .badge-pill {
-    border-radius: 9999px !important;
+    border-radius: var(--badge-radius-pill, 9999px) !important;
   }
 
   .badge-rounded {
-    border-radius: 5px !important;
+    border-radius: var(--badge-radius-rounded, 5px) !important;
   }
 
   .badge-minimal {
-    border-radius: 0 !important;
+    border-radius: var(--badge-radius-minimal, 0) !important;
     background-color: transparent !important;
   }
 
