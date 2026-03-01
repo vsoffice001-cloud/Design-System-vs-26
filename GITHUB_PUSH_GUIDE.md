@@ -1,6 +1,6 @@
 # GITHUB PUSH GUIDE
 **How to Push Files Correctly to the `main` Branch**
-**Version:** 1.1
+**Version:** 1.2
 **Date:** 2026-03-01
 **For:** Team members, AI assistants, and contributors
 
@@ -87,6 +87,11 @@ Before pushing **any** file, verify ALL of the following:
 - [ ] `COMPONENT_GUIDELINES_4WH.md` has a 4W+H entry
 - [ ] `GITHUB_REPO_MANIFEST.md` includes it
 
+### Step 6: Merge Safety
+- [ ] Read the CURRENT version of every shared doc file (index.ts, 4WH.md, MANIFEST.md) from GitHub BEFORE pushing
+- [ ] Verify your push ADDS to existing content rather than REPLACING it
+- [ ] If using `push_files`, include the FULL merged content of shared files (not just your additions)
+
 ---
 
 ## ATOMIC DESIGN CLASSIFICATION
@@ -119,10 +124,10 @@ Documentation/showcase component?               -> DOCUMENTATION
 1. Verify NO figma:asset imports
 2. Verify all dependencies exist on GitHub
 3. Verify all CSS variables defined in theme.css
-4. Add export to components/index.ts
-5. Add 4W+H entry to COMPONENT_GUIDELINES_4WH.md
-6. Update GITHUB_REPO_MANIFEST.md
-7. Push: component + index.ts + docs
+4. Read CURRENT index.ts from GitHub, MERGE your export into it
+5. Read CURRENT 4WH.md from GitHub, MERGE your entry into it
+6. Read CURRENT MANIFEST.md from GitHub, MERGE your row into it
+7. Push: component + MERGED index.ts + MERGED docs
 8. Commit: "feat(molecule): add ComponentName - [purpose]"
 ```
 
@@ -133,10 +138,10 @@ Documentation/showcase component?               -> DOCUMENTATION
 3. If any uses figma:asset, resolve first
 4. If new CSS variables needed, push theme.css first
 5. If new hook needed, push hook first
-6. Add export to components/index.ts
-7. Add 4W+H entry
-8. Update GITHUB_REPO_MANIFEST.md
-9. Push: ALL new files together
+6. Read CURRENT index.ts from GitHub, MERGE your export into it
+7. Read CURRENT 4WH.md from GitHub, MERGE your entry into it
+8. Read CURRENT MANIFEST.md from GitHub, MERGE your row into it
+9. Push: ALL new files + MERGED shared docs together
 10. Commit: "feat(organism): add SectionName - [purpose]"
 ```
 
@@ -154,8 +159,8 @@ ResourcesSection.tsx
 ### Pushing a HOOK
 ```
 1. Verify no Figma Make-specific dependencies
-2. Add export to hooks/index.ts
-3. Push: hook + hooks/index.ts
+2. Read CURRENT hooks/index.ts from GitHub, MERGE your export
+3. Push: hook + MERGED hooks/index.ts
 4. Commit: "feat(hook): add useHookName - [purpose]"
 ```
 
@@ -166,10 +171,12 @@ ResourcesSection.tsx
 | What You Push | index.ts | hooks/index.ts | theme.css | 4WH.md | MANIFEST.md |
 |---|---|---|---|---|---|
 | CSS Variable | - | - | EDIT | - | UPDATE |
-| Molecule | ADD | - | verify | ADD | UPDATE |
-| Organism | ADD | - | verify/add | ADD | UPDATE |
-| Hook | - | ADD | - | - | UPDATE |
-| Doc Component | ADD | - | - | - | UPDATE |
+| Molecule | MERGE | - | verify | MERGE | MERGE |
+| Organism | MERGE | - | verify/add | MERGE | MERGE |
+| Hook | - | MERGE | - | - | MERGE |
+| Doc Component | MERGE | - | - | - | MERGE |
+
+**CRITICAL:** The word is MERGE, not REPLACE. Always read the current file first.
 
 ---
 
@@ -205,6 +212,7 @@ feat(molecule): add Container layout wrapper with 5 width presets
 feat(organism): add ResourcesSection with Masonry grid and 7 card variants
 tokens(atom): add --text-primary, --text-secondary semantic colors
 docs: update COMPONENT_GUIDELINES_4WH.md with ResourceCard 4W+H
+fix(barrel+docs): restore exports lost in overwrite
 ```
 
 ---
@@ -234,8 +242,10 @@ docs: update COMPONENT_GUIDELINES_4WH.md with ResourceCard 4W+H
 All files marked [x] are confirmed on GitHub as of March 1, 2026.
 
 **Core Molecules:** [x] Button, Badge, Label, CTALink, InlineLink, AnimatedArrow
-**Layout Molecules:** [x] Container, Navbar, ContactModal, StickyCTA, ReadingProgressBar, TableOfContents, CodeBlockWithCopy, CollapsibleSection, VariantSwitcher, SpacingHelpers
+**Layout Molecules:** [x] Container, SectionHeading, SectionWrapper, Card, Navbar, ContactModal, StickyCTA, ReadingProgressBar, TableOfContents, CodeBlockWithCopy, CollapsibleSection, VariantSwitcher, SpacingHelpers
+**Scroll Components:** [x] ScrollToTop, ScrollProgress
 **Resource Molecules:** [x] ResourceCard, SubtleVariantSwitcher
+**Icon System:** [x] iconColors.ts
 **Organisms:** [x] HeroSection, ClientContextSection, ChallengesSection, EngagementObjectivesSection, MethodologySection, ImpactSection, ValuePillarsSection, TestimonialSection, ResourcesSection, FinalCTASection, NextSectionCTA
 **Dashboard:** [x] DesignSystemDashboard, DesignSystemSidebar, FoundationsContent, ComponentsContent, PatternsContent, MotionContent, GuidelinesContent, ResourcesContent, all All*Content files, all documentation/showcase components
 **Hooks:** [x] useShimmer, useScrollAnimation, useScrollDirection, useActiveSection, useReadingProgress, useSectionProgress, useHeroVisibility, useCounter, useMagneticEffect, useResponsiveGutter
