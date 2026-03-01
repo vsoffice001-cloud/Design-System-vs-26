@@ -4,14 +4,12 @@
 
 **WHY this file exists:** The main AI context at 53KB exceeds the GitHub MCP API response limit (~30KB). It cannot be read or updated via Figma Make. This addendum ensures no information is lost while remaining maintainable.
 
-**Current patch level:** v3.2.1 → v3.3.1  
+**Current patch level:** v3.2.1 → v3.3.2  
 **Date:** 2026-03-01
 
 ---
 
 ## Reading Order for AI Assistants
-
-When building a new page, read these docs in this exact order:
 
 | Step | File | What You Get | Size |
 |------|------|-------------|------|
@@ -22,7 +20,7 @@ When building a new page, read these docs in this exact order:
 | 5 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast Figma Make sessions | 6KB |
 | 6 | `GITHUB_PUSH_GUIDE.md` | Push safety rules, barrel exports, commit format | 10KB |
 
-**For quick sessions:** Skip to step 5 (QUICK_START_PROMPT.md) and copy-paste the prompt block.
+**For quick sessions:** Skip to step 5 (QUICK_START_PROMPT.md).
 
 ---
 
@@ -42,131 +40,94 @@ When building a new page, read these docs in this exact order:
 | Arrow color | `rgba(0,0,0,0.7)` | `var(--brand-red)` |
 | Transition | — | `300ms ease-out` |
 
-**Design reasoning:** Resting state is intentionally muted so secondary doesn't compete with brand/primary. On hover, the brand-red reveal creates a "warming" effect that signals importance without overwhelming at rest.
-
 **Dark mode secondary:** Unchanged — `bg-white/10`, white text, white border.
 
-**Supersedes:** Any description in DESIGN_SYSTEM_AI_CONTEXT.md that says secondary has a static neutral style. The secondary variant is now a dynamic two-state component.
+**Supersedes:** Any description in DESIGN_SYSTEM_AI_CONTEXT.md that says secondary has a static neutral style.
 
 ---
 
-### 2. New Documentation Files
+### 2. Documentation Created/Updated
 
 | File | Status | What |
 |------|--------|------|
-| `design-system-checklist.md` v2.0 | **NEW** (commit `2ea1224a`) | Complete file map — 45 files across 10 groups with 4W+H reasoning, proper markdown tables, barrel export instructions |
-| `COMPONENT_GUIDELINES_4WH.md` | **UPDATED** (commit `85001016`) | Added secondary two-state section, 4W+H for StickyCTA/ContactModal/NextSectionCTA, scroll hook decision flowchart |
-| `QUICK_START_PROMPT.md` | **UPDATED** (commit `d25c7cb3`) | Added page-level components section, page shell template, secondary button examples |
+| `design-system-checklist.md` v2.0 | **NEW** (`2ea1224a`) | File map — 45 files, 10 groups, 4W+H, barrel exports |
+| `COMPONENT_GUIDELINES_4WH.md` | **UPDATED** (`85001016`) | Secondary two-state, StickyCTA/ContactModal/NextSectionCTA 4W+H |
+| `QUICK_START_PROMPT.md` | **UPDATED** (`d25c7cb3`) | Page-level components, page shell template, secondary button |
 
 ---
 
-### 3. Component Coverage Gaps (Now Documented)
+### 3. Component/Hook/Section Coverage Gaps (Now Documented)
 
-These components existed in the codebase but were missing from the AI context docs. They are now fully documented in `COMPONENT_GUIDELINES_4WH.md` and `design-system-checklist.md`:
-
-| Component | What It Does | 4W+H Entry |
-|-----------|-------------|------------|
-| `Navbar.tsx` | Fixed top nav — expanded/compact states, section pills, mobile hamburger | ✅ Added |
-| `ContactModal.tsx` | Contact form modal — 4 fields, escape close, body scroll lock | ✅ Added |
-| `StickyCTA.tsx` | Context-aware floating CTA — adapts text per active section | ✅ Added |
-| `NextSectionCTA.tsx` | "Scroll to next" button — label + bouncing chevron | ✅ Added |
-| `ReadingProgressBar.tsx` | Case-study progress — useSectionProgress + useHeroVisibility | ✅ Added |
-| `TableOfContents.tsx` | Sidebar TOC — active section highlighting | ✅ Added |
-
-### 4. Hook Coverage Gaps (Now Documented)
-
-| Hook | What It Does | Documented In |
-|------|-------------|---------------|
-| `useMagneticEffect.ts` | Magnetic hover (element follows cursor slightly) | checklist Group 8 |
-| `useReadingProgress.ts` | Generic 0-100% reading progress | checklist Group 8 |
-| `useSectionProgress.ts` | Section-range progress (start ID to end ID) | checklist Group 8 |
-
-### 5. Reference Section Coverage Gaps (Now Documented)
-
-| Section | Pattern | Documented In |
-|---------|---------|---------------|
-| `ClientContextSection.tsx` | Context/background narrative with prose width | checklist Group 9 |
-| `EngagementObjectivesSection.tsx` | Numbered objectives with StepPill badges | checklist Group 9 |
-| `ValuePillarsSection.tsx` | Value proposition grid with feature icons | checklist Group 9 |
-| `TestimonialSection.tsx` | Social proof with serif quotes | checklist Group 9 |
+| Category | Items Added | Documented In |
+|----------|------------|---------------|
+| Page Components | Navbar, ContactModal, StickyCTA, NextSectionCTA, ReadingProgressBar, TableOfContents | 4WH.md + checklist |
+| Hooks | useMagneticEffect, useReadingProgress, useSectionProgress | checklist Group 8 |
+| Reference Sections | ClientContext, EngagementObjectives, ValuePillars, Testimonial | checklist Group 9 |
 
 ---
 
-## v3.3.1 Changes (2026-03-01) — Badge CSS Migration Phase 1-2
+## v3.3.1–3.3.2 Changes (2026-03-01) — Badge CSS Migration
 
-### 6. Badge.tsx CSS Custom Property Migration (Phases 1-2 of 4)
+### 4. Badge.tsx CSS Custom Property Migration (COMPLETE)
 
-**What:** Migrating Badge.tsx from hardcoded JS token objects to CSS custom properties in theme.css.
+**What:** Migrated Badge.tsx from hardcoded JS token objects to CSS custom properties. All 4 phases complete.
 
 #### Migration Log
 
-| Phase | Commit | What Changed | Risk | Status |
-|-------|--------|-------------|------|--------|
-| **1** | `20fe785f` | Added 15 `--badge-*` CSS variables to theme.css (sizes + variants) | Zero (additive) | ✅ Done |
-| **2** | `8ff0679a` | Badge.tsx now consumes `--badge-*` size/variant tokens from CSS | Low (same values) | ✅ Done |
-| **3** | — | Add `--badge-[theme]-[mode]-*` color tokens to theme.css | Zero (additive) | ⏳ Next |
-| **4** | — | Badge.tsx consumes color tokens, remove THEME_COLORS JS object | Medium (176 values) | ⏳ Planned |
+| Phase | Commit | What Changed | Files |
+|-------|--------|-------------|-------|
+| **1** | `20fe785f` | Added 17 `--badge-*` CSS variables (sizes, shapes, animation) | `theme.css` |
+| **2** | `8ff0679a` | Badge.tsx consumes size/variant CSS vars, wired hover vars | `Badge.tsx` |
+| **3** | `b65ba54e` | Added CSS color consumption rules (`.badge { color: var(--badge-text) }`) | `theme.css` |
+| **4** | `58de9f24` | Removed inline colors, all styling via CSS custom properties | `Badge.tsx` |
 
-#### Phase 1 Details: theme.css tokens added
+#### Architecture (Final)
 
-```css
-/* 12 size variables (4 sizes × 3 properties) */
---badge-xs-font, --badge-xs-py, --badge-xs-px, --badge-xs-tracking
---badge-sm-font, --badge-sm-py, --badge-sm-px, --badge-sm-tracking
---badge-md-font, --badge-md-py, --badge-md-px, --badge-md-tracking
---badge-lg-font, --badge-lg-py, --badge-lg-px, --badge-lg-tracking
-
-/* 3 shape variables */
---badge-radius-minimal: 0px
---badge-radius-rounded: 5px
---badge-radius-pill: 9999px
-
-/* 2 animation variables */
---badge-transition-duration: 300ms
---badge-shimmer-duration: 700ms
+```
+Badge.tsx (JS)                    theme.css (CSS)
+──────────────────────────────    ──────────────────────────────
+THEME_COLORS[theme][mode]         :root { --badge-sm-font: ... }
+  ↓ selects values                .badge { color: var(--badge-text) }
+  ↓ sets as inline CSS vars       .badge:not(.badge-minimal) {
+style={{                            background-color: var(--badge-bg);
+  '--badge-text': ...,            }
+  '--badge-bg': ...,              .badge:hover {
+  '--badge-border': ...,            background-color: var(--badge-hover-bg);
+  '--badge-shimmer': ...,           border-color: var(--badge-hover-border);
+  fontSize: var(--badge-sm-font)  }
+}}                                .badge-shimmer {
+                                    background: linear-gradient(...
+                                      var(--badge-shimmer) ...);
+                                  }
 ```
 
-#### Phase 2 Details: Badge.tsx refactored
+**WHY this pattern (not 22 CSS selector blocks):**
+1. Badge theme is a runtime prop decision (11 themes × 2 modes)
+2. Inline CSS vars avoid massive CSS selector explosion
+3. CSS owns transitions/hover/animation behavior cleanly
+4. No inline style specificity fights (no `backgroundColor:` etc.)
 
-- `SIZE_TOKENS` JS object → `SIZE_CSS_VARS` (references `var(--badge-*)` variables)
-- `VARIANT_TOKENS` JS object → `VARIANT_CSS_VARS` (references `var(--badge-radius-*)` variables)
-- Transition durations now use `var(--badge-transition-duration)`
-- **Bug fix:** `--badge-hover-bg` and `--badge-hover-border` are now set as inline CSS custom properties on each badge element, which means the CSS hover rules in theme.css (`.badge:not(.badge-minimal):hover`) **now actually work**. Previously these were dead CSS rules referencing undefined variables.
-- `BADGE_TOKENS` export updated to reflect new structure (`sizeVars`, `variantVars`, `themes`)
+#### What Changed for Consumers
 
-#### Phase 3-4 Plan: Color Token Migration
-
-**Approach:** Use inline CSS custom properties (set per-instance) rather than 22 CSS selector blocks.
-
-Badge.tsx currently sets `--badge-hover-bg` and `--badge-hover-border` as inline CSS vars (Phase 2 fix). Phase 3-4 will extend this pattern to all color properties:
-
+**Nothing.** All Badge props and wrappers work identically. The API is unchanged:
 ```tsx
-// Phase 4 target — Badge sets theme colors as CSS custom properties:
-style={{
-  '--badge-bg': colorTokens.background,
-  '--badge-border': colorTokens.border,
-  '--badge-text': colorTokens.text,
-  '--badge-hover-bg': colorTokens.hoverBackground,
-  '--badge-hover-border': colorTokens.hoverBorder,
-  '--badge-shimmer': colorTokens.shimmer,
-}}
-
-// theme.css consumes them:
-.badge { 
-  background-color: var(--badge-bg);
-  border-color: var(--badge-border);
-  color: var(--badge-text);
-}
-.badge:hover {
-  background-color: var(--badge-hover-bg);
-  border-color: var(--badge-hover-border);
-}
+// These all still work exactly the same:
+<Badge variant="pill" size="sm" theme="warm" bordered shimmer>Step 1</Badge>
+<SectionLabel theme="brand" fontWeight={600}>KEY INSIGHTS</SectionLabel>
+<StatusBadge status="success">Completed</StatusBadge>
+<ClickableBadge onClick={fn} theme="purple">Click me</ClickableBadge>
 ```
 
-**Decision:** Keep THEME_COLORS in JS (not move 176 values to CSS selector blocks) because:
-1. Badge theme is prop-driven (runtime JS decision)
-2. Inline CSS vars give same override capability without massive CSS
-3. Consistent with how hover-bg/hover-border already works (Phase 2)
+#### File Size Reduction
+
+| File | Before | After | Saved |
+|------|--------|-------|-------|
+| `Badge.tsx` | 27KB | 22KB | 5KB (removed redundant comments, contrastRatio strings) |
+| `theme.css` | 30KB | 25KB | 5KB (consolidated inline comments) |
+
+#### Bug Fixed
+
+CSS hover rules for `.badge:not(.badge-minimal):hover` were referencing `--badge-hover-bg` and `--badge-hover-border` but these variables were never set — making badge hover effects via CSS completely dead code. Now fully functional.
 
 ---
 
@@ -174,9 +135,8 @@ style={{
 
 | Task | Status | Details |
 |------|--------|--------|
-| Badge.tsx CSS custom properties (sizes/variants) | ✅ Phase 1-2 done | `--badge-*` tokens in theme.css, Badge.tsx consuming them |
-| Badge.tsx CSS custom properties (colors) | ⏳ Phase 3-4 next | Inline CSS var pattern for all color properties |
-| DESIGN_SYSTEM_AI_CONTEXT.md modularization | ❌ Not started | Split 53KB monolith into focused modules (see plan below) |
+| Badge.tsx CSS custom properties | ✅ **Complete** (4 phases) | All sizing, shape, color, hover, shimmer via CSS custom properties |
+| DESIGN_SYSTEM_AI_CONTEXT.md modularization | ❌ Not started | Split 53KB monolith into focused modules (requires local terminal) |
 
 ### Modularization Plan for DESIGN_SYSTEM_AI_CONTEXT.md
 
@@ -192,9 +152,7 @@ style={{
 | `COMPONENT_GUIDELINES_4WH.md` | Already exists — absorb remaining component details from AI Context | ~30KB |
 | `design-system-checklist.md` | Already exists — the file map | ~20KB |
 
-**How to execute:** Requires `git clone` + local editor to read the 53KB file, extract sections, verify nothing is lost, then push the split files. Cannot be done via Figma Make API.
-
-**When:** Next session with terminal/local file access.
+**Requires:** `git clone` + local editor to read 53KB file, extract sections, verify nothing lost.
 
 ---
 
@@ -202,6 +160,7 @@ style={{
 
 | Version | Date | Changes |
 |---------|------|---------|
-| v3.3.1 | 2026-03-01 | Badge CSS migration Phase 1-2: 15 `--badge-*` tokens added to theme.css, Badge.tsx refactored to consume CSS vars for sizes/variants, hover CSS bug fixed |
-| v3.3 | 2026-03-01 | Secondary button two-state, 6 missing page components documented, 3 missing hooks documented, 4 missing reference sections documented, checklist v2.0 created, 4WH + Quick Start updated |
+| v3.3.2 | 2026-03-01 | Badge CSS migration Phase 3-4 complete: all colors via CSS custom properties, shimmer via CSS, hover bug fixed, 10KB file size reduction |
+| v3.3.1 | 2026-03-01 | Badge CSS migration Phase 1-2: 17 `--badge-*` tokens in theme.css, Badge.tsx consumes size/variant CSS vars |
+| v3.3 | 2026-03-01 | Secondary button two-state, 6 page components + 3 hooks + 4 sections documented, checklist v2.0, 4WH + Quick Start updated |
 | v3.2.1 | (previous) | Base version in DESIGN_SYSTEM_AI_CONTEXT.md |
