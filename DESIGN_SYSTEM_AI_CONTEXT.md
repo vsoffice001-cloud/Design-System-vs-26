@@ -1,5 +1,5 @@
 # DESIGN SYSTEM - AI CONTEXT FILE
-**Version:** 3.3  
+**Version:** 3.3.1  
 **Date:** 2026-03-01  
 **Purpose:** Complete 4W+H documentation for AI tools to automatically apply this design system
 
@@ -28,7 +28,8 @@ When any team member asks you to build a page, component, or feature:
 7. [Layout System](#layout-system)
 8. [Animation System](#animation-system)
 9. [Component Library](#component-library)
-10. [AI Implementation Prompts](#ai-implementation-prompts)
+10. [Page Assembly Guide — Reports / Product Pages](#page-assembly-guide)
+11. [AI Implementation Prompts](#ai-implementation-prompts)
 
 ---
 
@@ -644,6 +645,454 @@ import { useSectionProgress } from '@/app/hooks';  // Section scroll progress
 
 ---
 
+## 📚 PAGE ASSEMBLY GUIDE — REPORTS / PRODUCT PAGES
+
+This section tells you exactly **which components, elements, props, typography tokens, hooks, and grid patterns** to use when building a report landing page or product page. Combine this with the [Color Recipe](#section-by-section-color-recipe) above for the full picture.
+
+### **Canonical Reference:** Healthcare AI Market Analysis Landing Page
+
+---
+
+### **Page-Level Scaffold**
+
+Every report/product page follows this outer structure:
+
+```tsx
+import { ScrollProgress } from '@/app/components/ScrollProgress';
+import { ScrollToTop } from '@/app/components/ScrollToTop';
+import { Navbar } from '@/app/components/Navbar';
+
+export default function ReportPage() {
+  return (
+    <>
+      <ScrollProgress />
+      <Navbar />
+      <main>
+        {/* Section components in order */}
+        <HeroSection />
+        <ContextSection />
+        <HighlightsSection />
+        <MethodologySection />
+        <ImpactSection />
+        <TestimonialSection />
+        <ResourcesSection />
+        <FinalCTASection />
+      </main>
+      <Footer />
+      <ScrollToTop />
+    </>
+  );
+}
+```
+
+**Page-level hooks (wire in the layout component or individual sections):**
+- `useScrollDirection()` — for navbar compact/expanded state
+- `useActiveSection()` — for TOC highlighting (if TOC sidebar is present)
+- `useHeroVisibility()` — for navbar style changes when hero scrolls out
+
+---
+
+### **1. HERO SECTION (bg: BLACK)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { Badge } from '@/app/components/Badge';
+import { Button } from '@/app/components/Button';
+import { iconColors } from '@/app/components/iconColors';
+import { TrendingUp, BarChart3, Globe } from 'lucide-react';
+
+<SectionWrapper background="black" spacing="xl" id="hero">
+  {/* Eyebrow badge */}
+  <Badge variant="pill" size="sm" theme="neutral" mode="dark" bordered>
+    MARKET INTELLIGENCE 2024
+  </Badge>
+
+  {/* Headline — ONLY place to use level={1} */}
+  <SectionHeading level={1} align="center">
+    Global AI in Healthcare Market Analysis
+  </SectionHeading>
+
+  {/* Description — sans-serif, white at 70% opacity */}
+  <p className="font-sans max-w-[var(--text-measure)] mx-auto text-center"
+     style={{ fontSize: 'var(--text-sm)', color: 'rgba(255, 255, 255, 0.7)' }}>
+    Comprehensive market analysis covering diagnostics, drug discovery...
+  </p>
+
+  {/* CTA pair — max 2 buttons */}
+  <div className="flex gap-4 justify-center">
+    <Button variant="brand" size="md" showArrow>Download Full Report</Button>
+    <Button variant="secondary" size="md">Talk to an Analyst</Button>
+  </div>
+
+  {/* Stats row — serif numbers, sans labels, periwinkle icons */}
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+    {stats.map(stat => (
+      <div key={stat.id} className="text-center">
+        <TrendingUp color={iconColors.content} size={20} className="mx-auto mb-2" />
+        <span className="font-serif" style={{ fontSize: 'var(--text-lg)', color: '#ffffff' }}>
+          {stat.value}
+        </span>
+        <span className="font-sans" style={{ fontSize: 'var(--text-xs)', color: 'rgba(255,255,255,0.5)' }}>
+          {stat.label}
+        </span>
+      </div>
+    ))}
+  </div>
+</SectionWrapper>
+```
+
+**Key rules:**
+- `SectionHeading level={1}` — ONE per page, nowhere else
+- `Badge mode="dark"` on black backgrounds
+- Stats numbers: `font-serif` + `--text-lg` (25px)
+- Stats labels: `font-sans` + `--text-xs` (12.8px)
+- Stat icons: `iconColors.content` (#806ce0)
+- Max 2 buttons, `brand` + `secondary` pairing
+
+---
+
+### **2. CONTENT + CARD GRID SECTION (bg: WHITE or WARM, alternating)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { SectionLabel } from '@/app/components/Badge';
+import { Card } from '@/app/components/Card';
+import { iconColors } from '@/app/components/iconColors';
+import { Target, Sparkles, Lightbulb } from 'lucide-react';
+
+<SectionWrapper background="warm" spacing="lg" id="highlights">
+  {/* Eyebrow label + heading */}
+  <SectionHeading level={2} eyebrow="KEY FINDINGS" align="center">
+    Report Highlights
+  </SectionHeading>
+
+  {/* Description under heading */}
+  <p className="font-sans text-center max-w-[var(--text-measure)] mx-auto"
+     style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+    Our analysis reveals three transformative trends...
+  </p>
+
+  {/* Card grid — 3 columns on desktop */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+    {highlights.map(item => (
+      <Card key={item.id} variant="white" padding="md" shadow="sm" hover>
+        {/* Icon container with periwinkle accent */}
+        <div className="rounded-[10px] p-3 w-fit mb-4" style={{
+          background: 'rgba(128, 108, 224, 0.1)',
+          boxShadow: '0 4px 16px rgba(128, 108, 224, 0.06)'
+        }}>
+          <Target color={iconColors.content} size={24} />
+        </div>
+
+        {/* Card title — serif for 2-3 cards, sans for 4+ */}
+        <h3 className="font-serif" style={{ fontSize: 'var(--text-lg)' }}>
+          {item.title}
+        </h3>
+
+        {/* Card body */}
+        <p className="font-sans" style={{
+          fontSize: 'var(--text-sm)',
+          color: 'var(--text-secondary)'
+        }}>
+          {item.description}
+        </p>
+      </Card>
+    ))}
+  </div>
+</SectionWrapper>
+```
+
+**Key rules:**
+- `SectionWrapper background` alternates: `"white"` → `"warm"` → `"white"` → ...
+- Cards on warm bg: `variant="white"` (pop). Cards on white bg: `variant="warm"` or `variant="outlined"`
+- **2-3 cards:** title = `font-serif` + `--text-lg` (25px)
+- **4+ cards:** title = `font-sans` + `--text-base` (20px), body = `--text-compact` (14px)
+- Icon containers: rounded-[10px], `rgba(128, 108, 224, 0.1)` bg, `0.06` shadow
+- Grid: `grid-cols-1 md:grid-cols-2` (2 cards), `md:grid-cols-3` (3 cards), `md:grid-cols-2 lg:grid-cols-4` (4 cards)
+
+---
+
+### **3. METHODOLOGY / TIMELINE SECTION (bg: WARM)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { Badge } from '@/app/components/Badge';
+import { Card } from '@/app/components/Card';
+import { iconColors } from '@/app/components/iconColors';
+import { CheckCircle } from 'lucide-react';
+
+<SectionWrapper background="warm" spacing="lg" id="methodology">
+  <SectionHeading level={2} eyebrow="OUR APPROACH" align="center">
+    Research Methodology
+  </SectionHeading>
+
+  {/* Numbered step cards */}
+  <div className="space-y-6 mt-10 max-w-[var(--container-content)] mx-auto">
+    {steps.map((step, i) => (
+      <Card key={step.id} variant="white" padding="lg" shadow="sm">
+        <div className="flex gap-6 items-start">
+          {/* Step number badge */}
+          <Badge variant="rounded" size="md" theme="purple" mode="light">
+            {String(i + 1).padStart(2, '0')}
+          </Badge>
+
+          <div>
+            <h3 className="font-serif" style={{ fontSize: 'var(--text-xl)' }}>
+              {step.title}
+            </h3>
+            <p className="font-sans mt-2" style={{
+              fontSize: 'var(--text-sm)',
+              color: 'var(--text-secondary)'
+            }}>
+              {step.description}
+            </p>
+
+            {/* Checklist items with periwinkle icons */}
+            <ul className="mt-4 space-y-2">
+              {step.items.map(item => (
+                <li key={item} className="flex gap-2 items-center font-sans"
+                    style={{ fontSize: 'var(--text-compact)' }}>
+                  <CheckCircle color={iconColors.content} size={16} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Card>
+    ))}
+  </div>
+</SectionWrapper>
+```
+
+**Key rules:**
+- Step numbers: `Badge variant="rounded" theme="purple"`
+- Checklist icons: `iconColors.content` (periwinkle), NOT green
+- Step titles: `font-serif` + `--text-xl` (31.25px)
+- Checklist text: `font-sans` + `--text-compact` (14px)
+
+---
+
+### **4. METRICS / IMPACT SECTION (bg: WHITE)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { Card } from '@/app/components/Card';
+import { iconColors } from '@/app/components/iconColors';
+import { useCounter } from '@/app/hooks';
+import { TrendingUp, DollarSign, Users, Globe } from 'lucide-react';
+
+<SectionWrapper background="white" spacing="lg" id="impact">
+  <SectionHeading level={2} eyebrow="MARKET IMPACT" align="center">
+    Key Market Metrics
+  </SectionHeading>
+
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+    {metrics.map(metric => {
+      const count = useCounter(metric.target, 2000); // 2s animation
+      return (
+        <Card key={metric.id} variant="warm" padding="md" shadow="none">
+          {/* Icon */}
+          <TrendingUp color={iconColors.content} size={20} className="mb-3" />
+
+          {/* Animated number — serif, large */}
+          <span className="font-serif" style={{ fontSize: 'var(--text-2xl)' }}>
+            {metric.prefix}{count}{metric.suffix}
+          </span>
+
+          {/* Label — sans, small, muted */}
+          <span className="font-sans" style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-secondary)'
+          }}>
+            {metric.label}
+          </span>
+        </Card>
+      );
+    })}
+  </div>
+</SectionWrapper>
+```
+
+**Key rules:**
+- Metric numbers: `font-serif` + `--text-2xl` (39px) or `--text-4xl` (61px) for hero-level metrics
+- Metric labels: `font-sans` + `--text-xs` (12.8px)
+- `useCounter` hook for animated counting on scroll-in
+- Cards on white bg: `variant="warm"` or `variant="outlined"`
+- Numbers are ALWAYS black (on light bg) or white (on dark bg) — never red
+
+---
+
+### **5. TESTIMONIAL / QUOTE SECTION (bg: WHITE or WARM)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { Container } from '@/app/components/Container';
+
+<SectionWrapper background="white" spacing="lg" id="testimonial">
+  <Container maxWidth="narrow">
+    {/* Quote text — serif, italic, large */}
+    <blockquote className="font-serif text-center" style={{
+      fontSize: 'var(--text-xl)',
+      lineHeight: '1.6'
+    }}>
+      “This analysis transformed our strategic approach to healthcare AI investments...”
+    </blockquote>
+
+    {/* Attribution — sans, muted */}
+    <p className="text-center mt-6 font-sans" style={{
+      fontSize: 'var(--text-sm)',
+      color: 'var(--text-secondary)'
+    }}>
+      — Dr. Sarah Chen, Chief Innovation Officer, MedTech Corp
+    </p>
+  </Container>
+</SectionWrapper>
+```
+
+**Key rules:**
+- Quote text: `font-serif` + `--text-xl` (31.25px)
+- Attribution: `font-sans` + `--text-sm` (16px) + `--text-secondary` color
+- `Container maxWidth="narrow"` (900px) for focused reading
+- No Card wrapper needed — testimonials stand alone
+
+---
+
+### **6. RESOURCES / FEATURED GRID (bg: BLACK with gradient mesh)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { ResourceCard } from '@/app/components/ResourceCard';
+import { useResponsiveGutter } from '@/app/hooks';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+
+<SectionWrapper background="black" spacing="lg" id="resources">
+  <SectionHeading level={2} eyebrow="RELATED RESEARCH" align="center">
+    Featured Resources
+  </SectionHeading>
+
+  <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 640: 2, 1024: 3 }}>
+    <Masonry gutter={`${useResponsiveGutter()}px`}>
+      {resources.map(resource => (
+        <ResourceCard
+          key={resource.id}
+          image={resource.image}
+          category={resource.category}
+          date={resource.date}
+          title={resource.title}
+          description={resource.description}
+          variant={resource.variant}  {/* Mix 3-4 variants */}
+          cardStyle="bordered"         {/* Frosted glass on dark bg */}
+          mode="dark"
+        />
+      ))}
+    </Masonry>
+  </ResponsiveMasonry>
+</SectionWrapper>
+```
+
+**Key rules:**
+- `SectionWrapper background="black"` with optional gradient mesh overlay
+- All ResourceCards: `mode="dark"` + `cardStyle="bordered"` on dark backgrounds
+- Mix 3-4 variants: `standard`, `full-featured` (max 1), `minimal`, `clean`
+- Grid: `ResponsiveMasonry` + `Masonry` (NOT CSS grid) for varied card heights
+- `useResponsiveGutter()` for pixel-based responsive gaps
+
+---
+
+### **7. FINAL CTA SECTION (bg: WHITE or WARM)**
+
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { Button } from '@/app/components/Button';
+import { CTALink } from '@/app/components/CTALink';
+import { Container } from '@/app/components/Container';
+
+<SectionWrapper background="white" spacing="xl" id="cta">
+  <Container maxWidth="narrow">
+    <SectionHeading level={2} eyebrow="GET STARTED" align="center">
+      Ready to Transform Your Strategy?
+    </SectionHeading>
+
+    <p className="text-center font-sans max-w-[var(--container-compact)] mx-auto"
+       style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+      Download the complete report or speak with our analysts.
+    </p>
+
+    {/* CTA pair */}
+    <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+      <Button variant="brand" size="md" showArrow>Download Full Report</Button>
+      <Button variant="secondary" size="md">Schedule a Briefing</Button>
+    </div>
+
+    {/* Optional text CTA */}
+    <div className="text-center mt-6">
+      <CTALink href="/methodology">Learn About Our Methodology</CTALink>
+    </div>
+  </Container>
+</SectionWrapper>
+```
+
+**Key rules:**
+- `Container maxWidth="narrow"` for focused CTA
+- `spacing="xl"` for extra breathing room
+- Max 2 buttons: `brand` (primary conversion) + `secondary` (alternative)
+- Optional `CTALink` below for low-commitment action
+- `showArrow` on the brand button ONLY if it leads to a form
+
+---
+
+### **Component Selection Quick Reference**
+
+| Need | Component | Key Props |
+|---|---|---|
+| Full page section wrapper | `SectionWrapper` | `background`, `spacing`, `id` |
+| Section title + optional eyebrow | `SectionHeading` | `level` (1/2/3), `eyebrow`, `align` |
+| Content container (cards, grids) | `Card` | `variant`, `padding`, `shadow`, `hover` |
+| Max-width content wrapper | `Container` | `maxWidth` (page/content/narrow/prose/compact) |
+| Category label above heading | `SectionLabel` (from Badge.tsx) | `theme`, `fontWeight` |
+| Inline status/category tag | `Badge` | `variant`, `size`, `theme`, `mode` |
+| Primary conversion CTA | `Button variant="brand"` | `size="md"`, `showArrow` (urgency only) |
+| Secondary action | `Button variant="secondary"` | `size="md"` |
+| Text + arrow CTA | `CTALink` | `href` |
+| Inline paragraph link | `InlineLink` | `href` |
+| Content/feature icon color | `iconColors.content` | `#806ce0` |
+| Utility/nav icon color | `iconColors.utility` | `#737373` |
+| Scroll-to-top FAB | `ScrollToTop` | (no props) |
+| Scroll depth bar | `ScrollProgress` | (no props) |
+| Resource/blog card grid | `ResourceCard` | `variant`, `cardStyle`, `mode` |
+| Masonry gutter | `useResponsiveGutter()` | returns 24 or 32 (px) |
+| Animated metric numbers | `useCounter()` | `(target, duration)` |
+
+---
+
+### **Typography Token Quick Reference (Per Element)**
+
+| Element | Font | Token | Size |
+|---|---|---|---|
+| Hero h1 | Serif | `--text-3xl` | 48.8px |
+| Section h2 | Serif | `--text-2xl` | 39px |
+| Subsection h3 | Serif | `--text-xl` | 31.25px |
+| Card title (2-3 cards) | Serif | `--text-lg` | 25px |
+| Card title (4+ cards) | Sans | `--text-base` | 20px |
+| Body text | Sans | `--text-sm` | 16px |
+| Card body (4+ cards) | Sans | `--text-compact` | 14px |
+| TOC / Nav items | Sans | `--text-nav` | 14px |
+| Labels, metadata | Sans | `--text-xs` | 12.8px |
+| Navbar links | Sans | `--text-2xs` | 12px |
+| Metric numbers | Serif | `--text-2xl` to `--text-4xl` | 39-61px |
+| Metric labels | Sans | `--text-xs` | 12.8px |
+| Testimonial quote | Serif | `--text-xl` | 31.25px |
+| Testimonial attribution | Sans | `--text-sm` | 16px |
+
+---
+
 ## AI IMPLEMENTATION PROMPTS
 
 See `/AI_DESIGN_SYSTEM_PROMPT.md` for full copy-paste prompts.
@@ -670,6 +1119,9 @@ Before generating ANY code, verify:
 - [ ] All gradients use inline styles with RGBA (NOT Tailwind gradient classes)
 - [ ] Purple used at ≤12% opacity only (except icon stroke and Badge internals)
 - [ ] Secondary buttons use warm border + coral shimmer (NOT periwinkle)
+- [ ] Each section uses correct components from Page Assembly Guide
+- [ ] SectionHeading level={1} used ONCE (hero only)
+- [ ] Card variant matches section background (white cards on warm bg, warm cards on white bg)
 
 ---
 
@@ -689,6 +1141,10 @@ Before generating ANY code, verify:
 12. ❌ Use arbitrary icon colors — always use `iconColors.content` or `iconColors.utility`
 13. ❌ Use periwinkle/purple for secondary button styling — it uses warm/coral tones
 14. ❌ Use purple at full opacity for backgrounds, text, or borders
+15. ❌ Hand-code `<section>` tags instead of using `<SectionWrapper>`
+16. ❌ Hand-code headings instead of using `<SectionHeading>`
+17. ❌ Hand-code content boxes instead of using `<Card>`
+18. ❌ Use `SectionHeading level={1}` more than once per page
 
 ---
 
@@ -714,4 +1170,4 @@ Before generating ANY code, verify:
 
 **Last Updated:** 2026-03-01  
 **Maintained By:** Design System Team  
-**Version:** 3.3 — Added 92-5-3 Color Usage Guide, icon colors, gradient workaround, layout/scroll components
+**Version:** 3.3.1 — Added Page Assembly Guide with component-level recipes for 7 section types
