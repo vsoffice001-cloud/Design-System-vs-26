@@ -18,18 +18,18 @@ Canonical file inventory for the entire repository. Use this when syncing betwee
 | `package.json` | Project dependencies & scripts | Stable |
 | `postcss.config.mjs` | PostCSS configuration | Stable |
 | `vite.config.ts` | Vite build configuration | Stable |
-| `README.md` | Project readme (v3.3 doc hierarchy) | Updated Mar 1 |
+| `README.md` | Project readme (v3.3.2) | Updated Mar 1 |
 | `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 1 |
 
-### Root - AI Context Files (v3.3.2)
+### Root - AI Context System (v3.3.2 — Modularized)
 
 | File | Purpose | Version |
 |------|---------|--------|
-| `DESIGN_SYSTEM_AI_CONTEXT.md` | Primary AI context — 92-5-3, typography, page assembly, token cross-reference | v3.3.2 (53KB, read-only via API) |
-| `DESIGN_SYSTEM_UPDATES.md` | Versioned patches to AI Context — secondary button, Badge migration log | v3.3.2 |
+| `DESIGN_SYSTEM_AI_CONTEXT.md` | **Lightweight index** — points to 6 modules in `ai-context/` | v3.3.2 (3KB index) |
+| `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v3.3.2) | v3.3.2 |
 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component — 17 entries + 5 flowcharts | v3.3 |
-| `design-system-checklist.md` | File map — 45 files, 10 groups, barrel export instructions | v2.0 |
-| `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | v3.3 |
+| `design-system-checklist.md` | File map — 45 files, 10 groups, barrel export instructions | v2.1 |
+| `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | v3.3.2 |
 | `GITHUB_PUSH_GUIDE.md` | Push checklist by Atomic level, merge safety, commit format | v1.3 |
 
 ### Root - Design System Reference Docs
@@ -41,6 +41,23 @@ Canonical file inventory for the entire repository. Use this when syncing betwee
 | `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font integration decisions | Stable |
 | `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames | Stable |
 | `TECHNICAL_HANDOVER.md` | Technical handover — **historical reference only** | Deprecated |
+
+---
+
+## `ai-context/` — Modular AI Context (6 files)
+
+Split from the original 53KB `DESIGN_SYSTEM_AI_CONTEXT.md` monolith. Each file is under 10KB and fully readable via the GitHub API.
+
+| File | Content | Size |
+|------|---------|------|
+| `CORE.md` | Overview, critical rules, AI checklist, common mistakes, quality metrics | 5KB |
+| `TYPOGRAPHY.md` | Font pairing (Serif/Sans/Mono), Major Third scale (1.25), custom sizes, weights | 4KB |
+| `COLORS.md` | 92-5-3 hierarchy, brand/black/warm/red/accent/utility colors, section color recipe | 8KB |
+| `COMPONENTS.md` | Button (4 variants + two-state secondary), Link system, Badge (CSS driven), Animation | 7KB |
+| `LAYOUT.md` | Spacing scale, 5 container widths, responsive padding, section pattern, page assembly | 7KB |
+| `PROMPTS.md` | 7 copy-paste AI implementation prompts | 6KB |
+
+**Total:** ~37KB (down from 53KB monolith)
 
 ---
 
@@ -337,6 +354,7 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 | Date | Action | Files Affected |
 |------|--------|----------------|
+| Mar 1, 2026 | AI Context modularized (53KB → 6 modules in `ai-context/`) | DESIGN_SYSTEM_AI_CONTEXT.md, ai-context/*.md |
 | Mar 1, 2026 | Deleted PROJECT_STRUCTURE.md (merged into MANIFEST) | PROJECT_STRUCTURE.md |
 | Mar 1, 2026 | Badge CSS migration Phase 1–4 | theme.css, Badge.tsx |
 | Mar 1, 2026 | Doc consolidation: BADGES_DOCUMENTATION v3.0, TECHNICAL_HANDOVER deprecated | 3 root .md files |
@@ -351,8 +369,9 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 | Date | Changes |
 |------|---------|
-| Mar 1, 2026 | **v3.3.2 Inventory Consolidation:** Merged PROJECT_STRUCTURE.md into MANIFEST (dependency chains, section order, cleanup log); deleted PROJECT_STRUCTURE.md |
-| Mar 1, 2026 | **v3.3.2 Doc Consolidation:** BADGES_DOCUMENTATION.md v3.0; TECHNICAL_HANDOVER.md deprecated; MANIFEST updated |
+| Mar 1, 2026 | **v3.3.2 AI Context Modularization:** Split 53KB monolith into 6 modules in `ai-context/` (CORE, TYPOGRAPHY, COLORS, COMPONENTS, LAYOUT, PROMPTS); updated DESIGN_SYSTEM_AI_CONTEXT.md to 3KB index; marked DESIGN_SYSTEM_UPDATES.md as pure changelog |
+| Mar 1, 2026 | **v3.3.2 Inventory Consolidation:** Merged PROJECT_STRUCTURE.md into MANIFEST; deleted PROJECT_STRUCTURE.md |
+| Mar 1, 2026 | **v3.3.2 Doc Consolidation:** BADGES_DOCUMENTATION.md v3.0; TECHNICAL_HANDOVER.md deprecated; checklist v2.1 |
 | Mar 1, 2026 | **v3.3.2 Badge CSS Migration (4 phases):** All Badge styling via CSS custom properties |
 | Mar 1, 2026 | **v3.3 AI Context Addendum:** DESIGN_SYSTEM_UPDATES.md, README doc hierarchy, GITHUB_PUSH_GUIDE v1.3 |
 | Mar 1, 2026 | **v3.3 Documentation:** design-system-checklist v2.0, 4WH updated, QUICK_START updated |
@@ -363,4 +382,4 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 ---
 
-**Total Files on GitHub:** ~105 files across 4 main directories
+**Total Files on GitHub:** ~111 files across 5 directories (root, ai-context, src/app, src/design-system, src/styles)
