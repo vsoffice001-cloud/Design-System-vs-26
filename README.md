@@ -16,8 +16,9 @@ This design system showcases a minimalist editorial aesthetic with:
 
 | # | File | What | Size |
 |---|------|------|------|
-| 1 | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth — 92-5-3 rules, typography, page assembly, token cross-reference | 53KB |
-| 2 | `DESIGN_SYSTEM_UPDATES.md` | Versioned patches to #1 (v3.2.1 → v3.3.2) — secondary button, Badge migration | ~8KB |
+| 1 | `DESIGN_SYSTEM_AI_CONTEXT.md` | Index → 6 modules in `ai-context/` (typography, colors, components, layout, prompts) | 3KB index |
+| 1a | `ai-context/*.md` | Modular AI context (CORE, TYPOGRAPHY, COLORS, COMPONENTS, LAYOUT, PROMPTS) | ~37KB total |
+| 2 | `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v3.3.2) | ~5KB |
 | 3 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H framework for every component with decision flowcharts | 28KB |
 | 4 | `design-system-checklist.md` | File map — which files to import, in what order, 10 groups, ~45 files | 20KB |
 | 5 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | 6KB |
@@ -76,6 +77,13 @@ pnpm dev
 
 ```
 Design-System-vs-26/
+├── ai-context/                        # Modular AI context (6 files)
+│   ├── CORE.md                        # Rules, checklist, mistakes
+│   ├── TYPOGRAPHY.md                  # Font pairing, scale
+│   ├── COLORS.md                      # 92-5-3, all color families
+│   ├── COMPONENTS.md                  # Button, Link, Badge, Animation
+│   ├── LAYOUT.md                      # Spacing, containers, sections
+│   └── PROMPTS.md                     # AI implementation prompts
 ├── src/
 │   ├── app/
 │   │   ├── components/       # React components (~45 files)
@@ -88,10 +96,10 @@ Design-System-vs-26/
 │       ├── fonts.css        # Font imports (DM Sans + Noto Serif)
 │       ├── tailwind.css     # Tailwind configuration
 │       └── theme.css        # CSS custom properties
-├── DESIGN_SYSTEM_AI_CONTEXT.md    # Source of truth (v3.2.1)
-├── DESIGN_SYSTEM_UPDATES.md       # Versioned patches (v3.3.2)
+├── DESIGN_SYSTEM_AI_CONTEXT.md    # Index → ai-context/ modules (v3.3.2)
+├── DESIGN_SYSTEM_UPDATES.md       # Changelog (v3.3.2)
 ├── COMPONENT_GUIDELINES_4WH.md    # 4W+H component reference
-├── design-system-checklist.md     # File map (v2.0)
+├── design-system-checklist.md     # File map (v2.1)
 ├── QUICK_START_PROMPT.md          # Copy-paste AI prompt
 ├── GITHUB_PUSH_GUIDE.md           # Push safety guide
 ├── package.json
