@@ -5,7 +5,7 @@
 **Repo:** `vsoffice001-cloud/Design-System-vs-26`  
 **Design System Version:** v3.3.2
 
-This document lists every file in the GitHub repository, organized by directory, with purpose and status notes. Use this as a reference when syncing between Figma Make and GitHub.
+Canonical file inventory for the entire repository. Use this when syncing between Figma Make and GitHub.
 
 ---
 
@@ -19,7 +19,7 @@ This document lists every file in the GitHub repository, organized by directory,
 | `postcss.config.mjs` | PostCSS configuration | Stable |
 | `vite.config.ts` | Vite build configuration | Stable |
 | `README.md` | Project readme (v3.3 doc hierarchy) | Updated Mar 1 |
-| `GITHUB_REPO_MANIFEST.md` | **This file** — Repository inventory | Updated Mar 1 |
+| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 1 |
 
 ### Root - AI Context Files (v3.3.2)
 
@@ -40,8 +40,7 @@ This document lists every file in the GitHub repository, organized by directory,
 | `RESOURCE_CARD_DOCUMENTATION.md` | ResourceCard deep-dive (7 variants, 53 tokens) | v3.0 |
 | `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font integration decisions | Stable |
 | `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames | Stable |
-| `PROJECT_STRUCTURE.md` | Complete file tree inventory | v3.2.1 |
-| `TECHNICAL_HANDOVER.md` | Technical handover — **historical reference only** (Feb 17 content, staleness warnings added) | Deprecated |
+| `TECHNICAL_HANDOVER.md` | Technical handover — **historical reference only** | Deprecated |
 
 ---
 
@@ -60,15 +59,70 @@ src/
 
 ---
 
+## Case Study Section Order
+
+```
+ 1. HeroSection              → BLACK
+ 2. ClientContextSection     → WHITE
+ 3. ChallengesSection        → WARM (#f5f2f1)
+ 4. EngagementObjectives     → WHITE
+ 5. MethodologySection       → WARM
+ 6. ImpactSection            → WHITE
+ 7. ValuePillarsSection      → WHITE (border-t separator)
+ 8. TestimonialSection       → WHITE (border-t separator)
+ 9. ResourcesSection         → BLACK (dark gradient mesh)
+10. FinalCTASection          → WHITE (border-t separator)
+```
+
+---
+
+## Key Dependency Chains
+
+### ResourcesSection (most complex organism)
+```
+ResourcesSection.tsx
+  ├── ResourceCard.tsx (7 card variants, 53 --rc-* CSS tokens)
+  ├── Container.tsx (layout wrapper, 5 width presets)
+  ├── SubtleVariantSwitcher.tsx (designer tool)
+  ├── useResponsiveGutter.ts (24/32px responsive, 640px breakpoint)
+  ├── react-responsive-masonry (npm)
+  ├── Button.tsx (CTA button)
+  └── theme.css (--rc-* token block)
+```
+
+### Navbar (second most complex)
+```
+Navbar.tsx
+  ├── Button.tsx
+  ├── ContactModal.tsx
+  ├── useScrollDirection.ts
+  └── useHeroVisibility.ts
+```
+
+### Link System
+```
+CTALink.tsx ───┬─── useShimmer.ts (DO NOT DELETE)
+InlineLink.tsx ─┘
+```
+
+### Badge System
+```
+Badge.tsx (canonical — 11 themes, 4 sizes, 3 variants, CSS custom property driven)
+  ├── theme.css (--badge-* size/shape/animation tokens + color consumption rules)
+  └── badges/index.ts (deprecated re-exports for backward compat)
+```
+
+---
+
 ## `src/app/App.tsx`
 
 Main application entry point using `react-router-dom` with routes:
-- `/` - DesignSystemDashboard
-- `/figma-comparison` - FigmaButtonComparison
-- `/shimmer-demo` - ShimmerDemo
-- `/arrow-animation-test` - ArrowAnimationTest
+- `/` → DesignSystemDashboard
+- `/figma-comparison` → FigmaButtonComparison
+- `/shimmer-demo` → ShimmerDemo
+- `/arrow-animation-test` → ArrowAnimationTest
 
-**IMPORTANT:** The GitHub version uses `react-router-dom` routing. The Figma Make version renders `<DesignSystemDashboard />` directly. **Never overwrite the GitHub version from Figma Make.**
+**IMPORTANT:** GitHub version uses `react-router-dom` routing. Figma Make version renders `<DesignSystemDashboard />` directly. **Never overwrite GitHub version from Figma Make.**
 
 ---
 
@@ -82,7 +136,7 @@ Main application entry point using `react-router-dom` with routes:
 | `useHeroVisibility.ts` | Detect if hero section is in viewport |
 | `useMagneticEffect.ts` | Magnetic cursor effect for buttons |
 | `useReadingProgress.ts` | Page reading progress percentage |
-| `useResponsiveGutter.ts` | Responsive pixel-based gutter (24px mobile / 32px desktop) |
+| `useResponsiveGutter.ts` | Responsive pixel-based gutter (24/32px) |
 | `useScrollAnimation.ts` | Scroll-triggered animations |
 | `useScrollDirection.ts` | Detect scroll up/down direction |
 | `useSectionProgress.ts` | Section scroll progress tracking |
@@ -90,31 +144,31 @@ Main application entry point using `react-router-dom` with routes:
 
 ---
 
-## `src/app/components/` - Core Components
+## `src/app/components/` — Core Components
 
-### Case Study Page Sections
+### Case Study Page Sections (10 organisms)
 
-| File | Purpose | Notes |
-|------|---------|-------|
-| `HeroSection.tsx` | Hero section with animated title | |
-| `ClientContextSection.tsx` | Client context with sidebar | Logo prop-driven |
-| `ChallengesSection.tsx` | Challenges cards (intentional 1000px JS calc) | |
-| `MethodologySection.tsx` | Methodology timeline | |
-| `EngagementObjectivesSection.tsx` | Engagement objectives | |
-| `ImpactSection.tsx` | Impact metrics with counters | |
-| `TestimonialSection.tsx` | Client testimonial | |
-| `ValuePillarsSection.tsx` | Value pillars section | |
-| `ResourcesSection.tsx` | Resources Masonry grid | Unsplash URLs |
-| `FinalCTASection.tsx` | Final call-to-action | |
+| File | Background | Notes |
+|------|-----------|-------|
+| `HeroSection.tsx` | BLACK | Animated title |
+| `ClientContextSection.tsx` | WHITE | Sidebar layout, prop-driven logo |
+| `ChallengesSection.tsx` | WARM | Intentional 1000px JS calc |
+| `EngagementObjectivesSection.tsx` | WHITE | Sticky sidebar |
+| `MethodologySection.tsx` | WARM | Scroll timeline |
+| `ImpactSection.tsx` | WHITE | Counter metrics |
+| `ValuePillarsSection.tsx` | WHITE | Grid-12 |
+| `TestimonialSection.tsx` | WHITE | Centered quote |
+| `ResourcesSection.tsx` | BLACK | Masonry grid, Unsplash URLs |
+| `FinalCTASection.tsx` | WHITE | Conversion CTA |
 
-### Interactive Components
+### Interactive Components (16 molecules)
 
 | File | Purpose |
 |------|--------|
-| `Button.tsx` | **Core** — 4 variants, 4 sizes, shimmer, arrow, secondary two-state (v3.3) |
-| `Badge.tsx` | **Core** — 11 themes, 4 sizes, 3 variants — **CSS custom property driven** (v3.3.2) |
+| `Button.tsx` | **Core** — 4 variants, 4 sizes, shimmer, arrow, secondary two-state |
+| `Badge.tsx` | **Core** — 11 themes, 4 sizes, 3 variants — CSS custom property driven |
 | `Label.tsx` | Form-only `<label>` component |
-| `AnimatedArrow.tsx` | 2-arrow replacement animation (Button.tsx dependency) |
+| `AnimatedArrow.tsx` | 2-arrow replacement animation (Button.tsx dep) |
 | `CTALink.tsx` | Unified hover CTA link (uses useShimmer) |
 | `InlineLink.tsx` | Paragraph interlinking (uses useShimmer) |
 | `Navbar.tsx` | Responsive two-state navbar |
@@ -147,15 +201,90 @@ Main application entry point using `react-router-dom` with routes:
 | `ResourceCard.tsx` | Content card molecule (7 variants, 2 styles, 2 modes) |
 | `SubtleVariantSwitcher.tsx` | Designer tool (lucide-react Settings) |
 
-### Dashboard, Showcase, Token Components
+### Design System Dashboard (8 files)
 
-_(Same as before — DesignSystemDashboard, Sidebar, 6 content tabs, 6 token showcases, 12 demo/showcase components)_
+| File | Purpose |
+|------|--------|
+| `DesignSystemDashboard.tsx` | Main dashboard with sidebar navigation |
+| `DesignSystemSidebar.tsx` | Sidebar navigation component |
+| `FoundationsContent.tsx` | Foundations tab (typography, colors, layout) |
+| `ComponentsContent.tsx` | Components tab (buttons, badges, links) |
+| `GuidelinesContent.tsx` | Guidelines tab |
+| `PatternsContent.tsx` | Patterns tab (intentional `max-w-[1200px]` in demo string) |
+| `ResourcesContent.tsx` | Resources tab |
+| `MotionContent.tsx` | Motion & animation tab |
 
-### Barrel Export
+### Token Showcase Components (6 files)
+
+| File | Purpose |
+|------|--------|
+| `AllColorsPaletteContent.tsx` | Full color palette display |
+| `AllTypographyTokensContent.tsx` | Typography tokens (intentionally hardcoded for demo) |
+| `AllSpacingTokensContent.tsx` | Spacing tokens display |
+| `AllBorderRadiusTokensContent.tsx` | Border radius tokens |
+| `AllElevationTokensContent.tsx` | Elevation/shadow tokens |
+| `AllLayoutGridTokensContent.tsx` | Layout grid tokens |
+
+### Showcase & Demo Components (12 files)
+
+| File | Purpose |
+|------|--------|
+| `ButtonDocumentation.tsx` | Button component documentation page |
+| `ButtonControlsGuide.tsx` | Interactive button controls guide |
+| `ButtonAnimationTest.tsx` | Button animation test page |
+| `FigmaButtonComparison.tsx` | Figma vs code button comparison |
+| `BadgeLabelsDocumentation.tsx` | Badge & labels documentation |
+| `BadgeShowcase.tsx` | Badge component showcase |
+| `LinksDocumentation.tsx` | Links system documentation page |
+| `LinkSystemDemo.tsx` | Link system demo page |
+| `ShimmerDemo.tsx` | Shimmer effect demo page |
+| `AnimatedArrowDemo.tsx` | Arrow animation demos |
+| `AnimatedArrowQuickRef.tsx` | Arrow quick reference card |
+| `ArrowAnimationTest.tsx` | Arrow animation test page |
+
+### Barrel Export & Subdirectories
 
 | File | Purpose |
 |------|--------|
 | `index.ts` | Barrel export for all components |
+| `badges/index.ts` | Pure re-exports from Badge.tsx (backward compat) |
+| `links/README.md` | Link & CTA component system overview |
+
+### Inline Documentation (10 `.md` files)
+
+| File | Purpose |
+|------|--------|
+| `ARROW_ANIMATION_BUG_FIX.md` | Arrow animation bug fix |
+| `ARROW_ANIMATION_EXPLAINED.md` | Arrow animation technical explanation |
+| `BUTTON_SIZING_STRATEGY.md` | Button size hierarchy guide |
+| `BUTTON_SYSTEM.md` | Button system documentation |
+| `LINK_SYSTEM_DOCUMENTATION.md` | Link & CTA system full docs |
+| `LINK_SYSTEM_QUICK_REFERENCE.md` | Link system quick reference |
+| `NAVBAR_RESPONSIVE.md` | Navbar responsive breakpoints |
+| `NAVBAR_TWO_STATE_SYSTEM.md` | Navbar two-state system |
+| `README_ANIMATED_ARROW.md` | AnimatedArrow README |
+| `SHIMMER_ARROW_COMPATIBILITY_ANALYSIS.md` | Shimmer+Arrow compatibility proof |
+
+---
+
+## `src/design-system/` (8 files)
+
+| File | Purpose |
+|------|--------|
+| `tokens.ts` | All design tokens as TypeScript constants |
+| `index.ts` | Barrel export |
+| `EXAMPLES.tsx` | Usage examples |
+| `ColorSwatch.tsx` | Color swatch display components |
+| `ComponentCard.tsx` | Component showcase card wrappers |
+| `SpacingScale.tsx` | Spacing scale visualization |
+| `TypeScale.tsx` | Typography scale visualization |
+| `README.md` | Design system components guide |
+
+---
+
+## `src/imports/` (12 SVG files)
+
+SVG path data files used by components: `svg-*.ts` (12 files)
 
 ---
 
@@ -163,7 +292,7 @@ _(Same as before — DesignSystemDashboard, Sidebar, 6 content tabs, 6 token sho
 
 | File | Purpose | Key Contents |
 |------|---------|-------------|
-| `theme.css` | All CSS custom properties | Font Pairing, Containers, Typography Scale (Major Third 1.25), Color System (92-5-3), Button tokens, **Badge tokens (`--badge-*` size/shape/animation)**, Badge color consumption rules, ResourceCard tokens (`--rc-*`), `--text-primary`/`--text-secondary`, responsive `--section-py-standard` |
+| `theme.css` | All CSS custom properties | Font Pairing, Containers, Typography Scale (Major Third 1.25), Color System (92-5-3), Button tokens, **Badge tokens** (`--badge-*` size/shape/animation + color consumption rules), ResourceCard tokens (`--rc-*`), `--text-primary`/`--text-secondary`, responsive `--section-py-standard` |
 | `fonts.css` | Font imports only | DM Sans (body/UI), Noto Serif (headings/display) |
 | `index.css` | CSS entry point | Imports |
 | `tailwind.css` | Tailwind directives | Base layer |
@@ -190,11 +319,31 @@ _(Same as before — DesignSystemDashboard, Sidebar, 6 content tabs, 6 token sho
 4. **PatternsContent.tsx** — `max-w-[1200px]` inside demo code string
 5. **useShimmer.ts** — Actively used by CTALink + InlineLink, DO NOT DELETE
 
-### App.tsx Differences
+---
 
-- **GitHub:** `react-router-dom` with 4 routes
-- **Figma Make:** Renders `<DesignSystemDashboard />` directly
-- **NEVER overwrite** GitHub version from Figma Make
+## Sync Checklist (Figma Make → GitHub)
+
+1. **Always verify** App.tsx differences — never overwrite GitHub version
+2. **Never push** `figma/ImageWithFallback.tsx`, `ui/` directory, or `src/imports/*.tsx` Figma frames
+3. **Always push** component `.tsx` changes and `.md` documentation updates
+4. **Always push** `theme.css` and `fonts.css` token changes
+5. **Always push** AI context `.md` files when updated
+6. **Check** for new hooks in `src/app/hooks/` that need syncing
+7. **Refer to** `GITHUB_PUSH_GUIDE.md` for the complete pre-push checklist
+
+---
+
+## Cleanup Changelog
+
+| Date | Action | Files Affected |
+|------|--------|----------------|
+| Mar 1, 2026 | Deleted PROJECT_STRUCTURE.md (merged into MANIFEST) | PROJECT_STRUCTURE.md |
+| Mar 1, 2026 | Badge CSS migration Phase 1–4 | theme.css, Badge.tsx |
+| Mar 1, 2026 | Doc consolidation: BADGES_DOCUMENTATION v3.0, TECHNICAL_HANDOVER deprecated | 3 root .md files |
+| Mar 1, 2026 | Phase 1: Deleted 4 stale AI context files | AI_CONTEXT_DESIGN_SYSTEM.md, AI_DESIGN_SYSTEM_PROMPT.md, DESIGN_SYSTEM_AI_PROMPT.md, README_AI_PORTABLE_SYSTEM.md |
+| Mar 1, 2026 | Phase 4: Deleted 3 standalone badge impls (51.6KB dead code) | badges/SectionLabel.tsx, ObjectivePill.tsx, InfoCardLabel.tsx |
+| Mar 1, 2026 | Phase 5: Deleted binary archive | Design system vs 26.zip |
+| Mar 1, 2026 | Deleted orphan useResponsiveGutter.tsx | src/app/hooks/useResponsiveGutter.tsx |
 
 ---
 
@@ -202,18 +351,16 @@ _(Same as before — DesignSystemDashboard, Sidebar, 6 content tabs, 6 token sho
 
 | Date | Changes |
 |------|---------|
-| Mar 1, 2026 | **v3.3.2 Doc Consolidation:** BADGES_DOCUMENTATION.md rewritten to v3.0 (aligned with CSS migration, 18KB→12KB); TECHNICAL_HANDOVER.md marked as historical with staleness warnings (19KB→6KB); MANIFEST updated with all migration entries |
-| Mar 1, 2026 | **v3.3.2 Badge CSS Migration (4 phases):** Phase 1: 17 `--badge-*` tokens added to theme.css; Phase 2: Badge.tsx consumes CSS vars for sizes/shapes; Phase 3: CSS color consumption rules added; Phase 4: All Badge colors via CSS custom properties, removed inline styles. Bug fix: CSS hover rules now functional. File reduction: Badge 27→22KB, theme 30→25KB |
-| Mar 1, 2026 | **v3.3 AI Context Addendum:** Created DESIGN_SYSTEM_UPDATES.md (patches for 53KB AI Context); Updated README.md with doc hierarchy; Updated GITHUB_PUSH_GUIDE.md v1.3 with checklist cross-refs |
-| Mar 1, 2026 | **v3.3 Documentation:** design-system-checklist v2.0 (45 files, 10 groups); COMPONENT_GUIDELINES_4WH.md updated (secondary two-state, 4W+H for StickyCTA/ContactModal/NextSectionCTA); QUICK_START_PROMPT.md updated |
+| Mar 1, 2026 | **v3.3.2 Inventory Consolidation:** Merged PROJECT_STRUCTURE.md into MANIFEST (dependency chains, section order, cleanup log); deleted PROJECT_STRUCTURE.md |
+| Mar 1, 2026 | **v3.3.2 Doc Consolidation:** BADGES_DOCUMENTATION.md v3.0; TECHNICAL_HANDOVER.md deprecated; MANIFEST updated |
+| Mar 1, 2026 | **v3.3.2 Badge CSS Migration (4 phases):** All Badge styling via CSS custom properties |
+| Mar 1, 2026 | **v3.3 AI Context Addendum:** DESIGN_SYSTEM_UPDATES.md, README doc hierarchy, GITHUB_PUSH_GUIDE v1.3 |
+| Mar 1, 2026 | **v3.3 Documentation:** design-system-checklist v2.0, 4WH updated, QUICK_START updated |
 | Mar 1, 2026 | **v3.3 Secondary Button:** Two-state secondary (neutral rest → brand-red hover) |
-| Mar 1, 2026 | **v3.3.2 Token Cross-Reference:** Shadow usage guide, border radius decision table, badge theme selection matrix |
-| Mar 1, 2026 | **v3.3.1 Page Assembly Guide:** Component-level recipes for 7 section types |
-| Mar 1, 2026 | **v3.3 Color Usage Guide:** 92-5-3 Color Usage Guide for reports/product pages |
 | Mar 1, 2026 | **ResourcesSection system (11 files):** Container, ResourceCard, SubtleVariantSwitcher, useResponsiveGutter, 53 `--rc-*` tokens |
 | Feb 28, 2026 | v3.3 sync: 6 new layout components, 4WH docs, barrel exports |
-| Feb 28, 2026 | v3.2 sync: Font Pairing + Container Width + Responsive Padding tokens, AnimatedArrow, 10 doc .md files |
+| Feb 28, 2026 | v3.2 sync: Font Pairing + Container Width tokens, AnimatedArrow, 10 doc .md files |
 
 ---
 
-**Total Files on GitHub:** ~106 files across 4 main directories
+**Total Files on GitHub:** ~105 files across 4 main directories
