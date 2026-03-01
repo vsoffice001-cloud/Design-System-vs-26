@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ExternalLink, FileText } from 'lucide-react';
 import { CTALink } from '@/app/components/CTALink';
 import { InlineLink } from '@/app/components/InlineLink';
@@ -182,6 +183,59 @@ export function LinksDocumentation() {
           </div>
         </div>
       </DocSection>
+
+      {/* Decision Flowchart — from COMPONENTS.md */}
+      <section className="border border-black/8 rounded-lg p-6">
+        <h3 className="text-2xl font-normal mb-4">Decision Flowchart</h3>
+        <p className="text-sm text-black/60 mb-6">Use this to pick the right component every time.</p>
+        <div className="space-y-3">
+          {[
+            { question: 'Is it a primary action (form submit, main CTA)?', yes: 'Button', yesColor: 'bg-black text-white', no: null },
+            { question: 'Is it text + arrow CTA ("Learn More \u2192")?', yes: 'CTALink', yesColor: 'bg-[var(--brand-red)] text-white', no: null },
+            { question: 'Is it within paragraph text?', yes: 'InlineLink', yesColor: 'bg-black/10 text-black', no: 'CTALink or Button' },
+          ].map((step, idx) => (
+            <div key={idx} className="flex items-start gap-4 p-4 bg-black/[0.02] rounded-lg border border-black/8">
+              <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 font-mono text-sm">
+                {idx + 1}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium mb-2">{step.question}</p>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-black/50">YES →</span>
+                  <span className={`text-xs px-3 py-1 rounded font-semibold ${step.yesColor}`}>{step.yes}</span>
+                  {step.no && (
+                    <>
+                      <span className="text-xs text-black/30">|</span>
+                      <span className="text-xs text-black/50">NO →</span>
+                      <span className="text-xs px-3 py-1 rounded bg-black/5 text-black/70">{step.no}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* DO / DON'T */}
+        <div className="grid grid-cols-2 gap-4 mt-6">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h4 className="font-semibold text-green-900 text-sm mb-2">DO</h4>
+            <ul className="text-xs text-green-800 space-y-1">
+              <li>• Button for primary conversions and form submits</li>
+              <li>• CTALink for exploratory "Learn More" / "See How" links</li>
+              <li>• InlineLink within paragraph text only</li>
+            </ul>
+          </div>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h4 className="font-semibold text-red-900 text-sm mb-2">DON'T</h4>
+            <ul className="text-xs text-red-800 space-y-1">
+              <li>• Don't use Button for exploratory links (use CTALink)</li>
+              <li>• Don't use CTALink for primary conversions (use Button)</li>
+              <li>• Don't use InlineLink standalone (use CTALink)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
       {/* CTALink Component */}
       <DocSection
