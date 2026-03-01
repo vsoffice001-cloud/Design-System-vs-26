@@ -1,9 +1,9 @@
-# Design System File Checklist v2.0
+# Design System File Checklist v2.1
 
 **Purpose:** The single reading-order guide for any AI or team member building a new report/product page.  
 **Rule:** Read top-to-bottom. Each group builds on the previous one.  
 **Repo:** `vsoffice001-cloud/Design-System-vs-26` (`main` branch)  
-**Last verified:** 2026-03-01 | DS version: 3.3
+**Last verified:** 2026-03-01 | DS version: 3.3.2
 
 ---
 
@@ -18,9 +18,10 @@
 | Priority | File | What | Why Read It |
 |----------|------|------|-------------|
 | 1st | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth | 92-5-3 rules, Page Assembly, Token Cross-Reference, typography scale |
-| 2nd | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component | Decision flowcharts, common mistakes, production checklist |
-| 3rd | `GITHUB_PUSH_GUIDE.md` | Push safety | Never-push list, pre-push checklist, merge rules |
-| 4th | `QUICK_START_PROMPT.md` | Copy-paste prompt | Shortened rules for fast Figma Make sessions |
+| 2nd | `DESIGN_SYSTEM_UPDATES.md` | Patches to #1 (v3.3.2) | Badge CSS migration, secondary button two-state |
+| 3rd | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component | Decision flowcharts, common mistakes, production checklist |
+| 4th | `GITHUB_PUSH_GUIDE.md` | Push safety | Never-push list, pre-push checklist, merge rules |
+| 5th | `QUICK_START_PROMPT.md` | Copy-paste prompt | Shortened rules for fast Figma Make sessions |
 
 ---
 
@@ -31,7 +32,7 @@
 | File | What You Get | When to Use |
 |------|-------------|-------------|
 | `src/design-system/tokens.ts` | All raw JS values — colors, shadows (sm/md/lg/brand/accent), border-radius (2.5/5/10px), opacity scale, spacing scale, z-index, easing, duration | When you need a token value in TypeScript/JSX (e.g., `colors.brand.red600`) |
-| `src/styles/theme.css` | CSS custom properties — `--text-*` typography scale, `--container-*` widths, `--button-*` sizing, `--brand-red`, `--rc-*` ResourceCard tokens, responsive padding | When you need a token value in CSS or inline `style={{ fontSize: 'var(--text-sm)' }}` |
+| `src/styles/theme.css` | CSS custom properties — `--text-*` typography scale, `--container-*` widths, `--button-*` sizing, `--badge-*` sizing/shape/animation, `--brand-red`, `--rc-*` ResourceCard tokens, responsive padding | When you need a token value in CSS or inline `style={{ fontSize: 'var(--text-sm)' }}` |
 | `src/styles/fonts.css` | Font imports (DM Sans + Noto Serif) | Already loaded globally — you never import this manually in components |
 
 **HOW to decide JS tokens vs CSS variables:**
@@ -71,7 +72,7 @@
 | `src/app/components/InlineLink.tsx` | Inline paragraph link — red underline, warm hover | Within `<p>` text. NOT for standalone CTAs. |
 | `src/app/components/AnimatedArrow.tsx` | Arrow animation — internal dependency | Don't use directly. Used by `Button.tsx` (via `showArrow`) and `CTALink.tsx` internally. |
 
-### Button Variant Reference (v3.3 — updated 2026-03-01)
+### Button Variant Reference (v3.3)
 
 | Variant | Resting State | Hover State | When |
 |---------|--------------|-------------|------|
@@ -108,7 +109,7 @@ Is it a primary action (form submit, main CTA)?
 
 | File | What It Builds | Key Exports |
 |------|---------------|-------------|
-| `src/app/components/Badge.tsx` | Labels, pills, section headers — 11 themes, 3 variants, convenience wrappers | `Badge`, `SectionLabel`, `StepPill`, `ObjectivePill`, `CategoryBadge`, `StatusBadge`, `InfoBadge`, `MutedBadge`, `ClickableBadge` |
+| `src/app/components/Badge.tsx` | Labels, pills, section headers — 11 themes, 3 variants, CSS custom property driven | `Badge`, `SectionLabel`, `StepPill`, `ObjectivePill`, `CategoryBadge`, `StatusBadge`, `InfoBadge`, `MutedBadge`, `ClickableBadge` |
 
 ### Quick Patterns
 
@@ -126,7 +127,7 @@ Is it a primary action (form submit, main CTA)?
 <Badge variant="minimal" size="sm" theme="brand" fontWeight={600}>CHAPTER 1</Badge>
 ```
 
-**Migration note:** Badge.tsx currently uses hardcoded JS tokens (`SIZE_TOKENS`, `THEME_COLORS`). Migration to CSS custom properties (`--badge-*` in theme.css) is planned but not yet started. No components on GitHub currently import Badge/SectionLabel externally — they're used inline within section components.
+**Architecture (v3.3.2):** Badge.tsx uses CSS custom properties for ALL styling. Sizes and shapes reference `--badge-*` tokens in theme.css. Colors are set as inline CSS custom properties (`--badge-bg`, `--badge-text`, `--badge-border`, `--badge-shimmer`) per instance, consumed by CSS rules in theme.css for base + hover + shimmer states. THEME_COLORS remains in JS (prop-driven selection), but no inline `backgroundColor`/`color` styles — CSS owns all property application. See `BADGES_DOCUMENTATION.md` v3.0 and `DESIGN_SYSTEM_UPDATES.md` v3.3.2 for full architecture.
 
 ---
 
@@ -329,8 +330,6 @@ import { useMyHook } from '@/app/hooks';
 | 10. Barrel Exports | 2 | components/index.ts, hooks/index.ts |
 | **Total** | **~45** | |
 
-**In practice:** For a new report page, you read `DESIGN_SYSTEM_AI_CONTEXT.md` first, then import from ~15 core files (Groups 2-6 + 8), reference ~3-4 existing sections (Group 9), and register in barrels (Group 10).
-
 ---
 
 ## Known Exceptions (Don't "Fix" These)
@@ -342,7 +341,6 @@ These are intentional patterns that look like bugs but aren't:
 | `AllTypographyTokensContent` | Hardcoded font-size values | Demo/showcase component displaying raw token values |
 | `ChallengesSection.tsx` | JS-calculated card widths | Dynamic layout that can't use static Tailwind classes |
 | `ContactModal.tsx` | Hardcoded modal width (500px) | Modal width is independent of container system |
-| `Badge.tsx` | Uses JS object tokens, not CSS variables | Migration to `--badge-*` tokens planned, not started |
 | `Navbar.tsx` | Imports SVG from `@/imports/svg-fodxwe3cpi` | Figma-imported brand logo — don't recreate |
 
 ---
@@ -351,5 +349,6 @@ These are intentional patterns that look like bugs but aren't:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| v2.0 | 2026-03-01 | Complete rewrite: proper markdown tables, 4W+H structure, added 8 missing files (Navbar, ContactModal, StickyCTA, NextSectionCTA, ReadingProgressBar, TableOfContents, 4 reference sections), added 3 missing hooks, clarified ScrollProgress vs ReadingProgressBar, added barrel export instructions, documented known exceptions, added Button secondary variant update |
+| v2.1 | 2026-03-01 | Fixed Badge migration status (complete, not planned); updated theme.css description to include --badge-* tokens; added DESIGN_SYSTEM_UPDATES.md to companion docs; removed Badge from Known Exceptions; bumped to v3.3.2 |
+| v2.0 | 2026-03-01 | Complete rewrite: proper markdown tables, 4W+H structure, added 8 missing files, 3 missing hooks, ScrollProgress vs ReadingProgressBar, barrel export instructions, known exceptions, secondary button update |
 | v1.0 | 2026-02-28 | Initial checklist (9 groups, ~30 files) |
