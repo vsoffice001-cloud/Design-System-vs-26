@@ -6,6 +6,11 @@
 ## 📌 PURPOSE
 This document provides the 4W+H (Why, What, When, When Not, How) framework for EVERY component in the design system. Use this as a reference when building new pages.
 
+**Companion docs:**
+- `design-system-checklist.md` — File map with reading order (which files to import, in what order)
+- `DESIGN_SYSTEM_AI_CONTEXT.md` — Source of truth for rules, tokens, page assembly
+- `QUICK_START_PROMPT.md` — Copy-paste prompt for fast Figma Make sessions
+
 ---
 
 ## 🔘 BUTTON COMPONENT
@@ -14,7 +19,7 @@ This document provides the 4W+H (Why, What, When, When Not, How) framework for E
 Buttons are the primary interaction mechanism for user actions. Consistent button design ensures users immediately recognize clickable actions and understand their hierarchy.
 
 ### WHAT
-A versatile button component with 4 variants (primary, brand, secondary, ghost), 4 sizes (sm, md, lg, xl), and signature shimmer animation that's always active.
+A versatile button component with 4 variants (primary, brand, secondary, ghost), 4 sizes (sm, md, lg, xl), and signature shimmer animation that's always active. The secondary variant features a **two-state design** (v3.3) that transitions from neutral to brand-red on hover.
 
 ### WHEN
 ✅ Use for primary actions (submit forms, CTAs, navigation)
@@ -22,6 +27,7 @@ A versatile button component with 4 variants (primary, brand, secondary, ghost),
 ✅ Use `md` size for 90% of buttons (default)
 ✅ Use `sm` size for navbar CTAs and TOC buttons
 ✅ Use `lg` size ONLY for homepage heroes
+✅ Use `secondary` for supporting actions alongside brand/primary buttons
 
 ### WHEN NOT
 ❌ Don't use `lg` size by default (dilutes impact)
@@ -34,6 +40,37 @@ A versatile button component with 4 variants (primary, brand, secondary, ghost),
 <Button variant="brand" size="md">Get Started</Button>
 <Button variant="brand" size="md" showArrow>Schedule Demo</Button>
 <Button variant="secondary" size="md">Learn More</Button>
+```
+
+### Secondary Variant — Two-State Design (v3.3)
+
+The secondary button (light background) uses a deliberate two-state interaction pattern:
+
+| Property | State 1 (Resting) | State 2 (Hover) |
+|----------|-------------------|------------------|
+| Border | `rgba(0,0,0,0.12)` neutral | `#b01f24` brand red |
+| Text color | `rgba(0,0,0,0.7)` neutral | `#b01f24` brand red |
+| Shimmer | White sweep (`rgba(255,255,255,0.8)`) | Red-tinted sweep (`rgba(176,31,36,0.08)`) |
+| Box shadow | `0 2px 8px rgba(0,0,0,0.04)` subtle | `0 4px 16px rgba(176,31,36,0.12)` red-tinted |
+| Transition | — | `300ms ease-out` on color, border, shadow |
+
+**WHY this design:** The resting state is intentionally muted so it doesn't compete with brand/primary buttons. On hover, the brand-red reveal creates a "warming" effect that signals the button's importance without overwhelming the page at rest.
+
+**Arrow behavior:** When `showArrow` is true, the arrow color also transitions:
+- Resting: `rgba(0,0,0,0.7)` (matches text)
+- Hover: `var(--brand-red)` (matches text)
+
+**Dark mode secondary** (`background="dark"`) is unchanged: `bg-white/10`, white text, white border.
+
+```tsx
+// Light background (two-state)
+<Button variant="secondary">Learn More</Button>
+
+// With arrow (two-state + arrow color transition)
+<Button variant="secondary" showArrow>Explore Features</Button>
+
+// Dark background (unchanged)
+<Button variant="secondary" background="dark">Learn More</Button>
 ```
 
 ---
@@ -620,6 +657,90 @@ function MyMasonryGrid() {
 
 ---
 
+## 🎯 STICKYCTA COMPONENT
+
+### WHY
+Report/case-study pages have multiple sections, each with different conversion opportunities. A static CTA misses context. StickyCTA adapts its message based on which section the user is reading.
+
+### WHAT
+A floating brand-red button fixed to the bottom-right. Changes text and icon based on `useActiveSection()`. Expands on hover to reveal the full CTA text with a tooltip description. Hidden during hero and final-CTA sections.
+
+### WHEN
+✅ Use on report/case-study pages with multiple defined sections
+✅ Use when you want context-aware conversion prompts
+✅ Place once at page root (self-positions via CSS fixed)
+
+### WHEN NOT
+❌ Don't use on pages without section-based navigation
+❌ Don't use alongside another floating CTA (conflicts with ScrollToTop positioning)
+❌ Don't use on mobile-first pages (desktop-only component via `hidden lg:block`)
+
+### HOW
+```tsx
+import { StickyCTA } from '@/app/components/StickyCTA';
+
+// Place at page root — no props needed
+<StickyCTA />
+```
+
+Requires sections with `id` attributes matching the internal `sectionCTAs` mapping.
+
+---
+
+## 📨 CONTACTMODAL COMPONENT
+
+### WHY
+Contact forms need consistent modal behavior: escape-to-close, body scroll lock, backdrop click dismiss, accessible focus trapping, and success state feedback.
+
+### WHAT
+A modal overlay with a 4-field contact form (name, email, company, message). 500px max-width, 10px border-radius, success checkmark animation.
+
+### WHEN
+✅ Use for "Contact Us" / "Get in Touch" / "Schedule Demo" actions
+✅ Trigger from Button onClick or StickyCTA
+
+### WHEN NOT
+❌ Don't use for inline forms (embed directly in section)
+❌ Don't use for complex multi-step forms (build a dedicated page)
+
+### HOW
+```tsx
+import { ContactModal } from '@/app/components/ContactModal';
+
+const [isOpen, setIsOpen] = useState(false);
+
+<Button variant="brand" onClick={() => setIsOpen(true)}>Contact Us</Button>
+<ContactModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+```
+
+---
+
+## ⬇️ NEXTSECTIONCTA COMPONENT
+
+### WHY
+Between long sections, users need directional guidance to continue scrolling. A subtle "next section" prompt reduces bounce rate and guides the reading flow.
+
+### WHAT
+A centered button with an uppercase label and bouncing ChevronDown icon. Smooth-scrolls to the target section.
+
+### WHEN
+✅ Use between sections to guide reading flow
+✅ Use `darkMode` prop when placed on a black background
+
+### WHEN NOT
+❌ Don't use at the bottom of the last section (nowhere to go)
+❌ Don't use between every section (overuse dilutes effectiveness)
+
+### HOW
+```tsx
+import { NextSectionCTA } from '@/app/components/NextSectionCTA';
+
+<NextSectionCTA targetId="methodology" label="Our Approach" />
+<NextSectionCTA targetId="impact" label="See Results" darkMode />
+```
+
+---
+
 ## 🎯 DECISION FLOWCHARTS
 
 ### "Which Link Component Should I Use?"
@@ -723,6 +844,32 @@ Do I need section-specific reading progress?
 
 ---
 
+### "Which Progress/Scroll Hook Should I Use?"
+
+```
+Do I need to know which section is visible?
+├─ YES → Use useActiveSection()
+└─ NO ↓
+
+Do I need progress between two specific sections?
+├─ YES → Use useSectionProgress('start-id', 'end-id')
+└─ NO ↓
+
+Do I need generic 0-100% reading progress?
+├─ YES → Use useReadingProgress()
+└─ NO ↓
+
+Do I need to detect scroll direction (up/down)?
+├─ YES → Use useScrollDirection()
+└─ NO ↓
+
+Do I need to know if the hero is visible?
+├─ YES → Use useHeroVisibility()
+└─ NO → No scroll hook needed
+```
+
+---
+
 ## 🚨 COMMON MISTAKES TO AVOID
 
 ### Typography
@@ -744,6 +891,7 @@ Do I need section-specific reading progress?
 ❌ Disabling shimmer animation
 ❌ Using `lg` size by default
 ❌ Multiple brand buttons in same section
+❌ Hardcoding secondary button colors instead of using variant prop
 
 ### Spacing
 ❌ Using arbitrary values: `gap-[17px]`
@@ -768,10 +916,13 @@ Before pushing to production, verify:
 - [ ] All icons use `iconColors.content` or `iconColors.utility`
 - [ ] Cards use `<Card>` component (not hand-coded containers)
 - [ ] Page sections use `<SectionWrapper>` (not hand-coded `<section>`)
+- [ ] New components registered in barrel exports (`index.ts`)
+- [ ] ScrollProgress vs ReadingProgressBar — only one per page
 
 ---
 
 **Last Updated:** 2026-03-01  
 **Design System Version:** 3.3  
 **Repository:** vsoffice001-cloud/Design-System-vs-26  
-**Use:** Reference this guide when building new components/pages
+**Use:** Reference this guide when building new components/pages  
+**File Map:** See `design-system-checklist.md` for complete reading-order file list
