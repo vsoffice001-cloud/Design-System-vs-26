@@ -86,6 +86,24 @@
   --section-py-tablet: 4rem;     /* 64px - sm:py-16 */
   --section-py-desktop: 5rem;    /* 80px - md:py-20 */
   
+  /* Section Composition Tokens (used by ResourcesSection, SectionHeader) */
+  --section-py-standard: 3rem;           /* 48px mobile-first - matches py-12 */
+  --section-header-mb: 3rem;             /* 48px - Gap after full section header block */
+  --pair-label-heading: 0.75rem;         /* 12px - Gap between section label and heading */
+  --pair-heading-description: 1rem;      /* 16px - Gap between heading and description */
+  --text-measure: 43.75rem;             /* 700px - Max width for readable text blocks */
+  
+  /* Label Colors (section eyebrow labels on different backgrounds) */
+  --label-on-black: rgba(255, 255, 255, 0.40);
+  --label-on-white: rgba(0, 0, 0, 0.40);
+  
+  /* Semantic Text Colors (for section headers and body text) */
+  --text-primary: #000000;              /* Primary text on light backgrounds */
+  --text-secondary: rgba(0, 0, 0, 0.60); /* Secondary/description text on light backgrounds */
+  
+  /* Background Compositions */
+  --bg-composition-warm-editorial: linear-gradient(180deg, #faf9f8 0%, #f5f2f1 40%, #faf9f8 100%);
+  
   /* ========================================
      TYPOGRAPHY SCALE - Major Third (1.25 ratio)
      ======================================== 
@@ -378,6 +396,27 @@
   }
 
   /* ========================================
+     RESPONSIVE CSS VARIABLE OVERRIDES
+     ========================================
+     
+     Mobile-first: :root defines mobile values,
+     media queries progressively enhance for larger screens.
+     Matches Tailwind's sm:py-16 / md:py-20 pattern.
+     ======================================== */
+  
+  @media (min-width: 640px) {
+    :root {
+      --section-py-standard: 4rem;   /* 64px - matches sm:py-16 */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    :root {
+      --section-py-standard: 5rem;   /* 80px - matches md:py-20 */
+    }
+  }
+
+  /* ========================================
      CUSTOM ANIMATIONS
      ======================================== */
   
@@ -509,9 +548,9 @@
     animation: loading-bar 1.5s ease-in-out infinite;
   }
 
-  /* ═══════════════════════════════════════════════════════════════════════
+  /* ═════════════════════════════════════════════════════════════════════════
      BADGE SYSTEM - Animations & Interactive States
-     ═══════════════════════════════════════════════════════════════════════ */
+     ═════════════════════════════════════════════════════════════════════════ */
 
   /* Shimmer Animation - Premium 700ms (40% slower than standard) */
   .badge-shimmer {
@@ -523,30 +562,10 @@
     z-index: 5;
   }
 
-  /* BADGE SHIMMER ANIMATION
-     ======================================== 
-     
-     SHIMMER BEHAVIOR:
-     - Initial: translateX(-100%) - shimmer starts off-screen LEFT
-     - On Hover: translateX(200%) - shimmer sweeps across and exits RIGHT
-     - Smooth 700ms ease-out transition ONLY on hover
-     - Instant reset on unhover (no reverse animation)
-     - Parent hover triggers (methodology cards, objective cards, step pills)
-     
-     ANIMATION FLOW:
-     1. Shimmer starts hidden on left (-100%) - NO TRANSITION
-     2. User hovers badge/parent
-     3. Transition is APPLIED, shimmer sweeps left → right (700ms)
-     4. Shimmer exits off-screen right (200%)
-     5. User unhovers
-     6. Shimmer INSTANTLY resets to left (-100%) - NO TRANSITION
-     
-     ======================================== */
-
   /* Direct badge hover - triggers shimmer on badge itself */
   .badge:hover .badge-shimmer {
-    transform: translateX(200%);  /* Sweep completely across and exit right */
-    transition: transform 700ms ease-out;  /* Apply transition ONLY on hover */
+    transform: translateX(200%);
+    transition: transform 700ms ease-out;
   }
 
   /* Parent hover triggers - for methodology cards, objective cards, step pills */
@@ -554,8 +573,8 @@
   .objective-card:hover .badge-shimmer,
   .step-pill:hover .badge-shimmer,
   .group:hover .badge-shimmer {
-    transform: translateX(200%);  /* Sweep completely across and exit right */
-    transition: transform 700ms ease-out;  /* Apply transition ONLY on hover */
+    transform: translateX(200%);
+    transition: transform 700ms ease-out;
   }
 
   /* Badge hover background/border transitions (300ms for snappy feel) */
@@ -627,20 +646,6 @@
 
   /* ========================================
      BADGE ICON ALIGNMENT
-     ======================================== 
-     
-     Ensures icons inside badges are properly sized and centered
-     with the text for perfect visual balance.
-     
-     ALIGNMENT RULES:
-     - Icons vertically centered via flexbox (already handled by inline-flex)
-     - Icons sized proportionally to badge font size
-     - 6px gap between icon and text (handled by gap property)
-     
-     USAGE:
-     <Badge>
-       <Icon size={14} /> Label Text
-     </Badge>
      ======================================== */
 
   .badge svg,
