@@ -1,6 +1,6 @@
 # GitHub Repository Manifest - Design System vs 26
 
-**Last Updated:** February 28, 2026  
+**Last Updated:** March 1, 2026  
 **Branch:** `main`  
 **Repo:** `vsoffice001-cloud/Design-System-vs-26`
 
@@ -19,7 +19,7 @@ This document lists every file in the GitHub repository, organized by directory,
 | `vite.config.ts` | Vite build configuration | Stable |
 | `Design system vs 26.zip` | Original project archive | Archive |
 | `README.md` | Project readme | Stable |
-| `GITHUB_REPO_MANIFEST.md` | **This file** - Repository inventory | Updated Feb 28, 2026 |
+| `GITHUB_REPO_MANIFEST.md` | **This file** - Repository inventory | Updated Mar 1, 2026 |
 
 ### Root - AI Context Files (v3.2)
 
@@ -34,9 +34,10 @@ This document lists every file in the GitHub repository, organized by directory,
 | File | Purpose |
 |------|--------|
 | `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font integration decisions |
-| `COMPONENT_GUIDELINES_4WH.md` | Component guidelines (What/Why/When/How) — **v3.3 updated** |
+| `COMPONENT_GUIDELINES_4WH.md` | Component guidelines (What/Why/When/How) — **v3.3 updated, 4 new entries (Container, ResourceCard, SubtleVariantSwitcher, useResponsiveGutter)** |
 | `DESIGN_SYSTEM_AI_PROMPT.md` | Design system AI prompt (4th doc) |
 | `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames |
+| `GITHUB_PUSH_GUIDE.md` | **NEW** — Checklist-based guide for pushing files to GitHub, organized by Atomic Design levels |
 | `QUICK_START_PROMPT.md` | Quick start AI prompt |
 | `README_AI_PORTABLE_SYSTEM.md` | AI portable system guide |
 
@@ -69,7 +70,7 @@ Main application entry point using `react-router-dom` with routes:
 
 ---
 
-## `src/app/hooks/` (10 files)
+## `src/app/hooks/` (11 files)
 
 | File | Purpose |
 |------|--------|
@@ -79,6 +80,7 @@ Main application entry point using `react-router-dom` with routes:
 | `useHeroVisibility.ts` | Detect if hero section is in viewport |
 | `useMagneticEffect.ts` | Magnetic cursor effect for buttons |
 | `useReadingProgress.ts` | Page reading progress percentage |
+| `useResponsiveGutter.ts` | **NEW** — Responsive pixel-based gutter (24px mobile / 32px desktop) for Masonry grids |
 | `useScrollAnimation.ts` | Scroll-triggered animations |
 | `useScrollDirection.ts` | Detect scroll up/down direction |
 | `useSectionProgress.ts` | Section scroll progress tracking |
@@ -90,18 +92,18 @@ Main application entry point using `react-router-dom` with routes:
 
 ### Case Study Page Sections
 
-| File | Purpose |
-|------|--------|
-| `HeroSection.tsx` | Hero section with animated title |
-| `ClientContextSection.tsx` | Client context with sidebar |
-| `ChallengesSection.tsx` | Challenges cards (intentional 1000px JS calc) |
-| `MethodologySection.tsx` | Methodology timeline |
-| `EngagementObjectivesSection.tsx` | Engagement objectives |
-| `ImpactSection.tsx` | Impact metrics with counters |
-| `TestimonialSection.tsx` | Client testimonial |
-| `ValuePillarsSection.tsx` | Value pillars section |
-| `ResourcesSection.tsx` | Resources section |
-| `FinalCTASection.tsx` | Final call-to-action |
+| File | Purpose | Notes |
+|------|---------|-------|
+| `HeroSection.tsx` | Hero section with animated title | |
+| `ClientContextSection.tsx` | Client context with sidebar | Logo now prop-driven (no figma:asset) |
+| `ChallengesSection.tsx` | Challenges cards (intentional 1000px JS calc) | |
+| `MethodologySection.tsx` | Methodology timeline | |
+| `EngagementObjectivesSection.tsx` | Engagement objectives | |
+| `ImpactSection.tsx` | Impact metrics with counters | |
+| `TestimonialSection.tsx` | Client testimonial | |
+| `ValuePillarsSection.tsx` | Value pillars section | |
+| `ResourcesSection.tsx` | Resources Masonry grid | All images now Unsplash URLs (no figma:asset) |
+| `FinalCTASection.tsx` | Final call-to-action | |
 
 ### Design System Dashboard
 
@@ -137,7 +139,15 @@ Main application entry point using `react-router-dom` with routes:
 | `SpacingHelpers.tsx` | Spacing utility components |
 | `VariantSwitcher.tsx` | Component variant switcher UI |
 
-### Layout & Section Components (NEW - v3.3)
+### Layout & Resource System Components (NEW — Mar 1, 2026)
+
+| File | Purpose |
+|------|--------|
+| `Container.tsx` | **NEW** — Semantic layout wrapper (5 width presets: page/content/narrow/prose/compact) |
+| `ResourceCard.tsx` | **NEW** — Content card molecule (7 variants, 2 styles, 2 color modes) |
+| `SubtleVariantSwitcher.tsx` | **NEW** — Designer tool for toggling section variants (uses lucide-react Settings) |
+
+### Layout & Section Components (v3.3)
 
 | File | Purpose |
 |------|--------|
@@ -245,7 +255,7 @@ These are SVG path data files used by components for vector graphics:
 
 | File | Purpose | Key Contents |
 |------|---------|-------------|
-| `theme.css` | All CSS custom properties | Font Pairing System, Container Widths, Responsive Padding, Typography Scale (Major Third 1.25), Color System (92-5-3 hierarchy), Button Size System, Badge Animations |
+| `theme.css` | All CSS custom properties | Font Pairing System, Container Widths, Responsive Padding, Typography Scale (Major Third 1.25), Color System (92-5-3 hierarchy), Button Size System, Badge Animations, **NEW:** --text-primary, --text-secondary, responsive --section-py-standard |
 | `fonts.css` | Font imports only | DM Sans (body/UI), Noto Serif (headings/display) |
 | `index.css` | CSS entry point | Imports |
 | `tailwind.css` | Tailwind directives | Base layer |
@@ -259,11 +269,9 @@ These files exist only in the Figma Make environment and should **never** be pus
 | File/Directory | Reason | Verified |
 |----------------|--------|----------|
 | `src/app/components/figma/ImageWithFallback.tsx` | Figma Make system component (protected) | N/A |
-| `src/app/components/ui/` (48 shadcn files) | Figma Make scaffolding - **zero imports found** in any project component | Searched Feb 28, 2026 |
+| `src/app/components/ui/` (48 shadcn files) | Figma Make scaffolding — **zero imports found** in any project component | Searched Feb 28, 2026 |
 | `src/imports/*.tsx` (16 Figma frame imports) | Figma Make environment-specific frame imports | Confirmed by user |
 | `src/app/test-link-system.tsx` | Development scratch file | N/A |
-
-**Why `ui/` stays in Figma Make only:** A full codebase search confirmed that zero components in the project import from the `ui/` directory. These are standard shadcn/ui library files (accordion, button, card, dialog, etc.) that came pre-installed with the Figma Make environment but are not used by any of our custom design system components.
 
 ---
 
@@ -283,12 +291,13 @@ These files exist only in the Figma Make environment and should **never** be pus
 - **Figma Make version:** Renders `<DesignSystemDashboard />` directly (correct for Figma Make)
 - **NEVER overwrite** the GitHub version from Figma Make
 
-### Color System
+### Resolved Issues (Mar 1, 2026)
 
-- All 53 broken `--accent-red` CSS variable references migrated to `--brand-red`
-- 9 incorrect Ken Bold Red hex values fixed
-- 30 utility color tokens added to `theme.css`
-- Brand Red `#b01f24` for CTAs only (5% usage)
+- **ResourcesSection.tsx** — 8 `figma:asset` imports replaced with Unsplash URLs
+- **ClientContextSection.tsx** — 1 `figma:asset` import replaced with prop-driven logo
+- **SubtleVariantSwitcher.tsx** — Inline SVG replaced with lucide-react `Settings` icon
+- **theme.css** — `--text-primary`, `--text-secondary` defined; `--section-py-standard` made responsive
+- **Barrel exports** — All case study sections + new components registered in index.ts and hooks/index.ts
 
 ---
 
@@ -302,6 +311,7 @@ When syncing from Figma Make to GitHub:
 4. **Always push** `theme.css` and `fonts.css` token changes
 5. **Always push** the 3 AI context `.md` files when updated
 6. **Check** for new hooks in `src/app/hooks/` that need syncing
+7. **Refer to** `GITHUB_PUSH_GUIDE.md` for the complete pre-push checklist
 
 ---
 
@@ -309,9 +319,10 @@ When syncing from Figma Make to GitHub:
 
 | Date | Changes |
 |------|---------|
+| Mar 1, 2026 | **ResourcesSection system push (11 files):** 4 new files (Container.tsx, ResourceCard.tsx, SubtleVariantSwitcher.tsx, useResponsiveGutter.ts); 2 updated organisms (ResourcesSection — 8 Unsplash URLs replacing figma:asset, ClientContextSection — prop-driven logo); theme.css updated (--text-primary, --text-secondary, responsive --section-py-standard); barrel exports updated; GITHUB_PUSH_GUIDE.md and COMPONENT_GUIDELINES_4WH.md pushed |
 | Feb 28, 2026 | v3.3 sync: Added 6 new components (SectionHeading, SectionWrapper, Card, ScrollToTop, ScrollProgress, iconColors); Updated COMPONENT_GUIDELINES_4WH.md with 4W+H docs for all 6 + 2 new decision flowcharts; Updated index.ts barrel exports |
 | Feb 28, 2026 | v3.2 sync: Font Pairing + Container Width + Responsive Padding tokens formalized; 11 process artifacts deleted; AnimatedArrow + design-system showcase components + 10 doc .md files pushed; ui/ confirmed Figma Make-only (zero imports) |
 
 ---
 
-**Total Files on GitHub:** ~101 files across 4 main directories
+**Total Files on GitHub:** ~106 files across 4 main directories
