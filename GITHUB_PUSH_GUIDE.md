@@ -1,6 +1,6 @@
 # GITHUB PUSH GUIDE
 **How to Push Files Correctly to the `main` Branch**
-**Version:** 1.2
+**Version:** 1.3
 **Date:** 2026-03-01
 **For:** Team members, AI assistants, and contributors
 
@@ -15,6 +15,11 @@ This guide ensures that every file pushed to GitHub is:
 4. Accompanied by correct commit messages
 
 **Read this BEFORE pushing anything.**
+
+**Companion docs:**
+- `design-system-checklist.md` — File map with 10 groups (which files exist and when to use them)
+- `COMPONENT_GUIDELINES_4WH.md` — 4W+H for every component
+- `DESIGN_SYSTEM_UPDATES.md` — Latest patches to the AI context
 
 ---
 
@@ -82,10 +87,13 @@ Before pushing **any** file, verify ALL of the following:
 ### Step 4: Registration
 - [ ] Component exported from `src/app/components/index.ts`
 - [ ] Hook exported from `src/app/hooks/index.ts`
+- [ ] (See `design-system-checklist.md` Group 10 for barrel export instructions)
 
 ### Step 5: Documentation
 - [ ] `COMPONENT_GUIDELINES_4WH.md` has a 4W+H entry
+- [ ] `design-system-checklist.md` lists the file in the correct group
 - [ ] `GITHUB_REPO_MANIFEST.md` includes it
+- [ ] If it changes component behavior: `DESIGN_SYSTEM_UPDATES.md` has a changelog entry
 
 ### Step 6: Merge Safety
 - [ ] Read the CURRENT version of every shared doc file (index.ts, 4WH.md, MANIFEST.md) from GitHub BEFORE pushing
@@ -168,13 +176,13 @@ ResourcesSection.tsx
 
 ## DOCUMENTATION UPDATE MATRIX
 
-| What You Push | index.ts | hooks/index.ts | theme.css | 4WH.md | MANIFEST.md |
-|---|---|---|---|---|---|
-| CSS Variable | - | - | EDIT | - | UPDATE |
-| Molecule | MERGE | - | verify | MERGE | MERGE |
-| Organism | MERGE | - | verify/add | MERGE | MERGE |
-| Hook | - | MERGE | - | - | MERGE |
-| Doc Component | MERGE | - | - | - | MERGE |
+| What You Push | index.ts | hooks/index.ts | theme.css | 4WH.md | checklist.md | MANIFEST.md | UPDATES.md |
+|---|---|---|---|---|---|---|---|
+| CSS Variable | - | - | EDIT | - | verify | UPDATE | if breaking |
+| Molecule | MERGE | - | verify | MERGE | verify | MERGE | if behavioral |
+| Organism | MERGE | - | verify/add | MERGE | verify | MERGE | if behavioral |
+| Hook | - | MERGE | - | - | verify | MERGE | - |
+| Doc Component | MERGE | - | - | - | - | MERGE | - |
 
 **CRITICAL:** The word is MERGE, not REPLACE. Always read the current file first.
 
@@ -243,16 +251,17 @@ All files marked [x] are confirmed on GitHub as of March 1, 2026.
 
 **Core Molecules:** [x] Button, Badge, Label, CTALink, InlineLink, AnimatedArrow
 **Layout Molecules:** [x] Container, SectionHeading, SectionWrapper, Card, Navbar, ContactModal, StickyCTA, ReadingProgressBar, TableOfContents, CodeBlockWithCopy, CollapsibleSection, VariantSwitcher, SpacingHelpers
-**Scroll Components:** [x] ScrollToTop, ScrollProgress
+**Scroll Components:** [x] ScrollToTop, ScrollProgress, NextSectionCTA
 **Resource Molecules:** [x] ResourceCard, SubtleVariantSwitcher
 **Icon System:** [x] iconColors.ts
-**Organisms:** [x] HeroSection, ClientContextSection, ChallengesSection, EngagementObjectivesSection, MethodologySection, ImpactSection, ValuePillarsSection, TestimonialSection, ResourcesSection, FinalCTASection, NextSectionCTA
+**Organisms:** [x] HeroSection, ClientContextSection, ChallengesSection, EngagementObjectivesSection, MethodologySection, ImpactSection, ValuePillarsSection, TestimonialSection, ResourcesSection, FinalCTASection
 **Dashboard:** [x] DesignSystemDashboard, DesignSystemSidebar, FoundationsContent, ComponentsContent, PatternsContent, MotionContent, GuidelinesContent, ResourcesContent, all All*Content files, all documentation/showcase components
 **Hooks:** [x] useShimmer, useScrollAnimation, useScrollDirection, useActiveSection, useReadingProgress, useSectionProgress, useHeroVisibility, useCounter, useMagneticEffect, useResponsiveGutter
-**Tokens:** [x] theme.css, fonts.css
+**Tokens:** [x] theme.css, fonts.css, tokens.ts
 **Barrel Exports:** [x] components/index.ts, hooks/index.ts
+**Documentation:** [x] DESIGN_SYSTEM_AI_CONTEXT.md, DESIGN_SYSTEM_UPDATES.md, COMPONENT_GUIDELINES_4WH.md, design-system-checklist.md, QUICK_START_PROMPT.md, GITHUB_PUSH_GUIDE.md, README.md
 
 ---
 
 *Last updated: 2026-03-01 by AI Assistant*
-*All files verified on GitHub*
+*Push Guide v1.3 — added checklist cross-references, UPDATES.md to doc matrix, NextSectionCTA to registry*

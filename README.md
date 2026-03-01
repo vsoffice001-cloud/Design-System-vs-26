@@ -12,7 +12,32 @@ This design system showcases a minimalist editorial aesthetic with:
 
 ## 📚 Documentation Structure
 
-The design system is organized into 7 main sections:
+### AI Context & Reference Docs (read in this order)
+
+| # | File | What | Size |
+|---|------|------|------|
+| 1 | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth — 92-5-3 rules, typography, page assembly, token cross-reference | 53KB |
+| 2 | `DESIGN_SYSTEM_UPDATES.md` | Versioned patches to #1 (v3.2.1 → v3.3) — secondary button, new components | ~8KB |
+| 3 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H framework for every component with decision flowcharts | 28KB |
+| 4 | `design-system-checklist.md` | File map — which files to import, in what order, 10 groups, ~45 files | 20KB |
+| 5 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | 6KB |
+| 6 | `GITHUB_PUSH_GUIDE.md` | Push safety — never-push list, barrel exports, commit format | 10KB |
+
+### Supplementary Docs
+
+| File | What |
+|------|------|
+| `BADGES_DOCUMENTATION.md` | Badge system deep-dive (11 themes, 3 variants, 9 convenience wrappers) |
+| `RESOURCE_CARD_DOCUMENTATION.md` | ResourceCard deep-dive (7 variants, 53 CSS tokens) |
+| `14PX_DESIGN_SYSTEM_INTEGRATION.md` | 14px base font-size integration notes |
+| `FIGMA_MAKE_IMPORT_PROMPTS.md` | Prompts for importing Figma frames |
+| `TECHNICAL_HANDOVER.md` | Technical handover document |
+| `PROJECT_STRUCTURE.md` | Project file tree and structure |
+| `GITHUB_REPO_MANIFEST.md` | Complete file registry with Atomic Design levels |
+
+### Dashboard Sections
+
+The design system dashboard is organized into 7 main sections:
 
 1. **Overview** — Introduction and design principles
 2. **Foundations** — Typography, colors, spacing, grid, elevation
@@ -61,17 +86,23 @@ pnpm dev
 Design-System-vs-26/
 ├── src/
 │   ├── app/
-│   │   ├── components/       # React components
-│   │   │   ├── ui/          # Radix UI components
+│   │   ├── components/       # React components (~45 files)
+│   │   │   ├── ui/          # Radix UI components (Figma Make only)
 │   │   │   ├── categories/  # Design system categories
 │   │   │   └── figma/       # Figma import utilities
-│   │   └── hooks/           # Custom React hooks
-│   ├── design-system/       # Design tokens and utilities
+│   │   └── hooks/           # Custom React hooks (10 hooks)
+│   ├── design-system/       # Design tokens (tokens.ts)
 │   ├── imports/             # Figma imports and SVG assets
 │   └── styles/              # Global styles and theme
-│       ├── fonts.css        # Font imports
+│       ├── fonts.css        # Font imports (DM Sans + Noto Serif)
 │       ├── tailwind.css     # Tailwind configuration
 │       └── theme.css        # CSS custom properties
+├── DESIGN_SYSTEM_AI_CONTEXT.md    # Source of truth (v3.2.1)
+├── DESIGN_SYSTEM_UPDATES.md       # Versioned patches (v3.3)
+├── COMPONENT_GUIDELINES_4WH.md    # 4W+H component reference
+├── design-system-checklist.md     # File map (v2.0)
+├── QUICK_START_PROMPT.md          # Copy-paste AI prompt
+├── GITHUB_PUSH_GUIDE.md           # Push safety guide
 ├── package.json
 ├── vite.config.ts
 └── postcss.config.mjs
@@ -82,50 +113,44 @@ Design-System-vs-26/
 ### Typography Scale (Major Third 1.25 Ratio)
 
 ```css
---text-xs: 0.8rem;      /* 12.8px */
---text-sm: 1rem;        /* 16px */
---text-base: 1.25rem;   /* 20px */
---text-lg: 1.563rem;    /* 25px */
---text-xl: 1.953rem;    /* 31.25px */
---text-2xl: 2.441rem;   /* 39px */
---text-3xl: 3.052rem;   /* 48.8px */
+--text-xs: 0.8rem;      /* 12.8px — Labels, metadata */
+--text-sm: 1rem;        /* 16px  — Standard body (90% of text) */
+--text-base: 1.25rem;   /* 20px  — Large body, card titles (4+) */
+--text-lg: 1.563rem;    /* 25px  — Card titles (2-3) */
+--text-xl: 1.953rem;    /* 31.25px — Subsection h3 */
+--text-2xl: 2.441rem;   /* 39px  — Section h2 */
+--text-3xl: 3.052rem;   /* 48.8px — Hero h1 ONLY */
 ```
 
-### Color System
+### Color System (92-5-3 Hierarchy)
 
-**Brand Color**
-- Ken Bold Red: `#b01f24` (Primary CTAs only)
+| Tier | Usage | Colors |
+|------|-------|--------|
+| Foundation (92%) | Page structure | Black `#000000`, White `#ffffff`, Warm `#f5f2f1` |
+| Brand (5%) | CTAs only | Ken Bold Red `#b01f24` |
+| Accent (3%) | Shadows & highlights | Purple `#806ce0`, Periwinkle `#c3c6f9`, Coral, Perano |
 
-**Foundation**
-- Pure Black: `#000000`
-- Pure White: `#ffffff`
+## ✨ Core Components
 
-**Accent Colors**
-- Warm: `#f5f2f1` (Section backgrounds)
-- Purple: `#806ce0` (Premium features)
-- Periwinkle: `#c3c6f9` (Trust indicators)
-- Perano: `#dfeafa` (Data sections)
-
-## ✨ Core Features
-
-### Button System
-- **4 variants**: Primary, Secondary, Ghost, Brand
-- **4 sizes**: Small (40px), Medium (48px), Large (56px), XL (64px)
+### Button System (v3.3)
+- **4 variants**: Primary, Secondary (two-state), Ghost, Brand
+- **4 sizes**: Small (36px), Medium (42px), Large (48px), XL
 - **Always-active shimmer** effect as brand identity
-- **Animated arrow** for urgency CTAs
-- **Ripple effect** on click
-- **Background-aware** styling (adapts to light/dark backgrounds)
+- **Animated arrow** for urgency CTAs (ArrowUpRight diagonal)
+- **Secondary two-state**: Neutral at rest → Brand-red on hover
 
-### Design System Dashboard
-- **Stripe-style navigation** with 7 main tabs
-- **4W+H documentation framework** (What, Why, When, Where, How)
-- **Live component examples** with code snippets
-- **Responsive layout** with mobile-first approach
+### Page-Level Components
+- **Navbar** — Fixed top, expanded/compact states, section pills
+- **ReadingProgressBar** — Section-specific progress for case studies
+- **ScrollToTop** — Floating back-to-top with Motion animations
+- **StickyCTA** — Context-aware floating CTA per section
+- **ContactModal** — Accessible contact form overlay
 
 ## 🎯 Brand Identity Signatures
 
-1. **Shimmer Effect** — Always active on ALL buttons
+1. **Shimmer Effect** — Always active on ALL buttons (never disable)
 2. **Arrow Animation** — Only on buttons redirecting to forms/pages (urgency)
+3. **Two-State Secondary** — Neutral rest → Brand-red hover transition
 
 ## 📄 License
 
@@ -137,4 +162,4 @@ Proprietary - Design system for internal use
 
 ---
 
-**Built with ❤️ using elite design system patterns**
+**Built with elite design system patterns | DS v3.3 | Updated 2026-03-01**
