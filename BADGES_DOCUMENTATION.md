@@ -1,333 +1,188 @@
-# 🏷️ Complete Badge System Documentation
+# Badge System Documentation
 
-**Project:** YASH Case Study  
-**Component:** Universal Badge System  
-**Location:** `/src/app/components/Badge.tsx`  
-**Date:** February 17, 2026
-
----
-
-## 📋 Table of Contents
-
-1. [Overview](#overview)
-2. [Main Badge Component](#main-badge-component)
-3. [Badge Variants](#badge-variants)
-4. [Badge Sizes](#badge-sizes)
-5. [Badge Themes](#badge-themes)
-6. [Convenience Wrappers](#convenience-wrappers)
-7. [Specialized Badges](#specialized-badges)
-8. [Usage Examples](#usage-examples)
-9. [Design Tokens](#design-tokens)
+**Component:** `src/app/components/Badge.tsx`  
+**Version:** 3.0  
+**Date:** March 1, 2026  
+**Architecture:** CSS Custom Property Driven (migrated from hardcoded JS)
 
 ---
 
-## 🎯 Overview
+## Overview
 
-The Badge system is a **unified, flexible component** supporting all label and pill variants across the editorial design system. It replaces fragmented badge components with a single, scalable API.
+The Badge system is a **unified, flexible component** supporting all label and pill variants across the editorial design system. One component, 11 themes, 4 sizes, 3 variants = 132 possible combinations.
 
 ### Design Principles
 
-- ✅ **Single Source of Truth** - One component, multiple variants
-- ✅ **Semantic Props** - Clear, self-documenting API
-- ✅ **Design Token Based** - Uses CSS custom properties
-- ✅ **WCAG AAA Compliant** - All color combinations tested
-- ✅ **Performance Optimized** - Pure CSS animations
+- **Single Source of Truth** — One component, all variants
+- **CSS Custom Property Driven** — Sizes, shapes, and colors via `--badge-*` tokens
+- **WCAG AAA Compliant** — All theme/mode combinations tested for contrast
+- **Performance Optimized** — Pure CSS animations, shimmer via CSS gradient
 
-### File Location
+### Architecture
 
 ```
-/src/app/components/Badge.tsx           ← Main unified badge component
-/src/app/components/badges/
-├── InfoCardLabel.tsx                   ← Specialized info card labels
-├── ObjectivePill.tsx                   ← Objective/step pills
-├── SectionLabel.tsx                    ← Section headers
-└── index.ts                            ← Exports
+Badge.tsx (JS)                    theme.css (CSS)
+──────────────────────────────    ──────────────────────────────
+THEME_COLORS[theme][mode]         :root { --badge-sm-font: var(--text-xs) }
+  ↓ selects values                .badge { color: var(--badge-text) }
+  ↓ sets as inline CSS vars       .badge:not(.badge-minimal) {
+style={{                            background-color: var(--badge-bg);
+  '--badge-text': ...,            }
+  '--badge-bg': ...,              .badge:hover {
+  '--badge-border': ...,            background-color: var(--badge-hover-bg);
+  '--badge-shimmer': ...,         }
+  fontSize: var(--badge-sm-font)  .badge-shimmer {
+}}                                  background: linear-gradient(
+                                      ... var(--badge-shimmer) ...);
+                                  }
 ```
+
+**JS selects** theme colors → **sets as CSS custom properties** → **CSS rules consume** them for base, hover, and shimmer states.
 
 ---
 
-## 🧩 Main Badge Component
-
-### Props
+## Props
 
 ```typescript
 interface BadgeProps {
-  children: ReactNode;                  // Text or content
+  children: ReactNode;
   variant?: 'minimal' | 'rounded' | 'pill';  // Shape (default: 'minimal')
-  size?: 'xs' | 'sm' | 'md' | 'lg';     // Size scale (default: 'sm')
-  theme?: 'neutral' | 'warm' | 'brand' | 'success' | 'warning' | 'error';
-  mode?: 'light' | 'dark';              // Background mode (default: 'light')
-  bordered?: boolean;                   // Show border (default: false)
-  shimmer?: boolean;                    // Shimmer animation (default: false)
-  interactive?: boolean;                // Hover states (default: false)
-  uppercase?: boolean;                  // Force uppercase (default: true)
-  letterSpacing?: string;               // Custom spacing override
-  as?: 'span' | 'div' | 'p';           // HTML tag (default: 'span')
-  className?: string;                   // Additional CSS classes
-  style?: CSSProperties;                // Custom inline styles
-  ariaLabel?: string;                   // Accessibility label
-  onClick?: () => void;                 // Click handler
+  size?: 'xs' | 'sm' | 'md' | 'lg';          // Size (default: 'sm')
+  theme?: BadgeTheme;                         // Color theme (default: 'neutral')
+  mode?: 'light' | 'dark';                    // Background mode (default: 'light')
+  bordered?: boolean;                         // Show border (default: false)
+  shimmer?: boolean;                          // Shimmer animation (default: false)
+  interactive?: boolean;                      // Hover states (default: false)
+  uppercase?: boolean;                        // Force uppercase (default: true)
+  letterSpacing?: string;                     // Custom spacing override
+  fontWeight?: 400 | 500 | 600;              // Weight override
+  as?: 'span' | 'div' | 'p';                 // HTML tag (default: 'span')
+  className?: string;
+  style?: CSSProperties;
+  ariaLabel?: string;
+  onClick?: () => void;
 }
+
+type BadgeTheme =
+  | 'neutral'     // Black/white (default)
+  | 'warm'        // Editorial warm palette
+  | 'brand'       // Ken Bold Red (#b01f24)
+  | 'coral'       // Coral/Terracotta
+  | 'purple'      // Premium, Innovation
+  | 'periwinkle'  // Trust, Reliability
+  | 'success'     // Green positive
+  | 'warning'     // Amber caution
+  | 'error'       // Red negative
+  | 'info'        // Blue informational
+  | 'muted';      // Deliberately subdued
 ```
 
-### Basic Usage
+### fontWeight Guidance
 
-```tsx
-import { Badge } from '@/app/components/Badge';
-
-// Simple section label
-<Badge variant="minimal" size="sm" theme="neutral">
-  Challenges
-</Badge>
-
-// Step pill with shimmer
-<Badge variant="pill" size="sm" theme="warm" bordered shimmer>
-  Step 1
-</Badge>
-
-// Interactive objective pill
-<Badge variant="pill" size="sm" bordered interactive onClick={() => {}}>
-  Objective 1
-</Badge>
-```
+| Weight | When to use |
+|--------|------------|
+| `400` | Body-context badges, subtle labels, info card labels |
+| `500` | Default for pill/rounded badges, category tags (default) |
+| `600` | Section labels, chapter labels, headings context |
 
 ---
 
-## 🎨 Badge Variants
+## Variants
 
-### 1. **Minimal** (No Background, No Border)
-
-**Use for:** Section labels, inline text labels
+### Minimal (Section Labels)
+No background, no border, no padding. For section eyebrow labels.
 
 ```tsx
-<Badge variant="minimal" size="sm" theme="neutral">
-  Client Context
-</Badge>
+<Badge variant="minimal" size="sm" theme="neutral">Challenges</Badge>
 ```
 
-**Style:**
-- Border radius: `0px`
-- Padding: `0px`
-- Background: `transparent`
-- Font weight: `400`
+| Property | Value |
+|----------|-------|
+| Border radius | `var(--badge-radius-minimal)` = 0px |
+| Padding | 0px |
+| Background | transparent |
+| Default weight | 400 |
+
+### Rounded (Category Tags)
+5px radius with optional background and border.
+
+```tsx
+<Badge variant="rounded" size="sm" theme="neutral" bordered>Strategy</Badge>
+```
+
+| Property | Value |
+|----------|-------|
+| Border radius | `var(--badge-radius-rounded)` = 5px |
+| Padding | Size-based (CSS vars) |
+| Background | Theme-based |
+| Default weight | 500 |
+
+### Pill (Step Numbers, Objectives)
+Fully rounded, usually bordered.
+
+```tsx
+<Badge variant="pill" size="sm" theme="warm" bordered shimmer>Step 1</Badge>
+```
+
+| Property | Value |
+|----------|-------|
+| Border radius | `var(--badge-radius-pill)` = 9999px |
+| Padding | Size-based (CSS vars) |
+| Background | Theme-based |
+| Default weight | 500 |
 
 ---
 
-### 2. **Rounded** (5px Radius, Optional Background)
+## Sizes (CSS Custom Properties)
 
-**Use for:** Category tags, status indicators
+All size tokens are defined in `theme.css` as `--badge-*` CSS custom properties.
 
-```tsx
-<Badge variant="rounded" size="sm" theme="neutral" bordered>
-  Strategy
-</Badge>
-```
-
-**Style:**
-- Border radius: `5px`
-- Padding: Size-based (see sizes section)
-- Background: Theme-based
-- Font weight: `500`
+| Size | Font | Padding (V × H) | Letter Spacing | Est. Height | CSS Vars |
+|------|------|-----------------|----------------|-------------|----------|
+| `xs` | `clamp(9px, 0.8vw, 10px)` | 4px × 12px | 1.2px | ~18px | `--badge-xs-font`, `--badge-xs-py`, `--badge-xs-px` |
+| `sm` | `var(--text-xs)` (12.8px) | 6px × 14px | 1.8px | ~23px | `--badge-sm-font`, `--badge-sm-py`, `--badge-sm-px` |
+| `md` | 13px | 8px × 18px | 2px | ~29px | `--badge-md-font`, `--badge-md-py`, `--badge-md-px` |
+| `lg` | 15px | 10px × 22px | 2.2px | ~35px | `--badge-lg-font`, `--badge-lg-py`, `--badge-lg-px` |
 
 ---
 
-### 3. **Pill** (Fully Rounded, Usually Bordered)
+## Themes (11 Total)
 
-**Use for:** Step numbers, objectives, sequential items
+Each theme has **light** and **dark** mode variants. All colors are applied via CSS custom properties set by Badge.tsx.
 
-```tsx
-<Badge variant="pill" size="sm" theme="neutral" bordered>
-  Step 1
-</Badge>
-```
-
-**Style:**
-- Border radius: `9999px` (fully rounded)
-- Padding: Size-based
-- Background: Theme-based
-- Font weight: `500`
-
----
-
-## 📏 Badge Sizes
-
-Based on **Major Third scale** (1.25 ratio):
-
-### XS (Extra Small)
-**Use for:** Info card labels, metadata
-
-```tsx
-<Badge size="xs">Client</Badge>
-```
-
-**Tokens:**
-- Font size: `clamp(9px, 0.8vw, 10px)`
-- Padding: `6px 13px`
-- Letter spacing: `1.2px`
+| Theme | Light Text | Dark Text | Use Case |
+|-------|-----------|-----------|----------|
+| `neutral` | `rgba(0,0,0,0.6)` | `rgba(255,255,255,0.9)` | General labels, section headers |
+| `warm` | `var(--warm-900)` | `var(--warm-50)` | Editorial content, methodology |
+| `brand` | `var(--brand-red)` | `rgba(255,200,200,0.95)` | CTAs, featured — use sparingly |
+| `coral` | `var(--coral-900)` | `rgba(255,235,228,0.95)` | Warmth, energy, approachability |
+| `purple` | `var(--purple-900)` | `rgba(239,237,253,0.95)` | Premium, innovation, insights |
+| `periwinkle` | `var(--periwinkle-900)` | `rgba(245,246,253,0.95)` | Trust, reliability, calm |
+| `success` | `rgba(21,128,61,1)` | `rgba(187,247,208,1)` | Positive states, completed |
+| `warning` | `rgba(146,64,14,1)` | `rgba(254,243,199,1)` | Caution, attention |
+| `error` | `rgba(153,27,27,1)` | `rgba(254,202,202,1)` | Negative states, failures |
+| `info` | `rgba(34,139,230,1)` | `rgba(200,220,255,0.95)` | Informational, data |
+| `muted` | `rgba(0,0,0,0.35)` | `rgba(255,255,255,0.5)` | Deprecated, de-emphasized |
 
 ---
 
-### SM (Small) **← DEFAULT**
-**Use for:** Section labels, pills, general badges
+## Convenience Wrappers (9 Total)
 
-```tsx
-<Badge size="sm">Objective 1</Badge>
-```
-
-**Tokens:**
-- Font size: `var(--text-xs)` (10-11px)
-- Padding: `8px 16px`
-- Letter spacing: `1.8px`
-
----
-
-### MD (Medium)
-**Use for:** Emphasized badges, interactive elements
-
-```tsx
-<Badge size="md">Featured</Badge>
-```
-
-**Tokens:**
-- Font size: `13px`
-- Padding: `10px 20px`
-- Letter spacing: `2px`
-
----
-
-### LG (Large)
-**Use for:** Large interactive badges, CTAs
-
-```tsx
-<Badge size="lg">New Release</Badge>
-```
-
-**Tokens:**
-- Font size: `15px`
-- Padding: `13px 25px`
-- Letter spacing: `2.2px`
-
----
-
-## 🎨 Badge Themes
-
-### Neutral (Default)
-**Use for:** General labels, section headers, neutral content
-
-**Light Mode:**
-```tsx
-<Badge theme="neutral" mode="light">Content</Badge>
-```
-- Background: `rgba(0, 0, 0, 0.04)`
-- Border: `rgba(0, 0, 0, 0.15)`
-- Text: `rgba(0, 0, 0, 0.6)`
-- Contrast: 8.9:1 (WCAG AAA)
-
-**Dark Mode:**
-```tsx
-<Badge theme="neutral" mode="dark">Content</Badge>
-```
-- Background: `rgba(255, 255, 255, 0.1)`
-- Border: `rgba(255, 255, 255, 0.25)`
-- Text: `rgba(255, 255, 255, 0.9)`
-- Contrast: 12.6:1 (WCAG AAA)
-
----
-
-### Warm
-**Use for:** Editorial content, soft accents
-
-```tsx
-<Badge theme="warm" bordered>Step 1</Badge>
-```
-
-**Colors:**
-- Uses editorial warm palette
-- Rust: `#c44536`
-- Terracotta: `#d4835c`
-- Sand: `#e8a87c`
-- Contrast: 7.2:1+ (WCAG AAA)
-
----
-
-### Brand
-**Use for:** Primary actions, featured content (use sparingly)
-
-```tsx
-<Badge theme="brand" bordered>Featured</Badge>
-```
-
-**Colors:**
-- Brand Red: `#b01f24`
-- Background (light): `rgba(176, 31, 36, 0.06)`
-- Text: `var(--brand-red)`
-- Contrast: 7.8:1 (WCAG AAA)
-
----
-
-### Success
-**Use for:** Positive states, completed items
-
-```tsx
-<Badge theme="success" bordered>Completed</Badge>
-```
-
-**Colors:**
-- Green tones
-- Contrast: 8.1:1 (WCAG AAA)
-
----
-
-### Warning
-**Use for:** Caution, attention items
-
-```tsx
-<Badge theme="warning" bordered>In Progress</Badge>
-```
-
-**Colors:**
-- Amber tones
-- Contrast: 8.5:1 (WCAG AAA)
-
----
-
-### Error
-**Use for:** Negative states, failures
-
-```tsx
-<Badge theme="error" bordered>Failed</Badge>
-```
-
-**Colors:**
-- Red tones
-- Contrast: 9.2:1 (WCAG AAA)
-
----
-
-## 🎁 Convenience Wrappers
-
-Pre-configured badge types for common use cases:
+All wrappers are exported from `Badge.tsx`. No separate files.
 
 ### SectionLabel
-**For page section headers**
+For page section headers. Default fontWeight: 600.
 
 ```tsx
 import { SectionLabel } from '@/app/components/Badge';
 
 <SectionLabel>Challenges</SectionLabel>
+<SectionLabel theme="brand" fontWeight={600}>KEY INSIGHTS</SectionLabel>
 <SectionLabel mode="dark">Client Context</SectionLabel>
 ```
 
-**Pre-configured:**
-- Variant: `minimal`
-- Size: `sm`
-- Theme: `neutral`
-- Margin bottom: `var(--pair-label-heading)` (12px)
-
----
-
 ### StepPill
-**For methodology steps and sequential processes**
+For methodology steps. Pre-configured: pill, sm, warm, bordered, shimmer.
 
 ```tsx
 import { StepPill } from '@/app/components/Badge';
@@ -336,17 +191,8 @@ import { StepPill } from '@/app/components/Badge';
 <StepPill stepNumber={2} active />
 ```
 
-**Pre-configured:**
-- Variant: `pill`
-- Size: `sm`
-- Theme: `warm`
-- Bordered: `true`
-- Shimmer: `true`
-
----
-
 ### ObjectivePill
-**For engagement objectives and goals**
+For engagement objectives. Optional interactive mode.
 
 ```tsx
 import { ObjectivePill } from '@/app/components/Badge';
@@ -355,17 +201,8 @@ import { ObjectivePill } from '@/app/components/Badge';
 <ObjectivePill objectiveNumber={2} interactive onClick={() => {}} />
 ```
 
-**Pre-configured:**
-- Variant: `pill`
-- Size: `sm`
-- Theme: `neutral`
-- Bordered: `true`
-- Shimmer: Interactive only
-
----
-
 ### ObjectivePillInteractive
-**Interactive version with shimmer on hover**
+Legacy interactive version with shimmer. Size: md.
 
 ```tsx
 import { ObjectivePillInteractive } from '@/app/components/Badge';
@@ -374,53 +211,27 @@ import { ObjectivePillInteractive } from '@/app/components/Badge';
 <ObjectivePillInteractive number="2" label="Goal" />
 ```
 
-**Pre-configured:**
-- Variant: `pill`
-- Size: `md` (bigger than regular)
-- Theme: `neutral`
-- Bordered: `true`
-- Shimmer: `true`
-
----
-
 ### InfoCardLabel
-**For metadata labels in info cards**
+For metadata labels. Size: xs, opacity: 0.7.
 
 ```tsx
 import { InfoCardLabel } from '@/app/components/Badge';
 
 <InfoCardLabel>Client</InfoCardLabel>
-<InfoCardLabel mode="dark">Industry</InfoCardLabel>
 ```
 
-**Pre-configured:**
-- Variant: `minimal`
-- Size: `xs`
-- Theme: `neutral`
-- Opacity: `0.7`
-- Margin bottom: `clamp(6px, 0.6vw, 8px)`
-
----
-
 ### CategoryBadge
-**For content categorization**
+For content categorization. Rounded, bordered.
 
 ```tsx
 import { CategoryBadge } from '@/app/components/Badge';
 
 <CategoryBadge>Strategy</CategoryBadge>
-<CategoryBadge theme="brand">Case Study</CategoryBadge>
+<CategoryBadge theme="purple">Insights</CategoryBadge>
 ```
 
-**Pre-configured:**
-- Variant: `rounded`
-- Size: `sm`
-- Bordered: `true`
-
----
-
 ### StatusBadge
-**For status indicators**
+For status indicators. Rounded, bordered, status-themed.
 
 ```tsx
 import { StatusBadge } from '@/app/components/Badge';
@@ -430,462 +241,130 @@ import { StatusBadge } from '@/app/components/Badge';
 <StatusBadge status="error">Failed</StatusBadge>
 ```
 
-**Pre-configured:**
-- Variant: `rounded`
-- Size: `sm`
-- Bordered: `true`
-- Theme: Based on status
-
----
-
-## 📦 Specialized Badges (Separate Components)
-
-### InfoCardLabel (Detailed)
-
-Located in `/src/app/components/badges/InfoCardLabel.tsx`
-
-**Purpose:** Ultra-small labels for metadata cards (hero info cards, stat cards)
-
-**Key Features:**
-- Font size: `9-10px`
-- Letter spacing: `1.2px`
-- 70% opacity for subtle hierarchy
-- Responsive scaling with `clamp()`
-
-**Complete InfoCard Example:**
+### InfoBadge
+For informational content. Uses `info` theme.
 
 ```tsx
-import { InfoCard } from '@/app/components/badges/InfoCardLabel';
+import { InfoBadge } from '@/app/components/Badge';
 
-<InfoCard
-  label="Client"
-  value="Yash Highvoltage Insulators"
-  variant="light"
-  cardType="frosted-glass"
-  context="desktop"
-/>
+<InfoBadge>New</InfoBadge>
 ```
 
-**Also includes:**
-- `StatCard` - For statistics/metrics
-- `HeroInfoCardGrid` - Pre-configured grid layout
-
----
-
-### ObjectivePill (Detailed)
-
-Located in `/src/app/components/badges/ObjectivePill.tsx`
-
-**Purpose:** Sequential objective numbers with shimmer animation
-
-**Layer Structure:**
-1. Container (pill shell with border)
-2. Shimmer overlay (animated gradient)
-3. Text content (z-indexed above)
-
-**Animation:**
-- Shimmer width: 50% of pill
-- Gradient: Transparent → White (60%) → Transparent
-- Animation: Slides left→right on hover
-- Duration: 700ms
-- Timing: ease-out
-
-**Usage Guidelines:**
-- ✅ Use for: 2+ sequential items
-- ✅ Optimal: 3-6 objectives
-- ✅ Maximum: 12 objectives
-- ❌ Avoid: Single items, non-sequential lists
-
----
-
-### SectionLabel (Detailed)
-
-Located in `/src/app/components/badges/SectionLabel.tsx`
-
-**Purpose:** Minimalist labels for section headers in editorial layouts
-
-**Typography Hierarchy:**
-
-```
-SECTION LABEL (11px, uppercase, 60% opacity)
-↓ 12px gap
-Section Heading (20-36px, sentence case, 100% opacity)
-↓ 16-24px gap
-Body Text (15px, normal case, 70% opacity)
-```
-
-**Spacing Tokens:**
-- `--pair-label-heading`: 12px (tight coupling)
-- `--spacing-section`: 64-80px (section breaks)
-- `--spacing-heading-body`: 16-24px (breathing room)
-
-**Combined Component:**
+### MutedBadge
+For deliberately subdued content. Opacity: 0.7.
 
 ```tsx
-import { SectionLabelWithHeading } from '@/app/components/badges/SectionLabel';
+import { MutedBadge } from '@/app/components/Badge';
 
-<SectionLabelWithHeading 
-  label="Challenges"
-  heading="Key Engagement Obstacles"
-  headingLevel="h2"
-  description="Identifying critical risks"
-/>
+<MutedBadge>Deprecated</MutedBadge>
 ```
 
----
-
-## 💡 Usage Examples
-
-### Section Headers
+### ClickableBadge
+For interactive, clickable badges. Pill, bordered, shimmer.
 
 ```tsx
-<Badge variant="minimal" size="sm" theme="neutral">
-  Challenges
-</Badge>
+import { ClickableBadge } from '@/app/components/Badge';
+
+<ClickableBadge onClick={() => {}} theme="purple">Click me</ClickableBadge>
 ```
 
 ---
 
-### Step Pills with Shimmer
+## Quick Reference
 
-```tsx
-<Badge variant="pill" size="sm" theme="warm" bordered shimmer>
-  Step 1
-</Badge>
-```
-
----
-
-### Interactive Objectives
-
-```tsx
-<Badge 
-  variant="pill" 
-  size="sm" 
-  theme="neutral" 
-  bordered 
-  interactive 
-  onClick={() => console.log('Clicked')}
->
-  Objective 1
-</Badge>
-```
+| Use Case | Variant | Size | Theme | Bordered | Shimmer | Wrapper |
+|----------|---------|------|-------|----------|---------|--------|
+| Section headers | minimal | sm | neutral | false | false | `SectionLabel` |
+| Step numbers | pill | sm | warm | true | true | `StepPill` |
+| Objectives | pill | sm | neutral | true | interactive | `ObjectivePill` |
+| Info labels | minimal | xs | neutral | false | false | `InfoCardLabel` |
+| Category tags | rounded | sm | any | true | false | `CategoryBadge` |
+| Success status | rounded | sm | success | true | false | `StatusBadge` |
+| Warning status | rounded | sm | warning | true | false | `StatusBadge` |
+| Error status | rounded | sm | error | true | false | `StatusBadge` |
+| Informational | rounded | sm | info | true | false | `InfoBadge` |
+| Deprecated items | rounded | sm | muted | true | false | `MutedBadge` |
+| Clickable actions | pill | sm | any | true | true | `ClickableBadge` |
 
 ---
 
-### Resource Card Badges (Glassmorphism Overlay)
+## CSS Custom Properties Reference
 
-**Standard pattern for badges over images:**
+All badge tokens in `theme.css`:
 
-```tsx
-<div 
-  className="absolute top-4 right-4 backdrop-blur-[24px] rounded-[5px] border border-white/10"
-  style={{
-    background: 'rgba(0, 0, 0, 0.65)',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-    zIndex: 10
-  }}
->
-  <Badge 
-    variant="minimal"
-    size="xs"
-    theme="neutral"
-    mode="dark"
-    className="text-white font-semibold uppercase tracking-[1.2px]"
-    style={{ 
-      fontSize: '10px',
-      padding: '6px 12px',
-      textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
-    }}
-  >
-    Featured
-  </Badge>
-</div>
-```
-
-**Key Features:**
-- Dark frosted background (`rgba(0, 0, 0, 0.65)`)
-- Backdrop blur: `24px`
-- Border radius: `5px`
-- White text with text shadow for readability
-- Padding: `6px 12px`
-- Font size: `10px`
-
----
-
-### Category Tags
-
-```tsx
-<Badge variant="rounded" size="sm" theme="neutral" bordered>
-  Strategy
-</Badge>
-```
-
----
-
-### Status Indicators
-
-```tsx
-<Badge variant="rounded" size="sm" theme="success" bordered>
-  Completed
-</Badge>
-```
-
----
-
-### Info Card Labels
-
-```tsx
-<Badge variant="minimal" size="xs" theme="neutral">
-  Client
-</Badge>
-```
-
----
-
-## 🎨 Design Tokens
-
-### Size Tokens
-
-```typescript
-const SIZE_TOKENS = {
-  xs: {
-    fontSize: 'clamp(9px, 0.8vw, 10px)',
-    padding: '6px 13px',
-    letterSpacing: '1.2px',
-  },
-  sm: {
-    fontSize: 'var(--text-xs)',  // 10-11px
-    padding: '8px 16px',
-    letterSpacing: '1.8px',
-  },
-  md: {
-    fontSize: '13px',
-    padding: '10px 20px',
-    letterSpacing: '2px',
-  },
-  lg: {
-    fontSize: '15px',
-    padding: '13px 25px',
-    letterSpacing: '2.2px',
-  },
-};
-```
-
----
-
-### Variant Tokens
-
-```typescript
-const VARIANT_TOKENS = {
-  minimal: {
-    borderRadius: '0px',
-    padding: '0px',
-    background: 'transparent',
-  },
-  rounded: {
-    borderRadius: '5px',
-    padding: 'inherit',
-    background: 'default',
-  },
-  pill: {
-    borderRadius: '9999px',
-    padding: 'inherit',
-    background: 'default',
-  },
-};
-```
-
----
-
-### Theme Color Tokens
-
-All themes include both light and dark modes:
-
-```typescript
-{
-  light: {
-    background: string;
-    border: string;
-    text: string;
-    textMinimal: string;
-    hoverBackground: string;
-    hoverBorder: string;
-    shimmer: string;
-    contrastRatio: string;
-  },
-  dark: {
-    // Same structure
-  }
-}
-```
-
----
-
-## 🔄 Migration from Old Badge Components
-
-If you find old badge imports:
-
-```tsx
-// ❌ OLD (deprecated)
-import { InfoCardLabel } from '@/app/components/badges';
-import { ObjectivePill } from '@/app/components/badges';
-import { SectionLabel } from '@/app/components/badges';
-
-// ✅ NEW (recommended)
-import { 
-  InfoCardLabel, 
-  ObjectivePill, 
-  SectionLabel 
-} from '@/app/components/Badge';
-```
-
-**Why migrate?**
-- ✅ Unified API
-- ✅ Consistent theming
-- ✅ Better TypeScript support
-- ✅ Performance optimized
-- ✅ Single source of truth
-
----
-
-## ✅ Best Practices
-
-### DO ✅
-
-1. **Use semantic wrappers** for common use cases
-   ```tsx
-   <SectionLabel>Challenges</SectionLabel>
-   ```
-
-2. **Use design tokens** for consistency
-   ```tsx
-   <Badge theme="neutral" size="sm">Content</Badge>
-   ```
-
-3. **Follow WCAG AAA** contrast guidelines
-   - All theme combinations are pre-tested
-
-4. **Use appropriate sizes** for context
-   - `xs` for metadata
-   - `sm` for general labels
-   - `md`/`lg` for emphasis
-
-5. **Apply glassmorphism overlay** for image badges
-   - Follow the standard pattern documented above
-
----
-
-### DON'T ❌
-
-1. **Don't use random colors**
-   ```tsx
-   // ❌ Bad
-   <Badge style={{ color: '#ff0000' }}>Text</Badge>
-   
-   // ✅ Good
-   <Badge theme="error">Text</Badge>
-   ```
-
-2. **Don't mix font size classes**
-   ```tsx
-   // ❌ Bad
-   <Badge className="text-2xl">Text</Badge>
-   
-   // ✅ Good
-   <Badge size="lg">Text</Badge>
-   ```
-
-3. **Don't use badges for buttons**
-   ```tsx
-   // ❌ Bad
-   <Badge onClick={doSomething}>Click me</Badge>
-   
-   // ✅ Good
-   <Button onClick={doSomething}>Click me</Button>
-   ```
-
-4. **Don't skip bordered prop for pills**
-   ```tsx
-   // ❌ Bad (pill without border looks incomplete)
-   <Badge variant="pill">Step 1</Badge>
-   
-   // ✅ Good
-   <Badge variant="pill" bordered>Step 1</Badge>
-   ```
-
----
-
-## 🎯 Quick Reference
-
-| Use Case | Variant | Size | Theme | Bordered | Shimmer |
-|----------|---------|------|-------|----------|---------|
-| Section headers | minimal | sm | neutral | false | false |
-| Step numbers | pill | sm | warm | true | true |
-| Objectives | pill | sm | neutral | true | interactive |
-| Info labels | minimal | xs | neutral | false | false |
-| Category tags | rounded | sm | neutral | true | false |
-| Status indicators | rounded | sm | success/warning/error | true | false |
-| Featured badges | minimal | xs | neutral | false | false |
-
----
-
-## 📚 Related Documentation
-
-- **Main Badge Component:** `/src/app/components/Badge.tsx`
-- **InfoCardLabel:** `/src/app/components/badges/InfoCardLabel.tsx`
-- **ObjectivePill:** `/src/app/components/badges/ObjectivePill.tsx`
-- **SectionLabel:** `/src/app/components/badges/SectionLabel.tsx`
-- **CardBadge (Badge-inside-cards):** `/src/app/components/ResourceCard.tsx` — The `CardBadge` sub-component is the **canonical standard** for placing a Badge on image overlays. It uses `variant="minimal"` inside a glassmorphism wrapper with `--rc-badge-*` tokens. Full prop-by-prop rationale, className/style override reasoning, CSS token table, and WCAG compliance audit are documented inline in the component and in **[RESOURCE_CARD_DOCUMENTATION.md](./RESOURCE_CARD_DOCUMENTATION.md)** (v3.0, "Badge Overlay System" section).
-- **Design System:** `/TECHNICAL_HANDOVER.md` → Design System section
-
----
-
-## 🔍 Troubleshooting
-
-### Issue: Badge text not uppercase
-
-**Solution:** Badges are uppercase by default. To override:
-```tsx
-<Badge uppercase={false}>Text</Badge>
-```
-
----
-
-### Issue: Shimmer not animating
-
-**Solution:** Add CSS for parent hover:
 ```css
-.parent:hover .badge-shimmer {
-  transform: translateX(200%);
-}
+/* Size tokens */
+--badge-xs-font, --badge-xs-py, --badge-xs-px, --badge-xs-tracking
+--badge-sm-font, --badge-sm-py, --badge-sm-px, --badge-sm-tracking
+--badge-md-font, --badge-md-py, --badge-md-px, --badge-md-tracking
+--badge-lg-font, --badge-lg-py, --badge-lg-px, --badge-lg-tracking
+
+/* Shape tokens */
+--badge-radius-minimal: 0px
+--badge-radius-rounded: 5px
+--badge-radius-pill: 9999px
+
+/* Animation tokens */
+--badge-transition-duration: 300ms
+--badge-shimmer-duration: 700ms
+
+/* Per-instance color tokens (set by Badge.tsx inline) */
+--badge-text       /* Consumed by .badge { color } */
+--badge-bg         /* Consumed by .badge:not(.badge-minimal) { background-color } */
+--badge-border     /* Consumed by .badge { border-color } */
+--badge-border-width
+--badge-hover-bg   /* Consumed by .badge:hover { background-color } */
+--badge-hover-border
+--badge-shimmer    /* Consumed by .badge-shimmer { gradient } */
 ```
 
 ---
 
-### Issue: Badge spacing incorrect
+## Import Path
 
-**Solution:** Check padding override:
 ```tsx
-// For image overlay badges:
-<Badge style={{ padding: '6px 12px' }}>Featured</Badge>
+// All exports from one file:
+import { 
+  Badge,
+  SectionLabel, StepPill, ObjectivePill, ObjectivePillInteractive,
+  InfoCardLabel, CategoryBadge, StatusBadge, InfoBadge, MutedBadge, ClickableBadge,
+  BADGE_TOKENS,
+  type BadgeProps, type BadgeVariant, type BadgeSize, type BadgeTheme, type BadgeMode,
+} from '@/app/components/Badge';
+
+// Legacy re-exports (backward compat, same components):
+import { SectionLabel } from '@/app/components/badges';
 ```
 
 ---
 
-### Issue: Badge text color too light
+## Best Practices
 
-**Solution:** Use correct mode for background:
-```tsx
-// On light background
-<Badge mode="light">Text</Badge>
+### DO
+- Use convenience wrappers for common patterns
+- Use `mode="dark"` on dark backgrounds, `mode="light"` on light
+- Use `bordered` with pill and rounded variants
+- Use `shimmer` sparingly for emphasis (step pills, CTAs)
+- Use `fontWeight={600}` for section labels in heading context
 
-// On dark background
-<Badge mode="dark">Text</Badge>
-```
+### DON'T
+- Override colors with inline styles (`style={{ color: '#ff0000' }}`) — use themes
+- Use `shimmer` on every badge — it loses impact
+- Skip `bordered` on pill badges — they look incomplete
+- Use `Badge` for clickable actions — use `Button` instead
+- Mix font size Tailwind classes with Badge — use `size` prop
 
 ---
 
-**Last Updated:** February 28, 2026  
-**Status:** ✅ Complete & Production Ready  
-**Version:** 2.1
+## Related Documentation
+
+- **Source code:** `src/app/components/Badge.tsx`
+- **CSS tokens:** `src/styles/theme.css` (search `BADGE SIZE & SHAPE`)
+- **Migration log:** `DESIGN_SYSTEM_UPDATES.md` (v3.3.1–3.3.2)
+- **4W+H reference:** `COMPONENT_GUIDELINES_4WH.md` (Badge section)
+- **CardBadge overlay:** `RESOURCE_CARD_DOCUMENTATION.md` (Badge Overlay System)
+- **File map:** `design-system-checklist.md` (Group 2: Core Molecules)
+
+---
+
+**v3.0 | March 1, 2026 | Aligned with Badge CSS custom property migration (Phase 1–4)**
