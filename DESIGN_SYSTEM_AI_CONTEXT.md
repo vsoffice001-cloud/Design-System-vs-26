@@ -1,5 +1,5 @@
 # DESIGN SYSTEM - AI CONTEXT FILE
-**Version:** 3.2.1  
+**Version:** 3.3  
 **Date:** 2026-03-01  
 **Purpose:** Complete 4W+H documentation for AI tools to automatically apply this design system
 
@@ -21,7 +21,7 @@ When any team member asks you to build a page, component, or feature:
 
 1. [Design System Overview](#design-system-overview)
 2. [Typography System](#typography-system)
-3. [Color System](#color-system)
+3. [Color System — The 92-5-3 Rule](#color-system)
 4. [Spacing System](#spacing-system)
 5. [Button System](#button-system)
 6. [Link System](#link-system)
@@ -104,46 +104,249 @@ Contrast pairing creates editorial authority (Serif headings) while maintaining 
 
 ---
 
-## COLOR SYSTEM
+## COLOR SYSTEM — THE 92-5-3 RULE
 
-### **Primary Brand Colors**
+### **WHY**
+The 92-5-3 hierarchy ensures that 92% of the page surface uses neutral foundation colors, 5% uses brand red for conversion CTAs, and 3% uses accent colors for depth and personality. Without this constraint, pages become visually noisy, CTAs lose impact, and brand identity dilutes.
+
+---
+
+### **Foundation Tier (92% of Page Surface)**
+
+The vast majority of every page is black, white, and warm off-white.
+
 ```css
---brand-red: #b01f24;        /* Ken Bold Red - CTAs ONLY */
---brand-red-hover: #8f181d;
---brand-red-active: #771419;
---black: #000000;
---white: #ffffff;
+--black: #000000;        /* Hero backgrounds, primary text */
+--white: #ffffff;        /* Section backgrounds, card backgrounds */
+--warm-300: #f5f2f1;     /* BASE - Alternating section backgrounds */
+--warm-500: #eae5e3;     /* Borders, dividers */
+--warm-600: #d9d1ce;     /* Timeline base lines */
+--warm-700: #c8bcb8;     /* Timeline nodes, muted borders */
 ```
+
+**Usage Rules:**
+- ✅ ALL section backgrounds: black, white, or warm-300 (alternating)
+- ✅ ALL body text: black on light backgrounds, white on dark backgrounds
+- ✅ ALL utility/navigation elements (ScrollToTop, breadcrumbs, pagination): black/white
+- ✅ Borders and dividers: warm-500 or warm-600
+- ❌ Never use gray-scale colors outside the warm palette (no #ccc, #999, etc.)
 
 ### **Semantic Text Colors**
 ```css
 --text-primary: #000000;              /* Primary text on light backgrounds */
 --text-secondary: rgba(0, 0, 0, 0.60); /* Secondary/description text */
+--label-on-black: rgba(255, 255, 255, 0.40); /* Labels on dark backgrounds */
+--label-on-white: rgba(0, 0, 0, 0.40);       /* Labels on light backgrounds */
 ```
 
-### **Warm Palette (Highlighted Sections)**
+---
+
+### **Brand Red Tier (5% of Page Surface)**
+
+Ken Bold Red is reserved EXCLUSIVELY for conversion CTAs.
+
 ```css
---warm-300: #f5f2f1;   /* BASE - Section backgrounds */
---warm-500: #eae5e3;   /* Borders */
---warm-600: #d9d1ce;   /* Timeline base */
---warm-700: #c8bcb8;   /* Timeline nodes */
+--brand-red: #b01f24;        /* Primary - CTA buttons, progress bars */
+--brand-red-hover: #8f181d;  /* Hover state */
+--brand-red-active: #771419; /* Active/pressed state */
+/* Gradient: #b01f24 → #c62d31 (brand button background) */
 ```
 
-### **Label Colors**
+**Usage Rules:**
+- ✅ `Button variant="brand"` — conversion CTAs ("Download Report", "Get Started")
+- ✅ `ScrollProgress` bar color — engagement signal
+- ✅ Brand button shadow: `rgba(176, 31, 36, 0.15)`
+- ❌ Never use for borders, backgrounds, decorative elements
+- ❌ Never use for icons (icons use purple or gray)
+- ❌ Never use more than 1-2 brand buttons per viewport
+
+---
+
+### **Accent Tier (3% of Page Surface)**
+
+Accent colors add depth through low-opacity treatments only.
+
 ```css
---label-on-black: rgba(255, 255, 255, 0.40);
---label-on-white: rgba(0, 0, 0, 0.40);
+/* Primary accent — content/feature icons */
+--purple-600: #806ce0;     /* Periwinkle-400: icon stroke color */
+
+/* Supporting accents — badges, data viz, subtle highlights */
+--periwinkle-500: #c3c6f9; /* Trust indicators, badge themes */
+--perano-500: #dfeafa;     /* Data section highlights */
+--coral-500: #ea7a5f;      /* Secondary button hover shimmer */
 ```
+
+Full 50-900 scales for Purple, Periwinkle, Coral, Perano, Green, Amber, Rose are defined in `theme.css`. Use for Badge themes and data visualization ONLY.
+
+---
+
+### **Element-Color Classification Rule**
+
+Before assigning a color to ANY element, classify it first:
+
+| Element Type | Color Tier | Color | Examples |
+|---|---|---|---|
+| **Structural / Utility** | 92% Foundation | black/white | ScrollToTop, pagination, breadcrumbs, scroll indicators, separators |
+| **Conversion CTA** | 5% Brand Red | #b01f24 | "Download Report", "Get Started", "Subscribe" buttons |
+| **Content/Feature Icons** | 3% Accent | #806ce0 (stroke) | Sparkles, TrendingUp, Target, BarChart3, BookOpen, Lightbulb |
+| **Utility/Navigation Icons** | 92% Foundation | #737373 (gray) | ChevronDown, X, Search, Filter, Menu, Settings |
+| **Decorative Accents** | 3% Accent | RGBA low-opacity | Shadow tints, icon container fills, subtle highlights |
+
+---
+
+### **Purple (#806ce0) Usage Boundaries**
+
+Purple is the highest-risk accent color. These boundaries are non-negotiable:
+
+✅ **ALLOWED:**
+- Icon stroke color: `color={iconColors.content}` or `color="#806ce0"`
+- Icon container backgrounds at 10% opacity: `rgba(128, 108, 224, 0.1)`
+- Shadow tints at 6% opacity: `rgba(128, 108, 224, 0.06)`
+- Badge component internal themes (inside Badge.tsx only)
+
+❌ **FORBIDDEN:**
+- Solid button/element backgrounds
+- Full-opacity text color (except Badge internals)
+- Full-opacity borders
+- Section backgrounds
+- Any usage above 12% opacity outside of Badge.tsx
+
+**Hardcoded Hex Exception:** The ONLY intentional hardcoded hex values in `.tsx` files are inside `Badge.tsx`, which is a design-system atom defining its own internal theme color configs.
+
+---
+
+### **⚠️ Gradient Stop Workaround (Critical Technical Constraint)**
+
+Tailwind CSS gradient stop classes (`from-[...]`, `via-[...]`, `to-[...]`) are **broken** in this environment. All gradients MUST use inline styles with RGBA values.
+
+```tsx
+// ❌ BROKEN — Tailwind gradient classes don't work
+<div className="bg-gradient-to-br from-[#806ce0]/10 to-transparent" />
+
+// ✅ CORRECT — Inline style with RGBA
+<div style={{ background: 'linear-gradient(135deg, rgba(128, 108, 224, 0.12) 0%, rgba(223, 234, 250, 0.08) 100%)' }} />
+
+// ✅ CORRECT — Solid warm gradient for editorial sections
+<div style={{ background: 'linear-gradient(180deg, #faf9f8 0%, #f5f2f1 40%, #faf9f8 100%)' }} />
+```
+
+**Common gradient patterns:**
+```tsx
+// Purple accent glow (for icon containers, card accents)
+background: 'rgba(128, 108, 224, 0.1)'
+
+// Purple shadow
+boxShadow: '0 4px 16px rgba(128, 108, 224, 0.06)'
+
+// Warm editorial gradient (section background)
+background: 'linear-gradient(180deg, #faf9f8 0%, #f5f2f1 40%, #faf9f8 100%)'
+
+// Periwinkle-to-transparent card accent
+background: 'linear-gradient(135deg, rgba(243, 244, 255, 0.5), rgba(250, 250, 250, 0.3))'
+borderColor: 'rgba(235, 237, 251, 0.5)'
+
+// Dark section mesh background
+background: 'linear-gradient(135deg, #0e0b1c 0%, #07080f 50%, #090b12 100%)'
+```
+
+---
+
+### **Secondary Button — Warm Tone (NOT Periwinkle)**
+
+The secondary button uses a warm-toned border and coral shimmer accent. This is an intentional design decision — the secondary button is NOT blue/purple.
+
+```tsx
+// Secondary button styling (from Button.tsx)
+border: 'border-black/20'  // Light backgrounds
+border: 'border-white/20'  // Dark backgrounds
+hover shimmer: '#ea7a5f'   // Coral accent (NOT periwinkle)
+```
+
+**Consistent instances (do NOT change these):**
+1. `Button.tsx` — core secondary variant definition
+2. `NewHeader.tsx` — hand-coded secondary button
+3. `ChapterMethodology.tsx` — hand-coded secondary button
+4. `ChapterExtendedTOC.tsx` — hand-coded secondary button
+
+---
+
+### **🎨 Section-by-Section Color Recipe (Reports / Product Pages)**
+
+When building a report landing page or product page, follow this exact color sequence:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ SCROLL PROGRESS BAR          bg: var(--brand-red)  z-9999  │
+├─────────────────────────────────────────────────────────────┤
+│ NAVBAR                       bg: black  text: white        │
+├─────────────────────────────────────────────────────────────┤
+│ HERO SECTION                 bg: BLACK                     │
+│   h1: white (--text-3xl)                                   │
+│   description: rgba(255,255,255,0.7)                       │
+│   CTA: Button variant="brand" (red)                        │
+│   Secondary: Button variant="secondary" (warm border)      │
+│   Badges: mode="dark" theme="neutral"                      │
+│   Stats numbers: white, serif light                        │
+│   Icons in stats: #806ce0 (periwinkle)                     │
+├─────────────────────────────────────────────────────────────┤
+│ SECTION 2                    bg: WHITE                     │
+│   h2: black (--text-2xl)                                   │
+│   body: var(--text-primary) or var(--text-secondary)       │
+│   Icons: #806ce0 (content) or #737373 (utility)            │
+│   Cards: bg-white, border warm-500                         │
+├─────────────────────────────────────────────────────────────┤
+│ SECTION 3                    bg: WARM (#f5f2f1)            │
+│   h2: black (--text-2xl)                                   │
+│   body: var(--text-primary) or var(--text-secondary)       │
+│   Cards: bg-white (pop against warm bg)                    │
+│   Icon containers: rgba(128, 108, 224, 0.1) + shadow 0.06 │
+├─────────────────────────────────────────────────────────────┤
+│ SECTION 4                    bg: WHITE                     │
+│   (same as Section 2 — continue alternating)               │
+├─────────────────────────────────────────────────────────────┤
+│ SECTION 5                    bg: WARM (#f5f2f1)            │
+│   (same as Section 3 — continue alternating)               │
+├─────────────────────────────────────────────────────────────┤
+│ ...continue white/warm alternation...                      │
+├─────────────────────────────────────────────────────────────┤
+│ RESOURCES / FEATURED         bg: BLACK (gradient mesh)     │
+│   h2: white                                                │
+│   Cards: dark mode with frosted borders                    │
+│   Category badges: mode="dark"                             │
+├─────────────────────────────────────────────────────────────┤
+│ FINAL CTA SECTION            bg: WHITE or WARM             │
+│   h2: black (--text-2xl)                                   │
+│   CTA: Button variant="brand" (red, max 1-2)               │
+│   Secondary: Button variant="secondary" (warm border)      │
+├─────────────────────────────────────────────────────────────┤
+│ FOOTER                       bg: BLACK  text: white        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Color Budget Per Section:**
+
+| Element | Color | Opacity | Tier |
+|---|---|---|---|
+| Section background | black / white / warm-300 | 100% | 92% |
+| Heading text | black or white | 100% | 92% |
+| Body text | var(--text-primary) | 100% | 92% |
+| Description text | var(--text-secondary) | 60% | 92% |
+| Label text | --label-on-black or --label-on-white | 40% | 92% |
+| Card backgrounds | white or warm-300 | 100% | 92% |
+| Card borders | warm-500 (#eae5e3) | 100% | 92% |
+| Brand CTA button | #b01f24 | 100% | 5% |
+| Brand button shadow | rgba(176, 31, 36, 0.15) | 15% | 5% |
+| Content icons | #806ce0 | 100% stroke | 3% |
+| Icon container bg | rgba(128, 108, 224, 0.1) | 10% | 3% |
+| Icon shadow | rgba(128, 108, 224, 0.06) | 6% | 3% |
+| Badge accent themes | varies per theme | varies | 3% |
+
+---
 
 ### **Background Compositions**
 ```css
 --bg-composition-warm-editorial: linear-gradient(180deg, #faf9f8 0%, #f5f2f1 40%, #faf9f8 100%);
 ```
-
-### **Accent & Utility Colors**
-Full 50-900 scales for Purple, Periwinkle, Coral, Perano, Green, Amber, Rose defined in `theme.css`.
-- Use for Badge themes, data visualization, semantic states
-- NEVER use for primary CTAs (use `--brand-red`)
 
 ---
 
@@ -166,7 +369,7 @@ Full 50-900 scales for Purple, Periwinkle, Coral, Perano, Green, Amber, Rose def
 ```tsx
 variant="primary"   // Black - Main actions
 variant="brand"     // Red (#b01f24) - CTAs ONLY
-variant="secondary" // White + warm border - Supporting actions
+variant="secondary" // White + warm border + coral shimmer - Supporting actions
 variant="ghost"     // Transparent - Tertiary on dark backgrounds
 ```
 
@@ -183,6 +386,7 @@ size="xl"  // 56px - Rare, maximum impact
 - Use `md` as default size (NOT lg)
 - `showArrow={true}` ONLY for urgency/forms
 - Shimmer animation is ALWAYS active (never disable)
+- Secondary button uses warm border + coral shimmer (#ea7a5f), NOT periwinkle
 
 ---
 
@@ -322,6 +526,54 @@ import { Label } from '@/app/components/Label';
 <Label htmlFor="email" required>Email Address</Label>
 ```
 
+### **Icon Color System**
+```tsx
+import { iconColors } from '@/app/components/iconColors';
+
+// Content/feature icons — ALWAYS periwinkle
+<BarChart3 color={iconColors.content} size={20} />  // #806ce0
+<Target color={iconColors.content} size={24} />
+
+// Utility/navigation icons — ALWAYS gray
+<ChevronDown color={iconColors.utility} size={20} /> // #737373
+<X color={iconColors.utility} size={20} />
+
+// Icon container with accent background
+<div className="rounded-[10px] p-3" style={{
+  background: 'rgba(128, 108, 224, 0.1)',
+  boxShadow: '0 4px 16px rgba(128, 108, 224, 0.06)'
+}}>
+  <Sparkles color={iconColors.content} size={24} />
+</div>
+```
+
+### **Layout Components**
+```tsx
+import { SectionWrapper } from '@/app/components/SectionWrapper';
+import { SectionHeading } from '@/app/components/SectionHeading';
+import { Card } from '@/app/components/Card';
+import { Container } from '@/app/components/Container';
+
+// Full section
+<SectionWrapper background="warm" spacing="lg" id="highlights">
+  <SectionHeading level={2} eyebrow="KEY FINDINGS">Report Highlights</SectionHeading>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <Card variant="white" padding="md" shadow="sm" hover>...</Card>
+  </div>
+</SectionWrapper>
+```
+
+### **Scroll Components**
+```tsx
+import { ScrollToTop } from '@/app/components/ScrollToTop';
+import { ScrollProgress } from '@/app/components/ScrollProgress';
+
+// Place once at page level
+<ScrollProgress />  {/* 3px brand-red bar at top */}
+<main>...</main>
+<ScrollToTop />     {/* Floating button, appears after 400px */}
+```
+
 ### **Container (Layout Wrapper)**
 ```tsx
 import { Container } from '@/app/components/Container';
@@ -409,26 +661,34 @@ Before generating ANY code, verify:
 - [ ] Button size="md" as default (NOT lg)
 - [ ] showArrow={true} ONLY for urgency/forms
 - [ ] Shimmer animation automatic (don't disable)
-- [ ] Following section pattern (black/white/warm)
+- [ ] Following section pattern (black/white/warm alternating)
 - [ ] Using semantic component (Button vs CTALink vs InlineLink)
 - [ ] Spacing from base-10 scale
 - [ ] No hardcoded values (use tokens)
 - [ ] Responsive padding (px-4 sm:px-6 md:px-8) or Container component
+- [ ] All icons use `iconColors.content` (#806ce0) or `iconColors.utility` (#737373)
+- [ ] All gradients use inline styles with RGBA (NOT Tailwind gradient classes)
+- [ ] Purple used at ≤12% opacity only (except icon stroke and Badge internals)
+- [ ] Secondary buttons use warm border + coral shimmer (NOT periwinkle)
 
 ---
 
 ## COMMON MISTAKES TO AVOID
 
-1. Use `--brand-red` for anything except CTA buttons
-2. Use `size="lg"` as default (use `size="md"`)
-3. Add `showArrow={true}` to every button (only urgency)
-4. Use `--text-3xl` for section headings (only hero h1)
-5. Use hardcoded colors instead of tokens
-6. Use arbitrary spacing (stick to scale)
-7. Use Tailwind `text-2xl` classes (use CSS variables)
-8. Disable shimmer animation (always active)
-9. Use Sans for headings or Serif for body text
-10. Hardcode container max-widths instead of using Container component or tokens
+1. ❌ Use `--brand-red` for anything except CTA buttons
+2. ❌ Use `size="lg"` as default (use `size="md"`)
+3. ❌ Add `showArrow={true}` to every button (only urgency)
+4. ❌ Use `--text-3xl` for section headings (only hero h1)
+5. ❌ Use hardcoded colors instead of tokens
+6. ❌ Use arbitrary spacing (stick to scale)
+7. ❌ Use Tailwind `text-2xl` classes (use CSS variables)
+8. ❌ Disable shimmer animation (always active)
+9. ❌ Use Sans for headings or Serif for body text
+10. ❌ Hardcode container max-widths instead of using Container component or tokens
+11. ❌ Use Tailwind gradient stop classes (`from-[...]`, `to-[...]`) — they're broken
+12. ❌ Use arbitrary icon colors — always use `iconColors.content` or `iconColors.utility`
+13. ❌ Use periwinkle/purple for secondary button styling — it uses warm/coral tones
+14. ❌ Use purple at full opacity for backgrounds, text, or borders
 
 ---
 
@@ -438,8 +698,14 @@ Before generating ANY code, verify:
 - **Theme Tokens:** `/src/styles/theme.css`
 - **Component Library:** `/src/app/components/index.ts`
 - **Button:** `/src/app/components/Button.tsx`
+- **Icon Colors:** `/src/app/components/iconColors.ts`
 - **Container:** `/src/app/components/Container.tsx`
+- **SectionWrapper:** `/src/app/components/SectionWrapper.tsx`
+- **SectionHeading:** `/src/app/components/SectionHeading.tsx`
+- **Card:** `/src/app/components/Card.tsx`
 - **ResourceCard:** `/src/app/components/ResourceCard.tsx`
+- **ScrollToTop:** `/src/app/components/ScrollToTop.tsx`
+- **ScrollProgress:** `/src/app/components/ScrollProgress.tsx`
 - **Links:** `/src/app/components/CTALink.tsx`, `/src/app/components/InlineLink.tsx`
 - **Hooks:** `/src/app/hooks/index.ts`
 - **Dashboard:** `/src/app/components/DesignSystemDashboard.tsx`
@@ -448,4 +714,4 @@ Before generating ANY code, verify:
 
 **Last Updated:** 2026-03-01  
 **Maintained By:** Design System Team  
-**Version:** 3.2.1 - Added Container, ResourceCard, SubtleVariantSwitcher, useResponsiveGutter
+**Version:** 3.3 — Added 92-5-3 Color Usage Guide, icon colors, gradient workaround, layout/scroll components
