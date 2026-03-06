@@ -18,9 +18,9 @@ This design system showcases a minimalist editorial aesthetic with:
 |---|------|------|------|
 | 1 | `DESIGN_SYSTEM_AI_CONTEXT.md` | Index → 6 modules in `ai-context/` (typography, colors, components, layout, prompts) | 3KB index |
 | 1a | `ai-context/*.md` | Modular AI context (CORE, TYPOGRAPHY, COLORS, COMPONENTS, LAYOUT, PROMPTS) | ~37KB total |
-| 2 | `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v3.3.2) | ~5KB |
+| 2 | `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v3.4) | ~5KB |
 | 3 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H framework for every component with decision flowcharts | 28KB |
-| 4 | `design-system-checklist.md` | File map — which files to import, in what order, 10 groups, ~45 files | 20KB |
+| 4 | `design-system-checklist.md` | File map — which files to import, in what order, 11 groups, ~76 files | 20KB |
 | 5 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | 6KB |
 | 6 | `GITHUB_PUSH_GUIDE.md` | Push safety — never-push list, barrel exports, commit format | 10KB |
 
@@ -86,7 +86,14 @@ Design-System-vs-26/
 │   └── PROMPTS.md                     # AI implementation prompts
 ├── src/
 │   ├── app/
-│   │   ├── components/       # React components (~45 files)
+│   │   ├── components/       # React components (~76 files)
+│   │   │   ├── foundations/  # Modular Foundations sub-files (v3.4)
+│   │   │   │   ├── FoundationsHelpers.tsx
+│   │   │   │   ├── ColorsContent.tsx (~35KB)
+│   │   │   │   ├── TypographyContent.tsx (~23KB)
+│   │   │   │   ├── SpacingContent.tsx (~8KB)
+│   │   │   │   ├── LayoutGridContent.tsx (~25KB)
+│   │   │   │   └── ElevationBorderRadius.tsx (~17KB)
 │   │   │   ├── ui/          # Radix UI components (Figma Make only)
 │   │   │   └── figma/       # Figma import utilities
 │   │   └── hooks/           # Custom React hooks (10 hooks)
@@ -96,16 +103,22 @@ Design-System-vs-26/
 │       ├── fonts.css        # Font imports (DM Sans + Noto Serif)
 │       ├── tailwind.css     # Tailwind configuration
 │       └── theme.css        # CSS custom properties
-├── DESIGN_SYSTEM_AI_CONTEXT.md    # Index → ai-context/ modules (v3.3.2)
-├── DESIGN_SYSTEM_UPDATES.md       # Changelog (v3.3.2)
+├── DESIGN_SYSTEM_AI_CONTEXT.md    # Index → ai-context/ modules (v3.4)
+├── DESIGN_SYSTEM_UPDATES.md       # Changelog (v3.4)
 ├── COMPONENT_GUIDELINES_4WH.md    # 4W+H component reference
-├── design-system-checklist.md     # File map (v2.1)
+├── design-system-checklist.md     # File map (v2.2, 11 groups, ~76 files)
 ├── QUICK_START_PROMPT.md          # Copy-paste AI prompt
 ├── GITHUB_PUSH_GUIDE.md           # Push safety guide
 ├── package.json
 ├── vite.config.ts
 └── postcss.config.mjs
 ```
+
+### FoundationsContent Modular Split (v3.4)
+
+The former 110KB `FoundationsContent.tsx` monolith was split into 6 modular files under `foundations/`. The original file is now a ~1KB re-export hub so all existing imports remain unchanged.
+
+**Import rule:** Always import via `@/app/components/FoundationsContent` (the hub), never directly from `foundations/`.
 
 ## 🎨 Design Tokens
 
@@ -168,4 +181,4 @@ Proprietary - Design system for internal use
 
 ---
 
-**Built with elite design system patterns | DS v3.3.2 | Updated 2026-03-01**
+**Built with elite design system patterns | DS v3.4 | Updated 2026-03-06**

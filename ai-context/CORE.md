@@ -1,8 +1,8 @@
 # Design System — Core Rules & AI Checklist
 
 **Module:** `ai-context/CORE.md`  
-**Version:** 3.3.2  
-**Date:** 2026-03-01  
+**Version:** 3.4  
+**Date:** 2026-03-06  
 **Part of:** [DESIGN_SYSTEM_AI_CONTEXT.md](../DESIGN_SYSTEM_AI_CONTEXT.md) modularization
 
 ---
@@ -55,7 +55,7 @@ Import components from `/src/app/components/`, use CSS variables from `theme.css
 
 **Companion docs:**
 - `COMPONENT_GUIDELINES_4WH.md` — 4W+H for every component with decision flowcharts
-- `design-system-checklist.md` — File map (45 files, 10 groups)
+- `design-system-checklist.md` — File map (76 files, 11 groups)
 - `QUICK_START_PROMPT.md` — Shortened copy-paste prompt
 - `GITHUB_PUSH_GUIDE.md` — Push safety rules
 
@@ -138,8 +138,8 @@ AI-generated code should score:
 1. **Read First:** This file + relevant `ai-context/` modules
 2. **Component References:** `Button.tsx`, `Badge.tsx`, `CTALink.tsx`, `InlineLink.tsx`
 3. **Section Examples:** `HeroSection.tsx`, `ChallengesSection.tsx`, `MethodologySection.tsx`
-4. **Dashboard:** `DesignSystemDashboard.tsx` (visual reference), `FoundationsContent.tsx` (typography details)
+4. **Dashboard:** `DesignSystemDashboard.tsx` (visual reference), `FoundationsContent.tsx` (re-export hub → modular `foundations/` sub-files for typography, colors, spacing, layout, elevation)
 
 ---
 
-**v3.3.2 | March 1, 2026 | Modularized from 53KB monolith**
+**v3.4 | March 6, 2026 | Modularized from 53KB monolith**

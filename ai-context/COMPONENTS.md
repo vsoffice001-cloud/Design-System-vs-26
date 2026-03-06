@@ -1,7 +1,7 @@
 # Design System — Component Systems
 
 **Module:** `ai-context/COMPONENTS.md`  
-**Version:** 3.3.2  
+**Version:** 3.4  
 **Source of truth:** `/src/app/components/`  
 **Detailed 4W+H:** `COMPONENT_GUIDELINES_4WH.md`
 
@@ -229,4 +229,4 @@ import { Label } from '@/app/components/Label';
 
 ---
 
-**v3.3.2 | Part of [ai-context/](.) module system**
+**v3.4 | Part of [ai-context/](.) module system**

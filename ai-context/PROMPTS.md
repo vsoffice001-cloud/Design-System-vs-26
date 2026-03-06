@@ -1,7 +1,7 @@
 # Design System — AI Implementation Prompts
 
 **Module:** `ai-context/PROMPTS.md`  
-**Version:** 3.3.2  
+**Version:** 3.4  
 **For:** Copy-paste into AI tools when building pages
 
 ---
@@ -174,6 +174,7 @@ Build a complete page with our design system. Follow this checklist:
 
 STRUCTURE:
 ✅ Import components from /src/app/components/
+✅ Import Foundations via @/app/components/FoundationsContent (re-export hub), never directly from foundations/
 ✅ Follow section alternating pattern (black → white → warm)
 ✅ Use semantic HTML (section, h1, h2, h3, p)
 ✅ Wire page-level components (Navbar, ScrollToTop, StickyCTA)
@@ -212,4 +213,4 @@ FILES TO READ:
 
 ---
 
-**v3.3.2 | Part of [ai-context/](.) module system**
+**v3.4 | Part of [ai-context/](.) module system**

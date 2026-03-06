@@ -1,7 +1,7 @@
 # Design System — Color System
 
 **Module:** `ai-context/COLORS.md`  
-**Version:** 3.3.2  
+**Version:** 3.4  
 **Source of truth:** `/src/styles/theme.css`  
 **Visual reference:** Dashboard → Foundations → Complete Color Palette
 
@@ -224,4 +224,4 @@ Three families for success/warning/error. **Distinct from decorative accents** �
 
 ---
 
-**v3.3.2 | Part of [ai-context/](.) module system**
+**v3.4 | Part of [ai-context/](.) module system**

@@ -1,7 +1,7 @@
 # Design System — Layout & Page Assembly
 
 **Module:** `ai-context/LAYOUT.md`  
-**Version:** 3.3.2  
+**Version:** 3.4  
 **Source of truth:** `/src/styles/theme.css`, `/src/app/components/Container.tsx`
 
 ---
@@ -106,8 +106,8 @@ import { Container } from '@/app/components/Container';
 ```
 
 ### Mobile-First UX Laws
-- **Fitts’s Law**: Touch targets min 44px, generous tap spacing
-- **Miller’s Law**: Reduce visible options on small screens
+- **Fitts's Law**: Touch targets min 44px, generous tap spacing
+- **Miller's Law**: Reduce visible options on small screens
 - **Content stacking**: 1-col below 640px, 2-col at 768px, 3-col at 1024px+
 
 ---
@@ -150,7 +150,7 @@ import { Container } from '@/app/components/Container';
 
 ---
 
-## Page Assembly Guide (v3.3.1)
+## Page Assembly Guide (v3.4)
 
 ### Page Shell Template
 
@@ -227,4 +227,4 @@ export default function ReportPage() {
 
 ---
 
-**v3.3.2 | Part of [ai-context/](.) module system**
+**v3.4 | Part of [ai-context/](.) module system**

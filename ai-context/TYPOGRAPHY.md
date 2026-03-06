@@ -1,7 +1,7 @@
 # Design System — Typography
 
 **Module:** `ai-context/TYPOGRAPHY.md`  
-**Version:** 3.3.2  
+**Version:** 3.4  
 **Source of truth:** `/src/styles/theme.css`  
 **Fonts:** `/src/styles/fonts.css`
 
@@ -121,4 +121,4 @@ Navigation, compact UIs, and spatial constraints need specific pixel sizes not i
 
 ---
 
-**v3.3.2 | Part of [ai-context/](.) module system**
+**v3.4 | Part of [ai-context/](.) module system**
