@@ -1,9 +1,9 @@
-# Design System File Checklist v2.1
+# Design System File Checklist v2.2
 
 **Purpose:** The single reading-order guide for any AI or team member building a new report/product page.  
 **Rule:** Read top-to-bottom. Each group builds on the previous one.  
 **Repo:** `vsoffice001-cloud/Design-System-vs-26` (`main` branch)  
-**Last verified:** 2026-03-01 | DS version: 3.3.2
+**Last verified:** 2026-03-06 | DS version: 3.4.0
 
 ---
 
@@ -17,8 +17,8 @@
 
 | Priority | File | What | Why Read It |
 |----------|------|------|-------------|
-| 1st | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth | 92-5-3 rules, Page Assembly, Token Cross-Reference, typography scale |
-| 2nd | `DESIGN_SYSTEM_UPDATES.md` | Patches to #1 (v3.3.2) | Badge CSS migration, secondary button two-state |
+| 1st | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth | Points to 6 modules in ai-context/ |
+| 2nd | `DESIGN_SYSTEM_UPDATES.md` | Changelog (v3.2.1 → v3.4.0) | FoundationsContent split, Badge CSS migration, secondary button two-state |
 | 3rd | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component | Decision flowcharts, common mistakes, production checklist |
 | 4th | `GITHUB_PUSH_GUIDE.md` | Push safety | Never-push list, pre-push checklist, merge rules |
 | 5th | `QUICK_START_PROMPT.md` | Copy-paste prompt | Shortened rules for fast Figma Make sessions |
@@ -314,6 +314,37 @@ import { useMyHook } from '@/app/hooks';
 
 ---
 
+## Group 11 — Dashboard Foundations (Modular)
+
+**WHY:** The Foundations tab of the Design System Dashboard documents all visual tokens (colors, typography, spacing, layout, elevation, border-radius). The original 110KB monolith `FoundationsContent.tsx` was too large to maintain or push to GitHub. It has been split into 6 modular sub-files.
+
+**WHAT:** 6 focused sub-files under `src/app/components/foundations/`, plus a thin re-export hub at the original path.
+
+**HOW:** Import via `@/app/components/FoundationsContent` — the re-export hub forwards all exports transparently. No consuming code needs to change.
+
+| File | Content | Exports |
+|------|---------|--------|
+| `foundations/FoundationsHelpers.tsx` | Shared helper components used by all sub-files | `DocSection`, `ColorCard`, `TextColorCard`, `CodeExample`, `TypeScaleDemo` |
+| `foundations/ColorsContent.tsx` | Complete color documentation: Core Principle, Element-Color Classification, Purple Boundaries, Brand Red, Warm Editorial, 5 Accent Colors, Pure Colors, Text Colors, Border Colors, Section Background Pattern, Complete Palette Reference | `ColorsContent` |
+| `foundations/TypographyContent.tsx` | Type Scale (Major Third 1.25), Font Pairing (DM Sans + Noto Serif), Font Weights, Letter Spacing, Custom Font Sizes (14px family + 12px), Line Height | `TypographyContent` |
+| `foundations/SpacingContent.tsx` | Spacing Scale, Margin vs Padding, Component Spacing, List & Form Spacing, Responsive Spacing, Visual Rhythm | `SpacingContent` |
+| `foundations/LayoutGridContent.tsx` | Container Width System, Responsive Padding, Mobile-First Design, Grid System, Breakpoints, Border Radius Decision Table, Z-Index Strategy | `LayoutGridContent` |
+| `foundations/ElevationBorderRadius.tsx` | Shadow System (3-tier), Border Radius Scale (5px increments), Component Examples, Usage Guidelines, Quick Reference | `ElevationContent`, `BorderRadiusContent` |
+
+**Re-export hub:** `src/app/components/FoundationsContent.tsx` (~1KB, 26 lines) — re-exports everything above plus 6 "All Tokens" showcase components (`AllColorsPaletteContent`, `AllTypographyTokensContent`, etc.)
+
+**Dependencies:**
+- `SpacingContent` imports from `@/app/components/SpacingHelpers` (spacing visualization helpers)
+- All sub-files import from `./FoundationsHelpers` (shared DocSection, ColorCard, etc.)
+- `DesignSystemDashboard.tsx` imports from `@/app/components/FoundationsContent` (unchanged)
+
+**WHEN NOT:**
+- Don't import sub-files directly from `foundations/` in new code — always use the re-export hub
+- Don't add new content to the re-export hub — put it in the appropriate sub-file
+- Don't move the re-export hub — `DesignSystemDashboard.tsx` depends on its path
+
+---
+
 ## Quick Reference — File Count by Group
 
 | Group | Files | What |
@@ -328,7 +359,10 @@ import { useMyHook } from '@/app/hooks';
 | 8. Hooks | 10 | useShimmer, useScrollDirection, useHeroVisibility, useActiveSection, useCounter, useScrollAnimation, useResponsiveGutter, useReadingProgress, useSectionProgress, useMagneticEffect |
 | 9. Reference Sections | 10 | Hero, ClientContext, Challenges, Objectives, Methodology, Impact, ValuePillars, Testimonial, Resources, FinalCTA |
 | 10. Barrel Exports | 2 | components/index.ts, hooks/index.ts |
-| **Total** | **~45** | |
+| 11. Dashboard Foundations | 7 | FoundationsHelpers, ColorsContent, TypographyContent, SpacingContent, LayoutGridContent, ElevationBorderRadius, FoundationsContent (re-export hub) |
+| **Total** | **~52** | |
+
+**In practice:** For a new report page, you read `DESIGN_SYSTEM_AI_CONTEXT.md` first, then import from ~15 core files (Groups 2-6 + 8), reference ~3-4 existing sections (Group 9), and register in barrels (Group 10). Group 11 is for dashboard development only.
 
 ---
 
@@ -342,6 +376,7 @@ These are intentional patterns that look like bugs but aren't:
 | `ChallengesSection.tsx` | JS-calculated card widths | Dynamic layout that can't use static Tailwind classes |
 | `ContactModal.tsx` | Hardcoded modal width (500px) | Modal width is independent of container system |
 | `Navbar.tsx` | Imports SVG from `@/imports/svg-fodxwe3cpi` | Figma-imported brand logo — don't recreate |
+| `PatternsContent.tsx` | `max-w-[1200px]` in demo code string | String content for documentation display, not actual layout |
 
 ---
 
@@ -349,6 +384,7 @@ These are intentional patterns that look like bugs but aren't:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| v2.2 | 2026-03-06 | Added Group 11 (Dashboard Foundations) documenting the 6 modular sub-files in `foundations/`; updated file count to ~52; added PatternsContent to Known Exceptions; bumped DS version to v3.4.0 |
 | v2.1 | 2026-03-01 | Fixed Badge migration status (complete, not planned); updated theme.css description to include --badge-* tokens; added DESIGN_SYSTEM_UPDATES.md to companion docs; removed Badge from Known Exceptions; bumped to v3.3.2 |
 | v2.0 | 2026-03-01 | Complete rewrite: proper markdown tables, 4W+H structure, added 8 missing files, 3 missing hooks, ScrollProgress vs ReadingProgressBar, barrel export instructions, known exceptions, secondary button update |
 | v1.0 | 2026-02-28 | Initial checklist (9 groups, ~30 files) |
