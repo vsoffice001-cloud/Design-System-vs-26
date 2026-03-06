@@ -1,7 +1,7 @@
 # DESIGN SYSTEM — AI CONTEXT
 
-**Version:** 3.3.2  
-**Date:** 2026-03-01  
+**Version:** 3.4.0  
+**Date:** 2026-03-06  
 **Architecture:** Modular (6 focused files in `ai-context/`)
 
 ---
@@ -44,12 +44,29 @@ The original 53KB monolith has been split into 6 focused modules, each under 10K
 | File | What | Size |
 |------|------|------|
 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component, decision flowcharts | 28KB |
-| `design-system-checklist.md` | File map — 45 files, 10 groups, barrel exports | 20KB |
+| `design-system-checklist.md` | File map — 51 files, 11 groups, barrel exports | 22KB |
 | `QUICK_START_PROMPT.md` | Shortened copy-paste AI prompt | 6KB |
 | `GITHUB_PUSH_GUIDE.md` | Push safety, never-push list, commit format | 10KB |
 | `BADGES_DOCUMENTATION.md` | Badge system deep-dive (v3.0) | 12KB |
 | `RESOURCE_CARD_DOCUMENTATION.md` | ResourceCard deep-dive (v3.0) | 42KB |
-| `GITHUB_REPO_MANIFEST.md` | Canonical file registry | 15KB |
+| `GITHUB_REPO_MANIFEST.md` | Canonical file registry | 17KB |
+
+---
+
+## Key Architecture: Dashboard Foundations (v3.4.0)
+
+The Foundations tab content lives in **modular sub-files** under `src/app/components/foundations/`:
+
+| File | Content | Size |
+|------|---------|------|
+| `FoundationsHelpers.tsx` | Shared components (DocSection, ColorCard, etc.) | 5KB |
+| `ColorsContent.tsx` | Color system documentation | 36KB |
+| `TypographyContent.tsx` | Typography documentation | 23KB |
+| `SpacingContent.tsx` | Spacing documentation | 3KB |
+| `LayoutGridContent.tsx` | Layout & grid documentation | 25KB |
+| `ElevationBorderRadius.tsx` | Elevation & border radius documentation | 17KB |
+
+**Import path:** `@/app/components/FoundationsContent` (re-export hub — no import changes needed)
 
 ---
 
@@ -60,10 +77,11 @@ The original 53KB monolith has been split into 6 focused modules, each under 10K
 | v3.2 (Feb 28) | Original monolith (53KB) — typography, colors, spacing, buttons, links, layout, prompts |
 | v3.3 (Mar 1) | Added: 92-5-3 Color Usage Guide, Page Assembly Guide, Token Cross-Reference, secondary button two-state |
 | v3.3.1 (Mar 1) | Added: Component-level recipes for 7 section types |
-| v3.3.2 (Mar 1) | Badge CSS migration complete; **Modularized into 6 files** |
+| v3.3.2 (Mar 1) | Badge CSS migration complete; **AI Context modularized into 6 files** |
+| v3.4.0 (Mar 6) | **FoundationsContent.tsx split** into 6 modular sub-files in `foundations/`; Dashboard alignment all 5 phases pushed to GitHub |
 
 The `DESIGN_SYSTEM_UPDATES.md` addendum file is no longer needed for patching — all patches have been merged into the modules. It is kept as a changelog/migration log.
 
 ---
 
-**v3.3.2 | Modularized March 1, 2026 | 53KB → 6 × ~6KB modules**
+**v3.4.0 | Updated March 6, 2026 | FoundationsContent split: 110KB → 6 modular sub-files**
