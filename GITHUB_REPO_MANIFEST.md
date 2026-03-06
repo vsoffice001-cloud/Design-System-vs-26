@@ -1,9 +1,9 @@
 # GitHub Repository Manifest - Design System vs 26
 
-**Last Updated:** March 1, 2026  
+**Last Updated:** March 6, 2026  
 **Branch:** `main`  
 **Repo:** `vsoffice001-cloud/Design-System-vs-26`  
-**Design System Version:** v3.3.2
+**Design System Version:** v3.4.0
 
 Canonical file inventory for the entire repository. Use this when syncing between Figma Make and GitHub.
 
@@ -19,16 +19,16 @@ Canonical file inventory for the entire repository. Use this when syncing betwee
 | `postcss.config.mjs` | PostCSS configuration | Stable |
 | `vite.config.ts` | Vite build configuration | Stable |
 | `README.md` | Project readme (v3.3.2) | Updated Mar 1 |
-| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 1 |
+| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 6 |
 
-### Root - AI Context System (v3.3.2 — Modularized)
+### Root - AI Context System (v3.4.0 — Modularized)
 
 | File | Purpose | Version |
 |------|---------|--------|
-| `DESIGN_SYSTEM_AI_CONTEXT.md` | **Lightweight index** — points to 6 modules in `ai-context/` | v3.3.2 (3KB index) |
-| `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v3.3.2) | v3.3.2 |
+| `DESIGN_SYSTEM_AI_CONTEXT.md` | **Lightweight index** — points to 6 modules in `ai-context/` | v3.4.0 (3KB index) |
+| `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v3.4.0) | v3.4.0 |
 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component — 17 entries + 5 flowcharts | v3.3 |
-| `design-system-checklist.md` | File map — 45 files, 10 groups, barrel export instructions | v2.1 |
+| `design-system-checklist.md` | File map — 52 files, 11 groups, barrel export instructions | v2.2 |
 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | v3.3.2 |
 | `GITHUB_PUSH_GUIDE.md` | Push checklist by Atomic level, merge safety, commit format | v1.3 |
 
@@ -68,6 +68,7 @@ src/
  ├── app/
  │   ├── App.tsx                    # Main app entry (uses react-router-dom)
  │   ├── components/                # All UI components
+ │   │   └── foundations/           # Modular Foundations tab content (v3.4.0)
  │   └── hooks/                     # Custom React hooks
  ├── design-system/                 # Design tokens & showcase components
  ├── imports/                       # SVG imports from Figma
@@ -127,6 +128,25 @@ InlineLink.tsx ─┘
 Badge.tsx (canonical — 11 themes, 4 sizes, 3 variants, CSS custom property driven)
   ├── theme.css (--badge-* size/shape/animation tokens + color consumption rules)
   └── badges/index.ts (deprecated re-exports for backward compat)
+```
+
+### Foundations Content (v3.4.0 — Modular)
+```
+DesignSystemDashboard.tsx
+  └── FoundationsContent.tsx (re-export hub, ~1KB)
+        ├── foundations/FoundationsHelpers.tsx (shared: DocSection, ColorCard, etc.)
+        ├── foundations/ColorsContent.tsx (36KB)
+        ├── foundations/TypographyContent.tsx (23KB)
+        ├── foundations/SpacingContent.tsx (3KB)
+        │     └── SpacingHelpers.tsx (external dependency)
+        ├── foundations/LayoutGridContent.tsx (25KB)
+        ├── foundations/ElevationBorderRadius.tsx (17KB)
+        ├── AllColorsPaletteContent.tsx
+        ├── AllTypographyTokensContent.tsx
+        ├── AllSpacingTokensContent.tsx
+        ├── AllLayoutGridTokensContent.tsx
+        ├── AllElevationTokensContent.tsx
+        └── AllBorderRadiusTokensContent.tsx
 ```
 
 ---
@@ -218,18 +238,33 @@ Main application entry point using `react-router-dom` with routes:
 | `ResourceCard.tsx` | Content card molecule (7 variants, 2 styles, 2 modes) |
 | `SubtleVariantSwitcher.tsx` | Designer tool (lucide-react Settings) |
 
-### Design System Dashboard (8 files)
+### Design System Dashboard (8 files + 6 foundations sub-files)
 
 | File | Purpose |
 |------|--------|
 | `DesignSystemDashboard.tsx` | Main dashboard with sidebar navigation |
 | `DesignSystemSidebar.tsx` | Sidebar navigation component |
-| `FoundationsContent.tsx` | Foundations tab (typography, colors, layout) |
+| `FoundationsContent.tsx` | **Re-export hub** (~1KB) — forwards all Foundations exports from `foundations/` |
 | `ComponentsContent.tsx` | Components tab (buttons, badges, links) |
 | `GuidelinesContent.tsx` | Guidelines tab |
 | `PatternsContent.tsx` | Patterns tab (intentional `max-w-[1200px]` in demo string) |
 | `ResourcesContent.tsx` | Resources tab |
 | `MotionContent.tsx` | Motion & animation tab |
+
+### `foundations/` — Modular Foundations Content (v3.4.0)
+
+Split from the 110KB monolith `FoundationsContent.tsx`. Each file is pushable via the GitHub API.
+
+| File | Content | Size |
+|------|---------|------|
+| `FoundationsHelpers.tsx` | Shared components: DocSection, InfoBlock, ColorCard, TextColorCard, CodeExample, TypeScaleDemo | 5KB |
+| `ColorsContent.tsx` | Color system: Core Principle, Element-Color Classification, Purple Boundaries, Brand Red, Warm Editorial, Accent Colors, Pure Colors, Text Colors, Border Colors, Section Background Pattern, Complete Palette | 36KB |
+| `TypographyContent.tsx` | Type Scale (Major Third 1.25), Font Pairing, Font Weights, Letter Spacing, Custom Font Sizes (14px/12px), Line Height | 23KB |
+| `SpacingContent.tsx` | Spacing Scale, Margin vs Padding, Component Spacing, List & Form, Responsive, Visual Rhythm | 3KB |
+| `LayoutGridContent.tsx` | Container Widths, Responsive Padding, Mobile-First Design, Grid System, Breakpoints, Border Radius Decision Table, Z-Index | 25KB |
+| `ElevationBorderRadius.tsx` | Shadow System (3-tier), Border Radius Scale (5px increments), Component Examples, Usage Guidelines | 17KB |
+
+**Import pattern:** All consuming files import from `@/app/components/FoundationsContent` (the re-export hub). Never import directly from `foundations/` in application code.
 
 ### Token Showcase Components (6 files)
 
@@ -347,6 +382,7 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 5. **Always push** AI context `.md` files when updated
 6. **Check** for new hooks in `src/app/hooks/` that need syncing
 7. **Refer to** `GITHUB_PUSH_GUIDE.md` for the complete pre-push checklist
+8. **Large files (>44KB):** Split into sub-files before pushing (proven push ceiling is ~44KB)
 
 ---
 
@@ -354,6 +390,8 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 | Date | Action | Files Affected |
 |------|--------|----------------|
+| Mar 6, 2026 | FoundationsContent.tsx split into 6 modular sub-files in `foundations/` | FoundationsContent.tsx, foundations/*.tsx (6 files) |
+| Mar 6, 2026 | Dashboard alignment plan: all 5 phases pushed to GitHub | PatternsContent, LinksDocumentation, ButtonDocumentation, DesignSystemDashboard, FoundationsContent |
 | Mar 1, 2026 | AI Context modularized (53KB → 6 modules in `ai-context/`) | DESIGN_SYSTEM_AI_CONTEXT.md, ai-context/*.md |
 | Mar 1, 2026 | Deleted PROJECT_STRUCTURE.md (merged into MANIFEST) | PROJECT_STRUCTURE.md |
 | Mar 1, 2026 | Badge CSS migration Phase 1–4 | theme.css, Badge.tsx |
@@ -369,6 +407,7 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 | Date | Changes |
 |------|---------|
+| Mar 6, 2026 | **v3.4.0 FoundationsContent Modular Split:** 110KB monolith → 6 sub-files in `foundations/` (FoundationsHelpers, ColorsContent, TypographyContent, SpacingContent, LayoutGridContent, ElevationBorderRadius); re-export hub preserves all imports; Dashboard alignment all 5 phases on GitHub; Updated 4 doc files |
 | Mar 1, 2026 | **v3.3.2 AI Context Modularization:** Split 53KB monolith into 6 modules in `ai-context/` (CORE, TYPOGRAPHY, COLORS, COMPONENTS, LAYOUT, PROMPTS); updated DESIGN_SYSTEM_AI_CONTEXT.md to 3KB index; marked DESIGN_SYSTEM_UPDATES.md as pure changelog |
 | Mar 1, 2026 | **v3.3.2 Inventory Consolidation:** Merged PROJECT_STRUCTURE.md into MANIFEST; deleted PROJECT_STRUCTURE.md |
 | Mar 1, 2026 | **v3.3.2 Doc Consolidation:** BADGES_DOCUMENTATION.md v3.0; TECHNICAL_HANDOVER.md deprecated; checklist v2.1 |
@@ -382,4 +421,4 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 ---
 
-**Total Files on GitHub:** ~111 files across 5 directories (root, ai-context, src/app, src/design-system, src/styles)
+**Total Files on GitHub:** ~117 files across 6 directories (root, ai-context, src/app, src/app/components/foundations, src/design-system, src/styles)
