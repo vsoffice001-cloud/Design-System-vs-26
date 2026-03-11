@@ -1,9 +1,9 @@
 # GitHub Repository Manifest - Design System vs 26
 
-**Last Updated:** March 10, 2026  
+**Last Updated:** March 11, 2026  
 **Branch:** `main`  
 **Repo:** `vsoffice001-cloud/Design-System-vs-26`  
-**Design System Version:** v4.0
+**Design System Version:** v4.1
 
 Canonical file inventory for the entire repository. Use this when syncing between Figma Make and GitHub.
 
@@ -19,7 +19,7 @@ Canonical file inventory for the entire repository. Use this when syncing betwee
 | `postcss.config.mjs` | PostCSS configuration | Stable |
 | `vite.config.ts` | Vite build configuration | Stable |
 | `README.md` | Project readme (v3.3.2) | Updated Mar 1 |
-| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 10 |
+| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 11 |
 
 ### Root - AI Context System (v4.0)
 
@@ -69,7 +69,9 @@ src/
  ├── app/
  │   ├── App.tsx                    # Main app entry (uses react-router-dom)
  │   ├── components/                # All UI components
- │   │   └── foundations/           # Modular Foundations tab content (v3.4.0)
+ │   │   ├── figma/                 # ImageWithFallback shim
+ │   │   ├── foundations/           # Modular Foundations tab content (v3.4.0)
+ │   │   └── molecules/            # Report Store molecules (v4.1)
  │   └── hooks/                     # Custom React hooks
  ├── design-system/                 # Design tokens & showcase components
  ├── imports/                       # SVG imports from Figma
@@ -150,6 +152,19 @@ Badge.tsx (canonical — 11 themes, 4 sizes, 3 variants, CSS custom property dri
   └── badges/index.ts (deprecated re-exports for backward compat)
 ```
 
+### Report Store Molecules (v4.1)
+```
+molecules/
+  ├── ReportGridCard.tsx ──── Card.tsx, ImageWithFallback, IndustryBadge, CardMetaRow, CardFooterRow
+  ├── AnalystPickCardB.tsx ── Card.tsx, Badge.tsx, Button.tsx, ImageWithFallback, IndustryBadge, CardMetaRow
+  ├── StatCard.tsx ────────── Card.tsx, Badge.tsx, Button.tsx, Tooltip, iconColors
+  ├── DataHighlightCard.tsx ─ Card.tsx, Tooltip, iconColors
+  ├── CardMetaRow.tsx ─────── Tooltip, iconColors (lucide: TrendingUp, MapPin, Calendar)
+  ├── CardFooterRow.tsx ───── iconColors (lucide: Calendar)
+  ├── HorizontalScroll.tsx ── (standalone, lucide: ChevronLeft/Right)
+  └── ScrollFade.tsx ──────── (standalone, lucide: ChevronLeft/Right)
+```
+
 ### Foundations Content (v3.4.0 — Modular)
 ```
 DesignSystemDashboard.tsx
@@ -217,6 +232,14 @@ Main application entry point using `react-router-dom` with routes:
 | `ResourcesSection.tsx` | BLACK | Masonry grid, Unsplash URLs |
 | `FinalCTASection.tsx` | WHITE | Conversion CTA |
 
+### Report Store Atoms (v4.1 — 3 files)
+
+| File | Purpose |
+|------|--------|
+| `Tooltip.tsx` | Portal-based tooltip (document.body level, never clipped by overflow:hidden, top/bottom position, scroll-reposition) |
+| `ViewToggle.tsx` | List/grid view toggle with warm pill container, Tooltip labels, 44px mobile touch targets |
+| `FadeInSection.tsx` | IntersectionObserver wrapper for scroll-triggered fade-in (stagger delay, direction, prefers-reduced-motion) |
+
 ### Interactive Components (16 molecules)
 
 | File | Purpose |
@@ -256,6 +279,32 @@ Main application entry point using `react-router-dom` with routes:
 | `Container.tsx` | Semantic layout wrapper (5 width presets) |
 | `ResourceCard.tsx` | Content card molecule (7 variants, 2 styles, 2 modes) |
 | `SubtleVariantSwitcher.tsx` | Designer tool (lucide-react Settings) |
+
+### `figma/` — Compatibility Shim
+
+| File | Purpose |
+|------|--------|
+| `ImageWithFallback.tsx` | Simple `<img>` wrapper that matches Figma Make's ImageWithFallback API — used by ReportGridCard, AnalystPickCardB, RevealImage |
+
+### `molecules/` — Report Store Molecules (v4.1 — 15 files)
+
+| File | Atomic Level | Purpose |
+|------|-------------|--------|
+| `index.ts` | Barrel | Re-exports all 14 molecules |
+| `IndustryBadge.tsx` | Atom | Text-only industry/subcategory eyebrow label |
+| `CardMetaRow.tsx` | Molecule | Inline meta row with A/B variants (projection+region or region+date) |
+| `CardFooterRow.tsx` | Molecule | Date footer with Calendar icon |
+| `CardReveal.tsx` | Molecule | IO-based card entrance animation with stagger delay |
+| `RevealImage.tsx` | Molecule | Smooth blur-to-sharp image reveal on load |
+| `EmptyState.tsx` | Molecule | No-results state with icon, message, optional action |
+| `BackToTop.tsx` | Molecule | Floating scroll-to-top button (bottom-16 mobile, bottom-6 desktop) |
+| `SkeletonCard.tsx` | Molecule | Shimmer loading placeholders (grid + list variants) |
+| `HorizontalScroll.tsx` | Molecule | Transform-based carousel (overflow-x:clip, button/wheel/touch/mouse drag, momentum) |
+| `ScrollFade.tsx` | Molecule | Native scroll wrapper with edge fade masks and optional chevron buttons |
+| `ReportGridCard.tsx` | Organism | Standard grid card: image → IndustryBadge → title → CardMetaRow → CardFooterRow |
+| `StatCard.tsx` | Molecule | Market indicator card: category badge → value → label → growth → description → CTA |
+| `DataHighlightCard.tsx` | Molecule | Daily data card: time → value → title → growth → source+arrow footer |
+| `AnalystPickCardB.tsx` | Molecule | Expert pick card: analyst header → blockquote → report mini-card → footer |
 
 ### Design System Dashboard (8 files + 6 foundations sub-files)
 
@@ -313,7 +362,7 @@ Main application entry point using `react-router-dom` with routes:
 
 | File | Purpose |
 |------|--------|
-| `index.ts` | Barrel export for all components |
+| `index.ts` | **v4.1** — Barrel export for all components including atoms, molecules, and types |
 | `badges/index.ts` | Pure re-exports from Badge.tsx (backward compat) |
 | `links/README.md` | Link & CTA component system overview |
 
@@ -345,7 +394,7 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 | File | Purpose | Key Contents |
 |------|---------|-------------|
 | `theme.css` | All CSS custom properties | Font Pairing, Containers, Typography Scale, Color System (92-5-3), Button tokens, Badge tokens, ResourceCard tokens |
-| `report-store-additions.css` | **NEW v4.0** — Report Store CSS classes | `:focus-visible` ring, `.scrollbar-hide`, `.img-zoom`, `.container-padding`, `.glass-header`, `.card-reveal`, `.skeleton-shimmer`, `@keyframes fadeUp/marquee/skeleton-pulse`, `prefers-reduced-motion` blocks, `--radius-element/--radius-inner` tokens |
+| `report-store-additions.css` | **v4.0** — Report Store CSS classes | `:focus-visible` ring, `.scrollbar-hide`, `.img-zoom`, `.container-padding`, `.glass-header`, `.card-reveal`, `.skeleton-shimmer`, `@keyframes fadeUp/marquee/skeleton-pulse`, `prefers-reduced-motion` blocks, `--radius-element/--radius-inner` tokens |
 | `fonts.css` | Font imports only | DM Sans (body/UI), Noto Serif (headings/display) |
 | `index.css` | CSS entry point | Imports |
 | `tailwind.css` | Tailwind directives | Base layer |
@@ -356,9 +405,10 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 
 | File/Directory | Reason |
 |----------------|--------|
-| `src/app/components/figma/ImageWithFallback.tsx` | Figma Make system component (protected) |
 | `src/app/components/ui/` (48 shadcn files) | Figma Make scaffolding — zero imports |
 | `src/imports/*.tsx` (16 Figma frame imports) | Figma Make environment-specific |
+
+> **Note:** `figma/ImageWithFallback.tsx` now EXISTS on GitHub as a simple `<img>` shim. The Figma Make version has richer fallback behavior but the API is identical.
 
 ---
 
@@ -372,7 +422,7 @@ SVG path data files used by components: `svg-*.ts` (12 files)
 4. **PatternsContent.tsx** — `max-w-[1200px]` inside demo code string
 5. **useShimmer.ts** — Actively used by CTALink + InlineLink, DO NOT DELETE
 
-### SectionHeading v4.0 BREAKING CHANGE
+### SectionHeading v4.0 API Change
 
 The SectionHeading API changed from children-based to prop-based:
 ```tsx
@@ -382,14 +432,14 @@ The SectionHeading API changed from children-based to prop-based:
 // NEW (v4.0)
 <SectionHeading level={2} label="X" title="Title" />
 ```
-Existing case study section files that use the old API need updating.
+**Status:** No existing files in the repo import SectionHeading — the 10 case study sections hand-code their headings inline. Adopting SectionHeading in those sections is an optional refactor, not a breaking fix.
 
 ---
 
 ## Sync Checklist (Figma Make → GitHub)
 
 1. **Always verify** App.tsx differences — never overwrite GitHub version
-2. **Never push** `figma/ImageWithFallback.tsx`, `ui/` directory, or `src/imports/*.tsx` Figma frames
+2. **Never push** `ui/` directory or `src/imports/*.tsx` Figma frames
 3. **Always push** component `.tsx` changes and `.md` documentation updates
 4. **Always push** `theme.css`, `report-store-additions.css`, and `fonts.css` token changes
 5. **Always push** AI context `.md` files when updated
@@ -403,6 +453,7 @@ Existing case study section files that use the old API need updating.
 
 | Date | Action | Files Affected |
 |------|--------|----------------|
+| Mar 11, 2026 | **v4.1 Molecule Push** — 3 atoms, 14 molecules, 1 shim, barrel exports updated | Tooltip.tsx, ViewToggle.tsx, FadeInSection.tsx, molecules/*.tsx (14), figma/ImageWithFallback.tsx, molecules/index.ts, components/index.ts |
 | Mar 10, 2026 | **v4.0 Report Store sync** — 3 docs, 3 evolved components, 1 CSS additions file | REPORT_STORE_COMPONENTS_4WH.md, DESIGN_SYSTEM_UPDATES.md, ai-context/CORE.md, Button.tsx, SectionHeading.tsx, Card.tsx, report-store-additions.css |
 | Mar 6, 2026 | FoundationsContent.tsx split into 6 modular sub-files in `foundations/` | FoundationsContent.tsx, foundations/*.tsx (6 files) |
 | Mar 6, 2026 | Dashboard alignment plan: all 5 phases pushed to GitHub | PatternsContent, LinksDocumentation, ButtonDocumentation, DesignSystemDashboard, FoundationsContent |
@@ -417,6 +468,7 @@ Existing case study section files that use the old API need updating.
 
 | Date | Changes |
 |------|---------||
+| Mar 11, 2026 | **v4.1 Molecule Push:** 3 atoms (Tooltip, ViewToggle, FadeInSection); 14 molecules in `molecules/` directory (IndustryBadge, CardMetaRow, CardFooterRow, CardReveal, RevealImage, EmptyState, BackToTop, SkeletonCard, HorizontalScroll, ScrollFade, ReportGridCard, StatCard, DataHighlightCard, AnalystPickCardB); `figma/ImageWithFallback.tsx` shim; `molecules/index.ts` barrel; `components/index.ts` updated with v4.0 atom/molecule exports |
 | Mar 10, 2026 | **v4.0 Report Store Components:** `REPORT_STORE_COMPONENTS_4WH.md` (33KB, 22 components, 4 flowcharts); `report-store-additions.css` (4KB, 10 new CSS classes); Button.tsx v4.0 (xs size, brand, iconOnly); SectionHeading.tsx v4.0 (prop-driven API, action/slots); Card.tsx v4.0 (ref-based hover, as/onClick); `CORE.md` v4.0 (Report Store reading order); `DESIGN_SYSTEM_UPDATES.md` v4.0 changelog |
 | Mar 6, 2026 | **v3.4.0 FoundationsContent Modular Split:** 110KB monolith → 6 sub-files in `foundations/`; Dashboard alignment all 5 phases on GitHub |
 | Mar 1, 2026 | **v3.3.2 AI Context Modularization:** 53KB → 6 modules in `ai-context/`; Badge CSS Migration (4 phases); Doc consolidation |
@@ -426,4 +478,4 @@ Existing case study section files that use the old API need updating.
 
 ---
 
-**Total Files on GitHub:** ~120 files across 6 directories (root, ai-context, src/app, src/app/components/foundations, src/design-system, src/styles)
+**Total Files on GitHub:** ~140 files across 8 directories (root, ai-context, src/app, src/app/components, src/app/components/figma, src/app/components/foundations, src/app/components/molecules, src/design-system, src/styles)
