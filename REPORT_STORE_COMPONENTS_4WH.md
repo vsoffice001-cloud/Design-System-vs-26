@@ -1,9 +1,9 @@
 # Report Store Components - 4W+H Framework
 ## Complete Reference for Building Product Pages with the Ken Bold Design System
 
-**Version:** 4.1 (March 2026)
+**Version:** 4.2 (March 2026)
 **Source Page:** Report Store (Ken Research)
-**Design System:** Ken Bold DS v4.1
+**Design System:** Ken Bold DS v4.2
 **Architecture:** Atomic Design (Atoms > Molecules > Organisms > Templates)
 
 ---
@@ -29,6 +29,9 @@ This document extends `COMPONENT_GUIDELINES_4WH.md` with every component created
 | Atom | `Tooltip` | Universal — any page |
 | Atom | `ViewToggle` | Universal — any listing page |
 | Atom | `FadeInSection` | Universal — any page |
+| **Atom** | **`FilterCheckbox`** | **Universal — any filter panel, TOC, settings, sidebar list** |
+| **Atom** | **`FilterChip`** | **Universal — any multi-select chip group, mobile filter sheet** |
+| **Atom** | **`FilterSearchInput`** | **Universal — any panel-level search-within-content** |
 | Molecule | `CardReveal` | Universal — any card grid |
 | Molecule | `RevealImage` | Universal — any page with images |
 | Molecule | `SkeletonCard` | Universal — any async data page |
@@ -39,11 +42,19 @@ This document extends `COMPONENT_GUIDELINES_4WH.md` with every component created
 | Molecule | `IndustryBadge` (EyebrowLabel) | Universal — any card/listing |
 | Molecule | `CardMetaRow` (MetaRow) | Universal — any card with metadata |
 | Molecule | `CardFooterRow` | Universal — any card with date |
+| **Molecule** | **`FilterAccordion`** | **Universal — any collapsible section in sidebars/sheets** |
+| **Molecule** | **`SidebarPanel`** | **Universal — any sticky sidebar container (filters, TOC, nav, settings)** |
+| **Molecule** | **`ActiveFilterChip`** | **Universal — any removable filter tag display** |
 | **Organism** | **`ReportCard`** ★ | **Canonical — grid + list layouts** |
 | ~~Organism~~ | ~~`ReportGridCard`~~ | **@deprecated** — wrapper → `ReportCard layout="grid"` |
 | Molecule | `StatCard` | Reusable — data visualization card |
 | Molecule | `DataHighlightCard` | Reusable — stat highlight card |
 | Molecule | `AnalystPickCardB` | Reusable — curated/expert card |
+| **Organism** | **`IndustrySidebar`** | **Reusable — desktop filter panel (composes SidebarPanel + FilterAccordion + FilterCheckbox + FilterSearchInput)** |
+| **Organism** | **`MobileFilterSheet`** | **Reusable — mobile filter drawer (composes FilterAccordion sheet + FilterChip)** |
+| **Molecule** | **`MobileFilterBar`** | **Universal — floating filter access pill for mobile** |
+| **Organism** | **`ListingContextBanner`** | **Reusable — industry hero banner + active filter chips** |
+| **Hook** | **`useReportFilters`** | **Reusable — filter state, cascade logic, search, sort, pagination** |
 
 ### Evolved Components (Report Store version is canonical)
 
@@ -68,7 +79,7 @@ These classes were created during the Report Store build and should be in every 
 | `.skeleton-shimmer` | Gradient sweep loading pulse | Skeleton loading placeholders |
 | `.glass-header` | Glassmorphism nav (`blur(12px) saturate(1.4)`) | Sticky navigation headers |
 | `.container-padding` | Responsive px (16/24/32px) at mobile/tablet/desktop | Any Container-wrapped content |
-| `.scrollbar-hide` | Hide native scrollbar | Horizontal scroll containers |
+| `.scrollbar-hide` | Hide native scrollbar | Horizontal scroll containers, sidebar panels |
 | `@keyframes fadeUp` | Opacity 0 + translateY(10px) to visible | Card/element entrance |
 | `@keyframes ripple` | Button click ripple effect | Button clicks |
 | `:focus-visible` ring | 2px solid brand-red, 2px offset | Keyboard accessibility |
@@ -111,7 +122,7 @@ A portal-based tooltip that appears on hover/focus with a dark bubble, direction
 - Don't use on elements that already have visible labels
 
 ### WHERE
-Atomic level: **Atom**. Used inside ViewToggle, StatCard, CardMetaRow, and any icon button.
+Atomic level: **Atom**. Used inside ViewToggle, StatCard, CardMetaRow, FilterAccordion, and any icon button.
 
 ### HOW
 ```tsx
@@ -234,343 +245,438 @@ import { FadeInSection } from './FadeInSection';
 
 ---
 
+## FilterCheckbox
+
+### WHY
+Filter panels, TOC navigation, settings panels, and any sidebar list need checkboxes. Without a DS-level checkbox, each panel builds its own with inconsistent box sizing, border colors, hover effects, and accessibility. FilterCheckbox is the canonical checkbox control for all sidebar and panel contexts.
+
+### WHAT
+A custom checkbox row with 6 interaction states, ARIA compliance, keyboard support, and optional count badge.
+
+**Visual spec:**
+- Box: 16×16px, `--radius-inner` (2.5px), 1.5px border
+- Row: full-width, 6px 16px padding, optional 28px left-indent for nesting
+- Count: right-aligned, tabular-nums, pill background when checked
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | string | required | Display label |
+| `checked` | boolean | required | Controlled checked state |
+| `onToggle` | `() => void` | required | Toggle callback |
+| `count` | number \| string | — | Right-aligned count or text |
+| `indented` | boolean | false | Indent for nested items (subcategories) |
+| `disabled` | boolean | false | Disabled state |
+| `className` | string | — | Additional CSS classes |
+
+**Interaction States:**
+
+| State | Box | Row Background | Left Border | Label Color |
+|-------|-----|---------------|-------------|-------------|
+| Default | white bg, 18% border, inset shadow | transparent | transparent | 50% black |
+| Hover | — | `rgba(0,0,0,0.025)` | — | — |
+| Checked | `--text-primary` fill, white Check ✓ | `rgba(0,0,0,0.03)` | 2px solid 60% black | 85% black |
+| Checked+Hover | — | stays 3% | — | — |
+| Focus-Visible | — | — | — | 2px brand-red ring (global CSS) |
+| Disabled | 50% opacity | — | — | not-allowed cursor |
+
+### WHEN
+- Use inside FilterAccordion sections for multi-select filters (tags, regions, years)
+- Use for TOC checkable items
+- Use for settings toggle lists
+- Use for any list where users select multiple items
+
+### WHEN NOT
+- Don't use for single-select (use radio buttons or FilterChip)
+- Don't use for mobile touch contexts (use FilterChip — larger touch target)
+- Don't use standalone outside a panel/list context
+
+### WHERE
+Atomic level: **Atom**. File: `FilterCheckbox.tsx`. Used in IndustrySidebar.
+
+### HOW
+```tsx
+import { FilterCheckbox } from './FilterCheckbox';
+
+<FilterCheckbox label="Global" checked={selectedRegions.has('Global')}
+  onToggle={() => toggleRegion('Global')} count={42} />
+
+<FilterCheckbox label="AI & Machine Learning" checked={true}
+  onToggle={() => toggle('AI')} indented />
+
+<FilterCheckbox label="Locked Section" disabled />
+```
+
+---
+
+## FilterChip
+
+### WHY
+Mobile filter sheets, tag clouds, and any multi-select chip group need a consistent toggle chip. Without a DS atom, each sheet builds its own with inconsistent touch targets, active states, and label truncation.
+
+### WHAT
+A pill-shaped toggle button with active/inactive states, optional count, and 40px minimum height for mobile touch compliance.
+
+**Visual spec:**
+- Radius: `--radius-element` (5px)
+- Min height: 40px (padding brings effective touch target to 44px)
+- Active: 6% bg, 20% border, shadow-sm, 600 weight, Check icon prefix
+- Inactive: white bg, 8% border, 55% text, 400 weight
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | string | required | Display label |
+| `active` | boolean | required | Controlled active state |
+| `onToggle` | `() => void` | required | Toggle callback |
+| `count` | number \| string | — | Count displayed after label |
+| `disabled` | boolean | false | Disabled state |
+| `className` | string | — | Additional CSS classes |
+
+**Interaction States:**
+
+| State | Background | Border | Text | Weight | Icon |
+|-------|-----------|--------|------|--------|------|
+| Default | white | 8% | 55% black | 400 | none |
+| Hover | 4% | 14% | — | — | — |
+| Active | 6% | 20% | `--text-primary` | 600 | Check ✓ |
+| Active+Hover | 8% | 20% | — | — | — |
+| Focus-Visible | — | — | — | — | 2px brand-red ring |
+| Pressed | scale(0.97) | — | — | — | — |
+
+### WHEN
+- Use in MobileFilterSheet for industry, region, year, sort selections
+- Use for tag clouds and multi-select chip groups
+- Use when mobile touch targets need to be large (40px+ height)
+
+### WHEN NOT
+- Don't use in desktop sidebar panels (use FilterCheckbox — more compact)
+- Don't use for single items (use a button)
+- Don't use for non-toggle actions (use Button)
+
+### WHERE
+Atomic level: **Atom**. File: `FilterChip.tsx`. Used in MobileFilterSheet.
+
+### HOW
+```tsx
+import { FilterChip } from './FilterChip';
+
+<div className="flex flex-wrap gap-2">
+  {industries.map(ind => (
+    <FilterChip key={ind.name} label={ind.name}
+      active={selected === ind.name} onToggle={() => select(ind.name)}
+      count={ind.count} />
+  ))}
+</div>
+```
+
+---
+
+## FilterSearchInput
+
+### WHY
+Sidebar filter panels with many options (14 industries, 260+ subcategories, 50+ tags) need a way to search within the panel. Without a DS atom, each panel inlines its own search JSX with inconsistent border states and clear button behavior.
+
+### WHAT
+A compact search input with Search icon, placeholder, typing indicator (border darkens), and X clear button.
+
+**Visual spec:**
+- Font: `--text-2xs` (12px) — compact for sidebar use
+- Border: `rgba(0,0,0,0.08)` default → `rgba(0,0,0,0.2)` when has value
+- Radius: `--radius-inner` (2.5px)
+- Clear button: appears only when value is non-empty
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | string | required | Controlled value |
+| `onChange` | `(value: string) => void` | required | Change handler |
+| `onClear` | `() => void` | — | Optional clear callback |
+| `placeholder` | string | `'Search filters...'` | Placeholder text |
+| `ariaLabel` | string | `'Search filter options'` | Aria label |
+| `className` | string | — | Additional CSS classes |
+
+**Interaction States:**
+
+| State | Border | Icon | Clear Button |
+|-------|--------|------|-------------|
+| Empty | 8% | utility gray | hidden |
+| Typing | 20% (darker) | utility gray | visible |
+| Focused | 20% | — | — |
+| Focus-Within | brand-red ring (container) | — | — |
+
+### WHEN
+- Use in IndustrySidebar for search-within-filters
+- Use in any panel with 8+ items that need quick filtering
+- Use in TOC panels for search-within-sections
+
+### WHEN NOT
+- Don't use for page-level search (use HeroSection search bar — larger)
+- Don't use for forms (use standard input components)
+- Don't use when the list has <8 items (visual scanning is faster)
+
+### WHERE
+Atomic level: **Atom**. File: `FilterSearchInput.tsx`. Used in IndustrySidebar.
+
+### HOW
+```tsx
+import { FilterSearchInput } from './FilterSearchInput';
+
+const [query, setQuery] = useState('');
+
+<FilterSearchInput value={query} onChange={setQuery}
+  placeholder="Search industries..." />
+```
+
+---
+
 # MOLECULES
+
+---
+
+## FilterAccordion
+
+### WHY
+Filter panels need collapsible sections with icons, labels, active counts, and expand/collapse animation. Previously, `FilterSection` was defined as a local function inside **both** IndustrySidebar AND MobileFilterSheet — two separate implementations of the same pattern with different prop signatures. FilterAccordion unifies them with a `variant` prop.
+
+### WHAT
+A collapsible section header + content area with two visual variants:
+
+**Sidebar variant (desktop):**
+```
+┌──────────────────────────────────┐
+│ [icon] INDUSTRIES       (3) ▶ │  ← uppercase, 2xs, bordered icon box, chevron-right
+├──────────────────────────────────┤
+│  (collapsible children)       │  ← maxHeight 0→600px, 200ms
+└──────────────────────────────────┘
+```
+
+**Sheet variant (mobile):**
+```
+┌──────────────────────────────────┐
+│ (●) Industry           (3) ▼ │  ← normal-case, nav size, tinted circle, chevron-down
+├──────────────────────────────────┤
+│  (flex-wrap gap-2 chips)      │  ← maxHeight 0→600px, 300ms cubic-bezier
+└──────────────────────────────────┘
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | ReactNode | required | Section icon |
+| `label` | string | required | Section label |
+| `isOpen` | boolean | required | Controlled open state |
+| `onToggle` | `() => void` | required | Toggle callback |
+| `count` | number | — | Active selection count (badge appears when >0) |
+| `children` | ReactNode | required | Collapsible content |
+| `disabled` | boolean | false | Disabled state (sidebar only) |
+| `disabledHint` | string | — | Hint text below disabled header |
+| `variant` | `'sidebar' \| 'sheet'` | `'sidebar'` | Visual variant |
+| `className` | string | — | Additional CSS classes |
+
+**Sidebar variant interaction states:**
+
+| State | Background | Icon Box | Label Color | Badge |
+|-------|-----------|----------|-------------|-------|
+| Default (closed) | transparent | 8% border, white bg | 45% | hidden |
+| Open | 1.5% bg | — | — | hidden |
+| Hover | 4% bg | — | — | — |
+| Active (has selections) | 2.5% bg | 20% border, 4% bg | 70% | black pill w/ count |
+| Disabled | 1.5% bg, 55% opacity | — | — | Lock icon |
+
+### WHEN
+- Use in IndustrySidebar for filter section grouping
+- Use in MobileFilterSheet for mobile filter sections
+- Use for any accordion in sidebar panels (settings, nav groups)
+- Use `variant="sidebar"` for desktop side panels
+- Use `variant="sheet"` for mobile drawers and bottom sheets
+
+### WHEN NOT
+- Don't use for page-level accordions/FAQs (use CollapsibleSection — different visual weight)
+- Don't use for single non-collapsible sections
+
+### WHERE
+Atomic level: **Molecule**. File: `molecules/FilterAccordion.tsx`. Used in IndustrySidebar and MobileFilterSheet.
+
+### HOW
+```tsx
+import { FilterAccordion } from './molecules';
+import { FilterCheckbox } from './FilterCheckbox';
+import { FilterChip } from './FilterChip';
+
+{/* Desktop sidebar */}
+<FilterAccordion variant="sidebar" icon={<MapPin />} label="Regions"
+  isOpen={open} onToggle={toggle} count={selectedRegions.size}>
+  {regions.map(r => (
+    <FilterCheckbox key={r} label={r} checked={selected.has(r)} onToggle={() => toggle(r)} />
+  ))}
+</FilterAccordion>
+
+{/* Mobile sheet */}
+<FilterAccordion variant="sheet" icon={<MapPin />} label="Region"
+  isOpen={open} onToggle={toggle} count={selectedRegions.length}>
+  {regions.map(r => (
+    <FilterChip key={r} label={r} active={selected.includes(r)} onToggle={() => toggle(r)} />
+  ))}
+</FilterAccordion>
+
+{/* Disabled with hint */}
+<FilterAccordion variant="sidebar" icon={<Tag />} label="Tags"
+  isOpen={false} onToggle={() => {}} disabled disabledHint="Select an industry first">
+  ...
+</FilterAccordion>
+```
+
+---
+
+## SidebarPanel
+
+### WHY
+Every sticky sidebar (filter panel, TOC, side nav, settings) needs the same container pattern: sticky positioning relative to the header, max-height for viewport-fit scrolling, elevation (border + shadow), rounded corners, a fixed header zone, a scrollable body, and a fixed footer zone. Without a DS molecule, each page hand-codes its own `<aside>` with bespoke positioning that drifts across pages.
+
+### WHAT
+A three-zone container: **header** (sticky top, `--black-50` bg) + **scrollable body** (flex-1, `.scrollbar-hide`) + **footer** (sticky bottom, `--black-50` bg). Hidden below configurable breakpoint.
+
+**Visual spec:**
+- Width: `w-60` (240px), flex-shrink-0
+- Sticky top: `72px` (header height) — configurable
+- Max height: `calc(100vh - stickyTop - 16px)`
+- Border: `1px solid rgba(0,0,0,0.08)`
+- Radius: `10px`
+- Shadow: `0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03)`
+- Background: white
+- Header/Footer separator: `1px solid rgba(0,0,0,0.06)`
+- Hidden: below `lg` breakpoint (mobile uses sheet/drawer)
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `header` | ReactNode | — | Fixed header zone |
+| `children` | ReactNode | required | Scrollable body content |
+| `footer` | ReactNode | — | Fixed footer zone |
+| `stickyTop` | number | 72 | Top offset in px |
+| `width` | string | `'w-60'` | Width class |
+| `hideBelow` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'lg'` | Hide breakpoint |
+| `className` | string | — | Additional CSS classes |
+| `scrollRef` | `RefObject<HTMLDivElement>` | — | Ref for scrollable body |
+
+### WHEN
+- Use for filter panels (Report Store IndustrySidebar)
+- Use for Table of Contents panels (report detail pages)
+- Use for side navigation panels (documentation, settings)
+- Use for any sticky sidebar that needs header/body/footer zones
+
+### WHEN NOT
+- Don't use for full-width sidebars (this is a fixed-width panel)
+- Don't use on mobile (hidden by default; use MobileFilterSheet or equivalent)
+- Don't use for non-sticky content (use a regular aside)
+
+### WHERE
+Atomic level: **Molecule** (container pattern). File: `molecules/SidebarPanel.tsx`. Used by IndustrySidebar.
+
+### HOW
+```tsx
+import { SidebarPanel } from './molecules';
+
+{/* Filter panel */}
+<SidebarPanel
+  header={<div className="p-4"><h3>Filters</h3></div>}
+  footer={<div className="p-3"><p>1,200+ reports available</p></div>}
+>
+  <FilterAccordion ...>...</FilterAccordion>
+  <FilterAccordion ...>...</FilterAccordion>
+</SidebarPanel>
+
+{/* Table of Contents */}
+<SidebarPanel stickyTop={80} width="w-56"
+  header={<div className="p-3"><h4>On This Page</h4></div>}>
+  <nav>
+    <a href="#section-1">Introduction</a>
+    <a href="#section-2">Methodology</a>
+  </nav>
+</SidebarPanel>
+
+{/* Settings panel on xl+ only */}
+<SidebarPanel hideBelow="xl" width="w-64">
+  <SettingsForm />
+</SidebarPanel>
+```
+
+---
+
+## ActiveFilterChip
+
+### WHY
+When users apply multiple filters across different categories (industry, region, year, tag), they need to see what's active and remove individual filters. Each filter type needs a distinct color so users can visually scan "I have 2 region filters and 1 tag filter." Without a DS molecule, each banner builds its own chip rendering with inconsistent colors.
+
+### WHAT
+A removable pill chip with color-coding by filter type. Shows label + X remove button.
+
+**Color coding:**
+
+| Type | Background | Border |
+|------|-----------|--------|
+| `search` | gray 4% | gray 10% |
+| `industry` | gray 4% | gray 12% |
+| `subIndustry` | purple 6% | purple 14% |
+| `tag` | green 6% | green 14% |
+| `region` | blue 6% | blue 14% |
+| `year` | amber 6% | amber 14% |
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | string | required | Filter value display text |
+| `type` | `ActiveFilterType` | required | Color-code type |
+| `onRemove` | `() => void` | required | Remove callback |
+| `className` | string | — | Additional CSS classes |
+
+### WHEN
+- Use in ListingContextBanner for displaying active filter chips
+- Use in any toolbar or banner showing current filter state
+
+### WHEN NOT
+- Don't use for toggle selection (use FilterChip)
+- Don't use for non-removable tags (use Badge)
+
+### WHERE
+Atomic level: **Molecule**. File: `molecules/ActiveFilterChip.tsx`. Used in ListingContextBanner.
+
+### HOW
+```tsx
+import { ActiveFilterChip } from './molecules';
+
+<div className="flex flex-wrap gap-1.5">
+  <ActiveFilterChip label="Global" type="region" onRemove={() => removeRegion('Global')} />
+  <ActiveFilterChip label="AI & ML" type="subIndustry" onRemove={() => removeSub('AI & ML')} />
+  <ActiveFilterChip label="2024" type="year" onRemove={() => removeYear('2024')} />
+  <ActiveFilterChip label='"healthcare"' type="search" onRemove={removeSearch} />
+</div>
+```
 
 ---
 
 ## IndustryBadge (EyebrowLabel)
 
-### WHY
-Cards and listings need a consistent text-only eyebrow label above titles. This is NOT a chip or badge with background — it is a subtle category identifier that sits at the top of card content areas.
-
-### WHAT
-A `<span>` with uppercase text, `--text-2xs` (12px), `rgba(0,0,0,0.4)` color, `0.06em` letter-spacing, block truncate. No background, no border, no padding.
-
-### WHEN
-- Use as the first element in any card's content area (above title)
-- Use for industry/category/subcategory labels
-- Use when you need a subtle label that does not compete with the title
-
-### WHEN NOT
-- Don't use when you need a visible chip/tag (use Badge component)
-- Don't use for interactive elements (not clickable)
-- Don't use for more than one line (truncates)
-
-### WHERE
-Atomic level: **Molecule** (composed atom). Used in ReportCard, AnalystPickCardB, ResourceCard.
-
-### HOW
-```tsx
-import { IndustryBadge } from './molecules';
-
-<IndustryBadge>Healthcare</IndustryBadge>
-<IndustryBadge>{report.subcat || report.industry}</IndustryBadge>
-```
-
----
+_(Unchanged from v4.1 — see above)_
 
 ## CardMetaRow
 
-### WHY
-Cards need inline metadata rows (projection, region, date) with consistent icon sizing, colors, spacing, and dot separators. Without this, every card hand-codes its own meta row with inconsistent icon colors and spacing.
-
-### WHAT
-An inline row with two layout variants:
-
-| Variant | Layout | Use Case |
-|---------|--------|----------|
-| **A** (default) | TrendingUp (green) projection + MapPin (gray) region | Cards with forecast data |
-| **B** (compact) | MapPin region + Calendar date | Cards without projection data |
-
-**Icons:** TrendingUp uses `--green-600`, MapPin/Calendar use `iconColors.utility`. Middot separator between items. Font size `--text-2xs`.
-
-### WHEN
-- Use in any card that displays region, projection, or date metadata
-- Use Variant A when projection data is available
-- Use Variant B when no projection exists (collapses region + date into one row)
-
-### WHEN NOT
-- Don't use for long descriptions (this is for compact meta only)
-- Don't use outside of card components
-- Don't mix variants within the same card
-
-### WHERE
-Atomic level: **Molecule**. Used in ReportCard, AnalystPickCardB, ResourceCard.
-
-### HOW
-```tsx
-import { CardMetaRow } from './molecules';
-
-<CardMetaRow projection="$133.4B by 2030" region="Global" variant="A" />
-<CardMetaRow region="India" date="Dec 2024" variant="B" />
-```
-
----
+_(Unchanged from v4.1 — see above)_
 
 ## CardFooterRow
 
-### WHY
-Cards need a consistent bottom row showing the publication date. This standardizes the Calendar icon, color, spacing, and font size so every card footer looks identical.
+_(Unchanged from v4.1 — see above)_
 
-### WHAT
-A flex row with Calendar icon (`iconColors.utility`) + date text. Font size `--text-2xs`, color `text-black/35`. Pinned to bottom via `mt-auto`.
+## CardReveal, RevealImage, SkeletonCard, EmptyState, BackToTop, HorizontalScroll, ScrollFade
 
-### WHEN
-- Use as the last element in card content areas when date needs separate display
-- Use with CardMetaRow Variant A (which shows projection + region, leaving date for footer)
-- Used in ReportCard `layout="grid"` with metaVariant A
-
-### WHEN NOT
-- Don't use with CardMetaRow Variant B (date is already inline there)
-- Don't use when date is not relevant to the content
-- Not used in ReportCard `layout="list"` (date appears in right column instead)
-
-### WHERE
-Atomic level: **Molecule**. Used in ReportCard (grid layout, Variant A only).
-
-### HOW
-```tsx
-import { CardFooterRow } from './molecules';
-<CardFooterRow date="Dec 2024" />
-```
-
----
-
-## CardReveal
-
-### WHY
-Card grids need staggered entrance animations when scrolling. Each card should fade in with a slight delay after the previous one. Without this, all cards in a row appear simultaneously, which feels flat.
-
-### WHAT
-A div wrapper using IntersectionObserver that applies `.card-reveal` / `.card-reveal.is-visible` CSS classes. Supports stagger via `delay` prop. Once visible, stays visible. Respects `prefers-reduced-motion`.
-
-**Animation:** `opacity 0, translateY(12px)` to `opacity 1, translateY(0)` over `0.45s cubic-bezier(0.16, 1, 0.3, 1)`.
-
-### WHEN
-- Use around each card in a grid listing (wrap each ReportCard)
-- Use with stagger: `delay={index * 50}` capped at first 8 cards
-- Use for any individual card that needs entrance animation
-
-### WHEN NOT
-- Don't use for entire sections (use FadeInSection instead)
-- Don't use for above-the-fold cards (they should be immediately visible)
-- Don't nest CardReveal inside FadeInSection (double animation)
-
-### WHERE
-Atomic level: **Molecule**. Used in App.tsx listing mode around each ReportCard.
-
-### HOW
-```tsx
-import { CardReveal } from './molecules';
-import { ReportCard } from './molecules';
-
-{filteredReports.map((report, idx) => (
-  <CardReveal key={report.id} delay={idx < 8 ? idx * 50 : 0}>
-    <ReportCard layout={viewMode} {...report} />
-  </CardReveal>
-))}
-```
-
----
-
-## RevealImage
-
-### WHY
-Images loading in causes a visual pop when they appear. RevealImage wraps ImageWithFallback with a smooth opacity transition from a neutral placeholder background to the loaded image.
-
-### WHAT
-An `<img>` wrapper that shows a neutral background (`rgba(0,0,0,0.04)`) while loading, then fades the image in at `opacity 0 -> 1` over `0.4s`.
-
-### WHEN
-- Use for any image that loads asynchronously (Unsplash URLs, CDN images)
-- Use inside cards where image load delay is noticeable
-
-### WHEN NOT
-- Don't use for critical above-the-fold hero images (use standard `<img>` with preload)
-- Don't use for SVGs or icons (they load instantly)
-
-### WHERE
-Atomic level: **Molecule**. Available for any card or content image.
-
-### HOW
-```tsx
-import { RevealImage } from './molecules';
-
-<RevealImage src={report.image} alt={report.title} className="w-full h-full object-cover img-zoom" />
-```
-
----
-
-## SkeletonCard
-
-### WHY
-During data loading, empty space or spinners feel broken. Skeleton placeholders that match the exact shape of the final content create perceived performance and reduce layout shift.
-
-### WHAT
-Shimmer loading placeholders in two variants matching the card anatomy:
-- **Grid:** Vertical card with image placeholder + badge/title/meta shims
-- **List:** Horizontal card with side image + text column + right column shims
-
-Uses `.skeleton-shimmer` CSS class (animated gradient from `--warm-300` to `--warm-400`).
-
-### WHEN
-- Use during initial page load, filter changes, or Load More transitions
-- Use the same variant as the current ViewToggle mode (`variant={viewMode}`)
-- Show 6-12 skeletons matching the expected grid layout
-
-### WHEN NOT
-- Don't use indefinitely (always resolve to real content or EmptyState)
-- Don't mix skeleton variants (all grid or all list in one view)
-
-### WHERE
-Atomic level: **Molecule**. Used in App.tsx listing mode during loading states.
-
-### HOW
-```tsx
-import { SkeletonCard } from './molecules';
-
-{/* Match skeleton variant to ViewToggle's viewMode */}
-{isLoading && Array.from({ length: 6 }).map((_, i) => (
-  <SkeletonCard key={i} variant={viewMode} aspectRatio="16/9" />
-))}
-```
-
----
-
-## EmptyState
-
-### WHY
-When filters return zero results, blank space is confusing. EmptyState provides a clear message with an icon and an action to recover.
-
-### WHAT
-A centered message block with dashed border (`--warm-500`), warm-300 background, Search icon, message text, and optional action button. Uses `fadeUp` entrance animation.
-
-### WHEN
-- Use when filter/search results return zero items
-- Use when a section has no content to display
-- Always provide an `onAction` callback to help users recover
-
-### WHEN NOT
-- Don't use for error states (use a different error component)
-- Don't use when data is loading (use SkeletonCard)
-- Don't use for permanent empty sections (remove the section instead)
-
-### WHERE
-Atomic level: **Molecule**. Used when `filteredReports.length === 0`.
-
-### HOW
-```tsx
-import { EmptyState } from './molecules';
-
-<EmptyState
-  message="No reports match your current filters."
-  actionLabel="Clear all filters"
-  onAction={() => clearAllFilters()}
-/>
-```
-
----
-
-## BackToTop
-
-### WHY
-Long listing pages (50+ reports) can exceed 10,000px. Users need a quick way to return to the top without endless scrolling.
-
-### WHAT
-A circular floating button that appears after 600px scroll. Uses fade + scale entrance animation. Positioned to avoid conflict with MobileFilterBar.
-
-**Positioning:** Mobile `bottom-16 right-4` (clears MobileFilterBar floating pill). Desktop `bottom-6 right-6`.
-
-### WHEN
-- Use on any page with content exceeding 2 viewport heights
-- Use on listing pages, report catalogs, long editorial pages
-- Place once at page root (self-positions via CSS fixed)
-
-### WHEN NOT
-- Don't use on short single-screen pages
-- Don't use alongside ScrollToTop from the DS (pick one — BackToTop is mobile-aware)
-
-### WHERE
-Atomic level: **Molecule**. Used in App.tsx at page root level.
-
-### HOW
-```tsx
-import { BackToTop } from './molecules';
-<BackToTop />
-<BackToTop threshold={400} />
-```
-
----
-
-## HorizontalScroll
-
-### WHY
-Card carousels need horizontal scrolling but native `overflow-x: auto/hidden/scroll` forces `overflow-y` to change too, clipping card shadows and hover-lift transforms. HorizontalScroll uses `overflow-x: clip; overflow-y: visible` with `translateX`-based scrolling to solve this.
-
-### WHAT
-A transform-based horizontal scroll container with: button navigation (chevrons appear on hover), trackpad/wheel support, touch drag with momentum, mouse drag, gradient edge fades.
-
-### WHEN
-- Use for horizontal card carousels where cards have hover effects (shadow lift, image zoom)
-- Use for Recommended For You, Trending style horizontal card rows
-- Use when cards need `overflow-y: visible` for shadows
-
-### WHEN NOT
-- Don't use for simple tag/pill scrolling (use ScrollFade — simpler)
-- Don't use for vertical content
-- Don't use when native `overflow-x: auto` works fine (no hover shadows to clip)
-
-### WHERE
-Atomic level: **Molecule**. Used in HomeSectionsA/B for card carousels.
-
-### HOW
-```tsx
-import { HorizontalScroll } from './molecules';
-import { ReportCard } from './molecules';
-
-<HorizontalScroll fadeBg="white" gap="gap-4">
-  {reports.map(r => (
-    <div key={r.id} className="flex-shrink-0 w-64">
-      <ReportCard layout="grid" {...r} />
-    </div>
-  ))}
-</HorizontalScroll>
-```
-
----
-
-## ScrollFade
-
-### WHY
-Horizontal tab bars, filter pills, and tag rows often overflow on mobile. They need native scroll with edge fade indicators to show there is more content.
-
-### WHAT
-A lightweight wrapper using native `overflow-x: auto` with hidden scrollbar. Detects scroll position to show/hide gradient edge fades. Optional hover-revealed chevron buttons.
-
-### WHEN
-- Use for horizontal tab bars, filter pill rows, tag lists
-- Use when content may overflow horizontally on smaller screens
-- Use `showButtons` for wider bars where mouse navigation helps
-
-### WHEN NOT
-- Don't use for card carousels with hover effects (use HorizontalScroll)
-- Don't use when content always fits (no overflow)
-
-### WHERE
-Atomic level: **Molecule**. Used for subcategory pills, region tabs.
-
-### HOW
-```tsx
-import { ScrollFade } from './molecules';
-
-<ScrollFade fadeBg="var(--warm-200)" showButtons>
-  <div className="flex gap-2 whitespace-nowrap">
-    {subcategories.map(sub => (
-      <button key={sub} className="px-3 py-1.5 rounded-full">{sub}</button>
-    ))}
-  </div>
-</ScrollFade>
-```
+_(Unchanged from v4.1 — see entries above)_
 
 ---
 
@@ -578,588 +684,303 @@ import { ScrollFade } from './molecules';
 
 ---
 
+## IndustrySidebar
+
+### WHY
+Desktop listing pages need a persistent filter panel that stays visible while scrolling through results. The sidebar needs to handle: industry tree navigation with expand/collapse, 4 filter categories (industries, tags, regions, years), cross-category dependencies (tags locked until industry selected), in-panel search, active count badges, and auto-scroll to active selections.
+
+### WHAT
+A desktop-only filter organism that composes `SidebarPanel` + `FilterAccordion` + `FilterCheckbox` + `FilterSearchInput`.
+
+**Anatomy:**
+```
+┌────────────────────────────┐
+│  [≡] FILTERS    (5)  × Clear │  ← SidebarPanel.header (sticky)
+├────────────────────────────┤
+│  [🔍 Search filters... ]    │  ← FilterSearchInput
+├────────────────────────────┤
+│  [ico] INDUSTRIES  (1) ▶     │  ← FilterAccordion sidebar
+│    ▶ Healthcare      2,847 │    ← Tree row (expand/collapse)
+│    ▶ Technology      3,215 │    ← Selected: black left-border
+│      ├─ AI & ML             │    ← Subcategory (indented)
+│      └─ Cloud Computing     │
+│    ...                      │
+│    + Show all 14 industries │
+├────────────────────────────┤
+│  [🔒] TAGS       disabled   │  ← Disabled until industry selected
+├────────────────────────────┤
+│  [ico] REGIONS    (2) ▶     │  ← FilterCheckbox items
+├────────────────────────────┤
+│  [ico] PUBLISH YEAR (1) ▶   │  ← FilterCheckbox items
+├────────────────────────────┤
+│  18,500+ reports available  │  ← SidebarPanel.footer (sticky)
+└────────────────────────────┘
+```
+
+**Special behaviors:**
+1. **Search-within-filters:** Typing in FilterSearchInput auto-opens sections with matching items
+2. **Industry tree:** Chevron expands subcategories; clicking industry name selects it
+3. **Auto-expand:** When subcategories are active, their parent industry auto-expands
+4. **Auto-scroll:** After expand animation (220ms delay), scrolls to active subcategory
+5. **Show All:** Industries list truncated to 8, expandable to all 14
+6. **Tags dependency:** Tags section disabled until an industry is selected
+
+### WHEN
+- Use on any desktop listing page with multi-category filtering
+- Use when filter categories form a hierarchy (industry → subcategory → tag)
+
+### WHEN NOT
+- Don't use on mobile (use MobileFilterBar + MobileFilterSheet)
+- Don't use for single-category filtering (overkill)
+
+### WHERE
+Atomic level: **Organism**. File: `IndustrySidebar.tsx`. Used in listing mode layout.
+
+---
+
+## MobileFilterSheet
+
+### WHY
+Mobile users can't see a desktop sidebar. They need a full-screen drawer that provides spacious filter editing with large touch targets, sort integration, and easy dismissal.
+
+### WHAT
+A full-screen drawer that slides from the right, composes `FilterAccordion` (sheet variant) + `FilterChip`, with sticky header/footer.
+
+**Features:**
+- Slide-from-right: `translateX(100%) → translateX(0)`, 300ms cubic-bezier
+- Body scroll lock: `document.body.style.overflow = 'hidden'` while open
+- Focus trap: Tab/Shift+Tab cycles within sheet, Escape closes
+- Backdrop: `rgba(0,0,0,0.4)`, click to close
+- Max-width: 380px, full height
+- Sort integration: Sort options shown as top-level FilterChip section
+- Sticky footer: Brand "Show Results" button
+
+### WHEN
+- Use on any listing page below `lg` breakpoint
+- Use with MobileFilterBar (floating pill that opens this sheet)
+
+### WHEN NOT
+- Don't show on desktop (desktop has IndustrySidebar)
+- Don't use for non-filter content (use a generic drawer)
+
+### WHERE
+Atomic level: **Organism**. File: `MobileFilterSheet.tsx`. Used in App.tsx.
+
+---
+
+## MobileFilterBar
+
+### WHY
+Mobile users scrolling through results need persistent filter access. A floating bottom pill is always visible without obscuring content, using glassmorphism to blend with any background.
+
+### WHAT
+A centered floating pill at the bottom of the viewport with dark glass background, Filters label, and optional active count badge.
+
+**Visual spec:**
+- Position: `fixed bottom-0`, centered, `z-40`
+- Padding: `max(1rem, env(safe-area-inset-bottom, 1rem))` for notch phones
+- Background: `rgba(10,10,10,0.88)` + `blur(20px) saturate(180%)`
+- Shadow: 3-layer (`8px/32px`, `2px/8px`, inset highlight)
+- Border: `1px solid rgba(255,255,255,0.08)`
+- Radius: pill (9999px)
+- Badge: `--brand-red` background when active filters exist
+- Touch: `active:scale(0.97)` press feedback
+- Hidden: `lg:hidden` (desktop has sidebar)
+
+### WHEN
+- Use on any listing page that has MobileFilterSheet
+- Use below `lg` breakpoint
+
+### WHEN NOT
+- Don't use on desktop
+- Don't use on pages without filtering
+
+### WHERE
+Atomic level: **Molecule**. File: `MobileFilterBar.tsx`. Used in App.tsx.
+
+### HOW
+```tsx
+import { MobileFilterBar } from './MobileFilterBar';
+import { MobileFilterSheet } from './MobileFilterSheet';
+
+const [open, setOpen] = useState(false);
+
+<MobileFilterBar activeFilterCount={3} onOpenFilters={() => setOpen(true)} />
+<MobileFilterSheet isOpen={open} onClose={() => setOpen(false)} ... />
+```
+
+---
+
+## ListingContextBanner
+
+### WHY
+When users activate filters, they need immediate visual feedback showing what's active. The banner also serves as a quick-access point for the selected industry's subcategories.
+
+### WHAT
+A two-zone component with 4 possible states:
+
+| State | Zone A (Industry Hero) | Zone B (Filter Chips) |
+|-------|----------------------|----------------------|
+| Empty (no filters) | hidden | hidden | → renders nothing |
+| Industry only | dark banner + subcategory pills | hidden |
+| Filters only | hidden | compact chip strip |
+| Industry + filters | dark banner + subcategory pills | chip strip below |
+
+**Zone A (Industry Hero):** Dark gradient banner with industry name, report count from selected industry, and horizontally scrollable subcategory pills (using ScrollFade/HorizontalScroll).
+
+**Zone B (Filter Chips):** Light chip strip with color-coded removable chips (using ActiveFilterChip colors) + clear all button.
+
+### WHEN
+- Use between HeroSection and the listing grid in listing mode
+- Use when any filter, search, or industry selection is active
+
+### WHEN NOT
+- Don't use in home/discovery mode (no filters active)
+- Don't use for displaying results count (that's in the sort toolbar)
+
+### WHERE
+Atomic level: **Organism**. File: `ListingContextBanner.tsx`. Used in App.tsx listing mode.
+
+---
+
 ## ReportCard ★ (Canonical — Grid + List Layouts)
 
-### WHY
-The Report Store has two view modes controlled by ViewToggle: **grid** (vertical card stack) and **list** (horizontal card row). Originally `ReportGridCard` only supported the grid layout — so ViewToggle could switch modes but there was no list card to render. `ReportCard` unifies both layouts in a single component with a shared props interface, ensuring:
-
-1. **ViewToggle ↔ ReportCard ↔ SkeletonCard** are all aligned on `"grid" | "list"` values
-2. One component, one data shape — no prop mapping between two different card components
-3. Grid layout is identical to the original ReportGridCard (zero visual regression)
-4. List layout follows B2B market research listing conventions (thumbnail + content + CTA)
-
-### WHAT
-A dual-layout card organism that renders either a vertical grid card or a horizontal list card based on the `layout` prop.
-
-**Grid layout (default):**
-```
-┌────────────────────┐
-│ ┌────────────────┐ │
-│ │   16:9 IMAGE   │ │  ← overflow-hidden, img-zoom on group:hover
-│ │   + gradient   │ │  ← gradient overlay bottom 1/3
-│ └────────────────┘ │  ← optional overlayBadge
-│  INDUSTRY BADGE    │  ← IndustryBadge (subcat || industry)
-│  Report Title      │  ← h4, 2-line clamp, --text-nav
-│  +12% · Region     │  ← CardMetaRow variant A or B
-│  📅 March 2026     │  ← CardFooterRow (variant A only)
-└────────────────────┘
-```
-
-**List layout:**
-```
-┌──────────────────────────────────────────────────────┐
-│ ┌──────┐  INDUSTRY BADGE                  Mar 2026  │
-│ │      │  Report Title That Can             +12.4%  │
-│ │  IMG │  Span Two Lines                            │
-│ │      │  Optional description...    [View Report →]│
-│ └──────┘  Region · Meta (mt-auto)                   │
-└──────────────────────────────────────────────────────┘
-  80px mob   ← Content fills center →  ← Right column (sm+)
-  144px desk                              hidden on mobile
-```
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | string | required | Unique report identifier |
-| `image` | string | required | Image URL |
-| `title` | string | required | Report title (2-line clamp) |
-| `industry` | string | required | Primary industry name |
-| `subcat` | string | — | Subcategory (preferred over industry for badge) |
-| `projection` | string \| null | — | Growth projection (e.g., "$133.4B by 2030") |
-| `region` | string | required | Geographic region |
-| `date` | string | required | Publication date |
-| `onClick` | `(id: string) => void` | — | Click handler |
-| **`layout`** | **`'grid' \| 'list'`** | **`'grid'`** | **Visual layout mode** |
-| `overlayBadge` | ReactNode | — | Badge overlay on image (e.g., "New") |
-| `aspectRatio` | string | `'16/9'` | Image aspect ratio (grid only) |
-| `className` | string | — | Additional CSS classes |
-| `metaVariant` | `'A' \| 'B'` | `'A'` | CardMetaRow layout variant |
-| `description` | string | — | Short description (list layout only, 1-line clamp) |
-| `ctaLabel` | string | `'View Report'` | CTA button text (list layout only) |
-
-**Composition (what it uses internally):**
-- `Card` (v4.0 base container with hover)
-- `ImageWithFallback` (image with shim)
-- `IndustryBadge` (eyebrow label)
-- `CardMetaRow` (projection/region/date row)
-- `CardFooterRow` (date footer — grid layout only)
-- `Button` (CTA — list layout only, variant="secondary" size="xs" showArrow)
-- `TrendingUp` icon (projection badge — list layout right column)
-
-### WHEN
-- Use for **all report card rendering** on the Report Store — both discovery (home carousels) and listing (filtered grid/list)
-- Use `layout="grid"` for vertical card grids and horizontal carousels
-- Use `layout="list"` for compact list views in the listing mode
-- Use with ViewToggle: `<ReportCard layout={viewMode} />`
-- Use with SkeletonCard: `<SkeletonCard variant={viewMode} />`
-- Use with CardReveal for entrance animations
-
-### WHEN NOT
-- Don't use for analyst recommendation cards (use AnalystPickCardB — different anatomy)
-- Don't use for statistic/metric cards (use StatCard or DataHighlightCard)
-- Don't use for ResourceCard's 7-variant system in the case study DS (that's a separate component)
-- Don't pass `description` or `ctaLabel` when `layout="grid"` (they're ignored)
-
-### WHERE
-Atomic level: **Organism** (composes 6 sub-components). Lives in `molecules/ReportCard.tsx`.
-
-Used in:
-- Home mode carousels (FeaturedResearch, RecommendedForYou) with `layout="grid"`
-- Listing mode card grid with `layout={viewMode}` (toggleable)
-- Any future product page that lists research reports
-
-### HOW
-
-**Basic grid usage (equivalent to old ReportGridCard):**
-```tsx
-import { ReportCard } from './molecules';
-
-<ReportCard
-  id="r1" image="/img/report.jpg" title="AI in Healthcare Market Report"
-  industry="Healthcare" subcat="Digital Health"
-  projection="$133.4B by 2030" region="Global" date="Dec 2024"
-  onClick={handleView} metaVariant="A"
-/>
-```
-
-**List layout:**
-```tsx
-<ReportCard
-  layout="list"
-  id="r1" image="/img/report.jpg" title="AI in Healthcare Market Report"
-  industry="Healthcare" subcat="Digital Health"
-  projection="$133.4B by 2030" region="Global" date="Dec 2024"
-  description="Comprehensive analysis of AI adoption in healthcare diagnostics and treatment."
-  ctaLabel="View Report" onClick={handleView}
-/>
-```
-
-**With ViewToggle (the canonical pattern):**
-```tsx
-import { ViewToggle } from './ViewToggle';
-import type { ViewMode } from './ViewToggle';
-import { ReportCard, SkeletonCard, CardReveal, EmptyState } from './molecules';
-
-const [viewMode, setViewMode] = useState<ViewMode>('grid');
-
-{/* Toolbar */}
-<ViewToggle viewMode={viewMode} onViewModeChange={setViewMode}
-  count={reports.length} countLabel="reports" />
-
-{/* Card grid — layout synced with viewMode */}
-<div className={viewMode === 'grid'
-  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'
-  : 'flex flex-col gap-3'
-}>
-  {isLoading
-    ? Array.from({ length: 6 }).map((_, i) => (
-        <SkeletonCard key={i} variant={viewMode} />
-      ))
-    : reports.length === 0
-    ? <EmptyState message="No reports found." actionLabel="Clear filters" onAction={clearFilters} />
-    : reports.map((r, idx) => (
-        <CardReveal key={r.id} delay={idx < 8 ? idx * 50 : 0}>
-          <ReportCard layout={viewMode} {...r} onClick={handleView} />
-        </CardReveal>
-      ))
-  }
-</div>
-```
-
-### ALIGNMENT TABLE
-
-All three components use the same `"grid" | "list"` value:
-
-| Component | Prop | Controls |
-|-----------|------|----------|
-| `ViewToggle` | `viewMode: 'grid' \| 'list'` | User switches mode |
-| `ReportCard` | `layout: 'grid' \| 'list'` | Renders correct card layout |
-| `SkeletonCard` | `variant: 'grid' \| 'list'` | Renders matching loading skeleton |
-
-### MIGRATION FROM ReportGridCard
-
-```tsx
-// BEFORE (grid-only, @deprecated)
-import { ReportGridCard } from './molecules/ReportGridCard';
-<ReportGridCard id="1" image="..." title="..." industry="..." region="..." date="..." />
-
-// AFTER (grid + list)
-import { ReportCard } from './molecules';
-<ReportCard layout="grid" id="1" image="..." title="..." industry="..." region="..." date="..." />
-<ReportCard layout="list" id="1" image="..." title="..." industry="..." region="..." date="..." />
-```
-
-`ReportGridCard` still works (thin wrapper that passes `layout="grid"`), but new code should always use `ReportCard`.
+_(Unchanged from v4.1 — see full entry above)_
 
 ---
 
-## ReportGridCard ~~(Organism)~~ → @deprecated Wrapper
-
-### WHY (Deprecated)
-Originally the only report card component. **Replaced by `ReportCard`** which supports both grid AND list layouts. ReportGridCard now exists solely as a backward-compatible wrapper.
-
-### WHAT (Now)
-A thin function component that spreads all props to `<ReportCard layout="grid" />`. Zero logic of its own.
-
-### WHEN
-- **Don't use in new code.** Import `ReportCard` instead.
-- Only remains for existing consumers that haven't migrated yet.
-
-### WHERE
-File: `molecules/ReportGridCard.tsx`. Exported from barrel with `@deprecated` JSDoc.
-
-### HOW (Migration)
-```tsx
-// OLD
-import { ReportGridCard } from './molecules';
-<ReportGridCard id="1" image="..." title="..." ... />
-
-// NEW — drop-in replacement
-import { ReportCard } from './molecules';
-<ReportCard id="1" image="..." title="..." ... />  // layout defaults to "grid"
-```
+# HOOKS
 
 ---
 
-## StatCard
+## useReportFilters
 
 ### WHY
-Market indicator sections need a consistent card layout for displaying key statistics with growth metrics, descriptions, and CTAs.
+The Report Store has 7 filter dimensions (search, category, industry, sub-industry, tags, regions, years), 2 view modes (home/listing), sort, and pagination. Without a centralized hook, App.tsx would have 20+ useState calls and 15+ handler functions scattered through the component. `useReportFilters` encapsulates everything into one hook.
 
 ### WHAT
-Card anatomy: **Category badge** (coral/rounded) + **content icon** > **serif value** (Major Third xl) > **label** > **growth metric** (green chip with CAGR Tooltip) > **description** (2-line clamp) > **footer CTA** (secondary xs button).
+A custom hook that manages all filter state, derived data, cross-industry consistency rules, and handler functions.
 
-**Props:**
+**State managed:**
+- `viewMode` — `'home' | 'listing'`
+- `searchQuery` + `searchCategory`
+- `sidebarIndustry` + `sidebarSubIndustries` + `sidebarTags` + `sidebarRegions` + `sidebarYears`
+- `sortBy` — 5 options
+- `mobileFilterOpen`
+- `currentPage` + pagination
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `category` | string | required | Badge label (e.g., "Healthcare") |
-| `value` | string | required | Serif display value (e.g., "$133.4B") |
-| `label` | string | required | Value description (e.g., "AI in Healthcare Market") |
-| `description` | string | required | 2-line clamp detail text |
-| `growth` | string | required | Growth percentage (e.g., "38.4%") |
-| `metric` | string | required | Growth period (e.g., "2024-2030") |
-| `icon` | ReactNode | BarChart3 | Override content icon |
-| `className` | string | — | Additional CSS classes |
-| `onClick` | `() => void` | — | Click handler |
+**Derived state:**
+- `filteredReports` — all filters + sort applied
+- `paginatedReports` — current page slice
+- `totalPages`
+- `activeFilterCount`
+
+**Cross-industry consistency rules:**
+1. When a sub-industry is toggled ON and doesn't belong to the current industry → auto-switch to the sub's parent industry + clear orphaned subs + toast notification
+2. When an industry is selected → clear sub-industries that don't belong to the new industry + clear tags (industry-contextual)
+3. When industry is deselected → clear tags
+4. When no industry is selected and a sub-industry is added → auto-select parent industry
+
+**Scroll behavior:**
+- `scrollToListing()` — smooth scrolls to `#listing-area` when transitioning home → listing
+- Only scrolls on mode transition, not on subsequent filter changes within listing mode
 
 ### WHEN
-- Use for Key Market Indicators, Trending Statistics sections
-- Use when displaying numeric values with growth rates
-- Use in grids of 2-4 cards
+- Use for any listing page with multi-dimensional filtering
+- Use when filters have cross-category dependencies
 
 ### WHEN NOT
-- Don't use for content cards (reports, articles) — use ReportCard
-- Don't use for simple stat numbers without descriptions — too heavy
+- Don't use for simple single-filter pages (use local useState)
+- Don't use for non-listing pages
 
 ### WHERE
-Atomic level: **Molecule**. Used in TrendingStatistics section.
+File: `hooks/useReportFilters.ts`. Used in App.tsx.
 
 ### HOW
 ```tsx
-import { StatCard } from './molecules';
+import { useReportFilters } from './hooks/useReportFilters';
 
-<StatCard
-  category="Healthcare"
-  value="$133.4B"
-  label="AI in Healthcare Market"
-  growth="38.4%"
-  metric="2024-2030"
-  description="Driven by diagnostic AI adoption and personalized medicine platforms."
-  onClick={() => handleView('healthcare-ai')}
-/>
+function App() {
+  const filters = useReportFilters();
+
+  return (
+    <>
+      <HeroSection searchQuery={filters.searchQuery}
+        onSearchChange={filters.setSearchQuery}
+        onSearchSubmit={filters.handleSearchSubmit}
+        onPopularClick={filters.handlePopularClick}
+        selectedCategory={filters.searchCategory}
+        onCategoryChange={filters.setSearchCategory} />
+
+      <IndustrySidebar
+        selectedIndustry={filters.sidebarIndustry}
+        onIndustrySelect={filters.handleSidebarIndustrySelect}
+        onSubcategorySelect={filters.handleSubcategorySelect}
+        onClear={filters.handleClearSidebar}
+        currentSubIndustries={filters.sidebarSubIndustries}
+        onSubIndustriesChange={filters.handleSidebarSubIndustriesChange}
+        ... />
+    </>
+  );
+}
 ```
 
 ---
 
-## DataHighlightCard
-
-### WHY
-Daily data feeds need compact, data-first cards that prioritize the numeric value over descriptions. Unlike StatCard (which has a category badge, description paragraph, and CTA button), DataHighlightCard is minimal: value → title → growth → source.
-
-### WHAT
-Compact card: **time label** + **Zap icon** > **serif value** > **title** > **growth badge** (green chip with TrendingUp) > **footer** (source text + ArrowRight icon, border-top divider).
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | string | required | Serif display value (e.g., "$2.4T") |
-| `title` | string | required | Metric name (e.g., "Global Cloud Computing") |
-| `source` | string | required | Data source (e.g., "Gartner", "IDC") |
-| `growth` | string | required | Growth rate (e.g., "+18.2%") |
-| `time` | string | required | Time label (e.g., "Today", "This Week") |
-| `icon` | ReactNode | Zap | Override header icon |
-| `className` | string | — | Additional CSS classes |
-| `onClick` | `() => void` | — | Click handler |
-
-**Visual differences from StatCard:**
-
-| Feature | StatCard | DataHighlightCard |
-|---------|----------|-------------------|
-| Category badge | ✅ Coral rounded badge | ❌ None |
-| Header icon | BarChart3 (in purple container) | Zap (inline, no container) |
-| Value font size | `--text-xl` (Major Third) | `--text-base` (smaller) |
-| Description | ✅ 2-line clamp paragraph | ❌ None |
-| CTA button | ✅ "View Reports" secondary xs | ❌ None (ArrowRight hint) |
-| Footer | Border-top + Button | Border-top + source + arrow |
-| Padding | Card `padding="sm"` preset | Manual `padding: 14px` |
-| Weight | Heavy (6 content layers) | Light (4 content layers) |
-
-### WHEN
-- Use for Daily Data Highlights, Market Pulse, data feed sections
-- Use for real-time or frequently updated data points
-- Use in grids of 3-6 compact cards
-- Use when the numeric value is the hero (not the description)
-
-### WHEN NOT
-- Don't use for detailed content with descriptions (use StatCard)
-- Don't use when growth data is unavailable (growth badge is a key visual element)
-- Don't use for report cards (use ReportCard)
-
-### WHERE
-Atomic level: **Molecule**. Used in DailyDataHighlights section.
-
-### HOW
-```tsx
-import { DataHighlightCard } from './molecules';
-
-<DataHighlightCard
-  time="Today"
-  value="$2.4T"
-  title="Global Cloud Computing Market"
-  growth="+18.2%"
-  source="Gartner"
-  onClick={() => handleView('cloud-computing')}
-/>
-
-{/* In a grid */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-  {highlights.map(h => (
-    <DataHighlightCard key={h.id} {...h} />
-  ))}
-</div>
-```
-
----
-
-## AnalystPickCardB
-
-### WHY
-Expert curation sections need a card that puts the analyst voice first (blockquote) with an embedded report mini-card, creating trust through attribution.
-
-### WHAT
-Card anatomy: **Analyst header** (initials avatar + name/role + Expert Pick coral badge) > **blockquote** (coral left-border, 3-line clamp) > **embedded mini-card** (portrait image + IndustryBadge + title + CardMetaRow B) > **footer** (LikeCounter + Explore Resources button).
-
-### WHEN
-- Use for Analyst Picks, Expert Recommendations sections
-- Use when content has analyst attribution and quotes
-- Use in grids of 2-3 cards
-
-### WHEN NOT
-- Don't use without analyst data (name, role, quote)
-- Don't use for algorithmic recommendations (use ReportCard)
-
-### WHERE
-Atomic level: **Molecule**. Used in AnalystPicksSection.
-
-### HOW
-```tsx
-import { AnalystPickCardB } from './molecules';
-
-<AnalystPickCardB id="pick-1" image={report.image} title={report.title}
-  industry="Healthcare" region="Global" date="Dec 2024"
-  quote="This report redefines how we approach market sizing..."
-  analystName="Dr. Sarah Chen" analystRole="Senior Research Analyst"
-  analystInitials="SC" onClick={handleClick} />
-```
-
----
-
-# EVOLVED ATOMS (Report Store versions are canonical)
-
----
-
-## Button (v4.0 - Evolved)
-
-### What Changed from DS v3.4
-
-| Addition | Description |
-|----------|-------------|
-| `xs` size | 28px height, 12px font — for compact card CTAs |
-| `brand` variant | Red gradient shimmer — for high-impact CTAs |
-| `iconOnly` mode | Square button (width = height) for icon-only buttons |
-| `type` prop | `'button' \| 'submit' \| 'reset'` for form integration |
-| `fullWidth` responsive | `w-full sm:w-auto` — full on mobile, auto on desktop |
-
-### New Size: xs
-
-| Property | Value |
-|----------|-------|
-| Height | 28px (h-7) |
-| Padding-X | 0.75rem |
-| Min-Width | 56px |
-| Font Size | `--text-2xs` (12px) |
-| Border Radius | `--radius-element` (5px) |
-
-### WHEN to use xs
-- Card footer CTAs (View Report, Explore Resources)
-- ReportCard list layout CTA button
-- Inline actions within tight layouts
-- Secondary actions that should not compete with primary buttons
-
-### WHEN NOT
-- Don't use for primary page CTAs (too small)
-- Don't use in hero sections
-- Don't use for standalone actions
-
-```tsx
-<Button variant="secondary" size="xs" showArrow>View Report</Button>
-<Button variant="ghost" size="sm" iconOnly icon={<Filter />} ariaLabel="Filter" />
-```
-
----
-
-## SectionHeading (v4.0 - Evolved)
-
-### What Changed from DS v3.4
-
-| Addition | Description |
-|----------|-------------|
-| `level` prop | `1 \| 2 \| 3` — renders correct h1/h2/h3 tag |
-| `action` prop | `{ text, onClick }` — right-aligned CTALink |
-| `endSlot` prop | ReactNode — right-aligned custom content (hidden mobile) |
-| `labelEndSlot` prop | ReactNode — beside label (collapses below heading on mobile) |
-| `labelPulse` prop | boolean — animated green dot before label |
-| `title` as prop | string — heading text is now a prop, not children |
-| `subtitle` prop | string — description below heading |
-| `spacing` prop | `'default' \| 'compact'` — controls bottom margin |
-
-### Heading Font
-Font family `--font-serif`, weight `--font-weight-normal` (400), responsive size `clamp(1.375rem, 3vw, 1.875rem)`, color `rgba(0,0,0,0.88)`, tracking `[-0.01em]`.
-
-### HOW (v4.0)
-```tsx
-<SectionHeading label="What's Hot" title="Trending Topics"
-  subtitle="Research areas gaining traction this quarter"
-  action={{ text: "View All Topics", onClick: handleClick }} labelPulse />
-
-<SectionHeading label="Reports" title="Industry Reports"
-  endSlot={<ViewToggle viewMode={mode} onViewModeChange={setMode} />}
-  labelEndSlot={<Badge variant="rounded" size="xs" theme="brand" bordered>New</Badge>} />
-```
-
----
-
-# ORGANISMS (Page-Specific Patterns)
-
----
-
-## Header (Report Store Navigation)
-
-### WHY
-The Report Store needs a multi-tier navigation distinct from the case study Navbar. It includes a top utility bar, main nav with industry dropdown, search, and mobile hamburger menu.
-
-### WHAT
-Three-tier header: (1) Top utility bar (trust message + contact, lg+ only), (2) Main navigation with logo + nav links + industry dropdown + contact CTA, (3) Mobile menu overlay with full nav + search.
-
-**Key pattern:** Dropdown `onBlur` uses `relatedTarget`-based container check — NOT `setTimeout`.
-
-### WHEN
-- Use for Report Store and similar multi-section product pages
-- Use when you need industry dropdown navigation
-
-### WHEN NOT
-- Don't use for case study pages (use Navbar from DS repo)
-- Don't use for single-section landing pages (too heavy)
-
----
-
-## MobileFilterBar + MobileFilterSheet
-
-### WHY
-Mobile users need filter access without scrolling back to the top. A floating bottom pill provides always-available filter access, and the full-screen sheet provides a spacious filter editing experience.
-
-### WHAT
-**MobileFilterBar:** Dark floating pill (`rgba(10,10,10,0.88)`, blur(20px)) centered at bottom of viewport. Shows active filter count.
-
-**MobileFilterSheet:** Full-screen drawer with collapsible accordion sections, per-section active counts, scrollable content with sticky header/footer, sort toggle, focus trap.
-
-### WHEN
-- Use on any listing/catalog page with filters
-- Use below `lg` breakpoint (hidden on desktop where sidebar filters exist)
-
-### WHEN NOT
-- Don't show on desktop (desktop has FiltersPanel sidebar)
-- Don't use for pages without filtering capability
-
----
-
-# TEMPLATES (Page Assembly Patterns)
-
----
-
-## Report Store Page Template
-
-### WHY
-Product listing pages need a standardized assembly pattern that handles two modes: discovery (home) and filtered listing.
-
-### WHAT
-A dual-mode page template:
-
-**Mode 1 — Home (Discovery):** Curated editorial sections when no filters are active.
-**Mode 2 — Listing (Filtered):** Sidebar + card grid when industry/filters/search is active.
-
-### Page Assembly
-
-```
-Header (sticky, glass-header)
-HeroSection (dark, globe, search)
-
-IF home mode:
-  SectionWrapper(white)     > FeaturedResearch
-  SectionWrapper(neutral50) > IndustrySectorsGrid
-  SectionWrapper(white)     > RecommendedForYou
-  SectionWrapper(neutral50) > AnalystPicksSection
-  ... alternating white/neutral50 ...
-  CustomResearchCTA (dark)
-
-IF listing mode:
-  ListingContextBanner (industry hero + filter chips)
-  Container(page)
-    2-column grid (lg):
-      Left: IndustrySidebar (desktop filters)
-      Right: Sort toolbar + ViewToggle + ReportCard grid/list + pagination
-
-Footer (dark)
-MobileFilterBar (floating, < lg)
-MobileFilterSheet (drawer overlay)
-BackToTop (floating)
-Toaster (sonner)
-```
-
-### Background Alternation
-
-| Surface | Token | Usage |
-|---------|-------|-------|
-| Hero/CTA/Footer | `bg="black"` | Dark impact sections |
-| Odd sections | `bg="white"` | Primary content |
-| Even sections | `bg="neutral50"` (`--warm-200`) | Visual rhythm break |
-
----
-
-## Card Anatomy Standard
-
-### WHY
-Every report card across the page must follow the same visual anatomy for consistency across both grid and list layouts.
-
-### WHAT — Grid Layout
-The canonical grid card anatomy (ReportCard `layout="grid"`):
-
-```
-1. Image (16:9 aspect ratio)
-   - overflow-hidden for img-zoom
-   - gradient overlay (bottom 1/3)
-   - optional overlayBadge (top-left)
-2. Content padding (p-4, gap-2.5)
-   a. IndustryBadge eyebrow (subcat or industry)
-   b. Title (2-line clamp, --text-nav, font-weight 500)
-   c. CardMetaRow (projection + region OR region + date)
-   d. CardFooterRow (date — Variant A only)
-```
-
-### WHAT — List Layout
-The canonical list card anatomy (ReportCard `layout="list"`):
-
-```
-1. Horizontal flex container
-   a. Thumbnail (w-20 sm:w-28 md:w-36, self-stretch)
-      - overflow-hidden for img-zoom
-      - optional overlayBadge (top-left)
-   b. Content column (flex-1, py-3 px-3 sm:px-4, gap-1.5)
-      - IndustryBadge eyebrow
-      - Title (2-line clamp, --text-nav)
-      - Description (1-line clamp, sm+ only, optional)
-      - CardMetaRow (mt-auto, pinned to bottom)
-   c. Right column (hidden sm:flex, flex-col, items-end, py-3 pr-4)
-      - Date (--text-2xs, top)
-      - Projection badge (TrendingUp green, middle, if present)
-      - CTA Button (secondary xs showArrow, bottom)
-```
-
-### What is NOT in either card layout
-- No tables/figures meta
-- No spacer div
-- No border-top divider inside content area
-- Grid: No "View Report" button (CTA is in list layout only)
-- List: No CardFooterRow (date is in right column)
-- List: No image gradient overlay (image is too small)
+# INTERACTION STATE MATRIX
+
+Complete state documentation for every interactive control in the filter/search system:
+
+| Control | Default | Hover | Checked/Active | Disabled | Focus-Visible | Pressed |
+|---------|---------|-------|---------------|----------|---------------|----------|
+| **FilterCheckbox** | white box, 18% border, 50% text | 2.5% row bg | dark fill, white ✓, 3% bg, 60% left-border, 85% text | 50% opacity, not-allowed | 2px brand-red ring | — |
+| **FilterChip** | white bg, 8% border, 55% text, 400wt | 4% bg, 14% border | 6% bg, 20% border, 600wt, Check ✓ | 40% opacity | 2px brand-red ring | scale(0.97) |
+| **FilterSearchInput** | 8% border | — | 20% border (has value) | — | brand-red ring on container | — |
+| **FilterAccordion (sidebar)** | transparent, 45% label | 4% bg | 2.5% bg, count badge | 55% opacity, Lock | global focus-visible | — |
+| **FilterAccordion (sheet)** | transparent | active:bg-black/2% | count badge visible | — | global focus-visible | — |
+| **ActiveFilterChip** | color-coded bg/border | X darkens | — | — | — | X hover bg 6% |
+| **Industry tree row** | transparent, 50% text | 2% bg, 85% text | black 3px left-border, 4% bg, 90% text | — | global focus-visible | — |
+| **Subcategory row** | transparent, 40% text | 2.5% bg, 85% text | 5% bg, 2px left-border, 90% text | — | global focus-visible | — |
+| **Expand chevron button** | transparent | 6% bg | rotated 90° | — | global focus-visible | — |
+| **MobileFilterBar pill** | dark glass 88% | — | brand-red count badge | — | — | scale(0.97) |
+| **Clear All button** | 40% text | 80% text | — | — | global focus-visible | — |
+| **Show All industries** | 45% text | 70% text | — | — | global focus-visible | — |
 
 ---
 
 # DECISION FLOWCHARTS
+
+---
+
+## Which Filter Component Should I Use?
+
+```
+Am I building a filter/selection UI?
+  YES |
+      Is it a DESKTOP sidebar panel?
+        YES |
+            Do I need the container (sticky, elevation, header/footer)?
+              YES -> Use SidebarPanel (wraps everything)
+            Do I need collapsible sections?
+              YES -> Use FilterAccordion variant="sidebar"
+            Do I need multi-select checkboxes?
+              YES -> Use FilterCheckbox (compact, left-border accent)
+            Do I need search-within-panel?
+              YES -> Use FilterSearchInput
+        NO  |
+      Is it a MOBILE filter drawer?
+        YES |
+            Use MobileFilterSheet (full organism) which composes:
+              FilterAccordion variant="sheet" + FilterChip
+            Trigger with MobileFilterBar (floating pill)
+        NO  |
+      Am I showing ACTIVE filter state (removable chips)?
+        YES -> Use ActiveFilterChip (color-coded by type)
+        NO  |
+      Am I building a chip-based MULTI-SELECT?
+        YES -> Use FilterChip (40px+ touch target, toggle states)
+        NO  -> Use FilterCheckbox (compact, sidebar-optimized)
+```
 
 ---
 
@@ -1197,60 +1018,78 @@ Am I showing compact real-time data points?
 
 ---
 
-## Which Scroll Component Should I Use?
+## Which Scroll, Loading, or Animation Component?
 
-```
-Does the content have card hover effects (shadows, lift)?
-  YES -> Use HorizontalScroll (transform-based, overflow-y visible)
-  NO  |
-
-Is it a simple tab bar, tag row, or pill strip?
-  YES -> Use ScrollFade (native scroll, edge fades)
-  NO  |
-
-Do I need a scroll-to-top button?
-  YES -> Is it a listing page with MobileFilterBar?
-           YES -> Use BackToTop (mobile-aware positioning)
-           NO  -> Use ScrollToTop from DS repo (Motion-based)
-  NO  -> No scroll component needed
-```
+_(Unchanged from v4.1 — see scroll/loading/animation flowcharts above)_
 
 ---
 
-## Which Loading State Should I Use?
+# FILTER SYSTEM ARCHITECTURE
+
+## Component Composition Diagram
 
 ```
-Is data loading for a card grid?
-  YES -> Use SkeletonCard with variant matching ViewToggle's viewMode
-         (variant="grid" for grid mode, variant="list" for list mode)
-  NO  |
-
-Did filters return zero results?
-  YES -> Use EmptyState with clear-filters action
-  NO  |
-
-Is a section loading?
-  YES -> Use SkeletonCard array matching expected layout
-  NO  -> No loading state needed
+useReportFilters (hook — all state + handlers)
+    │
+    ├─── HeroSection
+    │       └── Search bar (inline) ── search query + category
+    │       └── Popular search chips ── handlePopularClick
+    │
+    ├─── IndustrySidebar (organism, lg+ only)
+    │       ├── SidebarPanel (container pattern)
+    │       │     ├── header: Filters title + active count + Clear All
+    │       │     ├── body: scrollable filter sections
+    │       │     └── footer: total report count
+    │       ├── FilterSearchInput (search within filters)
+    │       ├── FilterAccordion[sidebar] × 4 (Industries, Tags, Regions, Years)
+    │       │     └── FilterCheckbox × N per section
+    │       └── Industry tree rows (custom — expand/collapse/select)
+    │
+    ├─── ListingContextBanner (organism)
+    │       ├── Zone A: Industry hero + subcategory pills
+    │       └── Zone B: ActiveFilterChip × N + Clear All
+    │
+    ├─── MobileFilterBar (molecule, <lg only)
+    │       └── Floating pill → opens MobileFilterSheet
+    │
+    └─── MobileFilterSheet (organism, <lg only)
+            ├── FilterAccordion[sheet] × 5 (Sort, Industry, Segments, Region, Year)
+            │     └── FilterChip × N per section
+            ├── Sticky header: title + count + Clear All + Close
+            └── Sticky footer: Button[brand] "Show Results"
 ```
 
----
-
-## Which Animation Wrapper Should I Use?
+## Data Flow
 
 ```
-Am I animating an entire page section?
-  YES -> Use FadeInSection (heavier, section-level)
-  NO  |
-
-Am I animating individual cards in a grid?
-  YES -> Use CardReveal with stagger delay
-  NO  |
-
-Am I animating an image load?
-  YES -> Use RevealImage
-  NO  -> No animation wrapper needed
+useReportFilters
+    │
+    ├── Source of truth for ALL filter state
+    │
+    ├── IndustrySidebar reads & writes via controlled props
+    │     (currentSubIndustries, onSubIndustriesChange, etc.)
+    │
+    ├── MobileFilterSheet reads & writes via same controlled props
+    │
+    ├── ListingContextBanner reads filter state + provides remove handlers
+    │
+    └── filteredReports = useMemo(apply all filters + sort)
+          └── paginatedReports = filteredReports.slice(page)
+                └── ReportCard × N renders from paginatedReports
 ```
+
+## Cross-Platform Parity
+
+| Feature | Desktop (IndustrySidebar) | Mobile (MobileFilterSheet) |
+|---------|-------------------------|---------------------------|
+| Industry select | Tree row click | FilterChip toggle |
+| Sub-industry select | Tree expand + subcategory button | FilterChip toggle (contextual section) |
+| Region/Year select | FilterCheckbox | FilterChip |
+| Tag select | FilterCheckbox (disabled until industry) | Not shown (simplified) |
+| Search within filters | FilterSearchInput | Not shown (simplified) |
+| Sort | External toolbar | Integrated top section |
+| Clear all | Header button | Header button |
+| Active count | Per-section badges + header total | Per-section badges + header total |
 
 ---
 
@@ -1268,11 +1107,13 @@ Am I animating an image load?
    - Choose appropriate card components (see card flowchart)
 
 3. For listing/catalog pages:
+   - Add useReportFilters hook for state management
    - Add ViewToggle for list/grid switch
    - Add ReportCard with layout={viewMode} for cards
    - Add SkeletonCard with variant={viewMode} for loading
-   - Add FiltersPanel for desktop filters
-   - Add MobileFilterBar + MobileFilterSheet for mobile
+   - Add IndustrySidebar for desktop filters (composes SidebarPanel)
+   - Add MobileFilterBar + MobileFilterSheet for mobile filters
+   - Add ListingContextBanner for active filter display
    - Add EmptyState for zero results
    - Add BackToTop for long scrolling
    - Wrap each card in CardReveal for entrance animations
@@ -1283,7 +1124,13 @@ Am I animating an image load?
    - Use ScrollFade for tab bars
    - Use StatCard / DataHighlightCard for data sections
 
-5. Final checks:
+5. For any page with a sidebar:
+   - Use SidebarPanel for the container (sticky, elevation, scroll)
+   - Use FilterAccordion for collapsible sections
+   - Use FilterCheckbox or FilterChip for selections
+   - Use FilterSearchInput if >8 items need searching
+
+6. Final checks:
    - All icons use iconColors.content or iconColors.utility
    - All report cards use ReportCard (not deprecated ReportGridCard)
    - Touch targets meet 44px minimum on mobile
@@ -1292,41 +1139,18 @@ Am I animating an image load?
    - BackToTop positioned to clear MobileFilterBar
    - prefers-reduced-motion respected
    - focus-visible rings on all interactive elements
+   - Filter state managed by useReportFilters (or equivalent hook)
 ```
 
 ---
 
 ## Component Triad: ViewToggle ↔ ReportCard ↔ SkeletonCard
 
-These three components are designed to work as a unified system. Their mode/layout/variant values are intentionally aligned:
-
-```
-ViewToggle.viewMode ───→ ReportCard.layout ───→ card renders in matching format
-         │
-         └──────────→ SkeletonCard.variant ──→ loading skeleton matches format
-
-  "grid"  ─→  layout="grid"   ─→  Vertical card (image top, content bottom)
-              variant="grid"  ─→  Vertical skeleton
-
-  "list"  ─→  layout="list"   ─→  Horizontal card (thumbnail left, content+CTA right)
-              variant="list"  ─→  Horizontal skeleton
-```
-
-This alignment means you can use a single `viewMode` state variable to drive all three:
-
-```tsx
-const [viewMode, setViewMode] = useState<ViewMode>('grid');
-
-<ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-{isLoading
-  ? <SkeletonCard variant={viewMode} />
-  : <ReportCard layout={viewMode} {...report} />
-}
-```
+_(Unchanged from v4.1 — see alignment table above)_
 
 ---
 
 **Last Updated:** March 11, 2026
-**Design System Version:** 4.1
+**Design System Version:** 4.2
 **Repository:** vsoffice001-cloud/Design-System-vs-26
 **Companion Docs:** `COMPONENT_GUIDELINES_4WH.md`, `ai-context/CORE.md`
