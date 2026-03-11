@@ -30,6 +30,31 @@ export { BADGE_TOKENS } from './Badge';
 export { Label } from './Label';
 export type { LabelVariant } from './Label';
 
+// 💡 ATOMS (v4.0 — Report Store)
+export { Tooltip } from './Tooltip';
+export { ViewToggle } from './ViewToggle';
+export type { ViewMode } from './ViewToggle';
+export { FadeInSection } from './FadeInSection';
+
+// 🧱 MOLECULES (v4.0 — Report Store)
+export {
+  IndustryBadge,
+  CardMetaRow,
+  CardFooterRow,
+  ReportGridCard,
+  HorizontalScroll,
+  ScrollFade,
+  AnalystPickCardB,
+  StatCard,
+  DataHighlightCard,
+  EmptyState,
+  BackToTop,
+  SkeletonCard,
+  CardReveal,
+  RevealImage,
+} from './molecules';
+export type { CardMetaVariant } from './molecules';
+
 // Demo/Testing Components
 export { LinkSystemDemo } from './LinkSystemDemo';
 export { ButtonDocumentation } from './ButtonDocumentation';
@@ -130,10 +155,11 @@ export { VariantSwitcher } from './VariantSwitcher';
 export { ReadingProgressBar } from './ReadingProgressBar';
 export { TableOfContents } from './TableOfContents';
 
-// 📐 LAYOUT & SECTION COMPONENTS (v3.3)
+// 📐 LAYOUT & SECTION COMPONENTS (v3.3, evolved v4.0)
 export { SectionHeading } from './SectionHeading';
 export { SectionWrapper } from './SectionWrapper';
 export { Card } from './Card';
+export type { CardVariant, CardPadding, CardShadow } from './Card';
 
 // ⬆️ SCROLL COMPONENTS (v3.3)
 export { ScrollToTop } from './ScrollToTop';
