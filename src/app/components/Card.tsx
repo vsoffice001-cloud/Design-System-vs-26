@@ -1,84 +1,132 @@
-import { ReactNode } from 'react';
-
 /**
- * Card Component
- * 
- * Generic content container with consistent border-radius, shadow,
- * padding, and optional hover lift. Used for any bounded content
- * block within a section.
- * 
- * Border Radius: always 10px (large tier — cards/containers)
- * Variants: white (default), warm (#f5f2f1), outlined (transparent)
- * Shadow: 3 levels (sm, md, lg) or none
- * 
- * @param children - Card content
- * @param variant - Background: 'white' | 'warm' | 'outlined'
- * @param padding - Internal spacing: 'sm' (16px) | 'md' (24px) | 'lg' (32px)
- * @param shadow - Elevation: 'none' | 'sm' | 'md' | 'lg'
- * @param hover - Enable lift animation on hover
- * @param className - Additional CSS classes
- * 
- * @example
- * ```tsx
- * <Card variant="white" padding="lg" shadow="sm" hover>
- *   <h3>Feature Title</h3>
- *   <p>Description text...</p>
- * </Card>
- * ```
+ * Card — Ken Bold DS v4.0
+ *
+ * Reusable content container that encodes the approved card pattern:
+ * white bg, subtle border, box-shadow, hover lift + shadow intensify.
+ *
+ * DS compliance:
+ * - Border radius: var(--rc-radius-card) = 10px
+ * - Shadow rest: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)
+ * - Shadow hover: 0 8px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)
+ * - Lift: translateY(-2px) on hover
+ * - Border: 1px solid rgba(0,0,0,0.06), darkens to 0.10 on hover
+ * - Transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1)
  */
+
+import { CSSProperties, ReactNode, useRef } from 'react';
+
+export type CardVariant = 'white' | 'warm' | 'outlined';
+export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
+export type CardShadow = 'none' | 'sm' | 'md' | 'lg';
 
 interface CardProps {
   children: ReactNode;
-  className?: string;
-  variant?: 'white' | 'warm' | 'outlined';
-  padding?: 'sm' | 'md' | 'lg';
+  variant?: CardVariant;
+  padding?: CardPadding;
+  shadow?: CardShadow;
   hover?: boolean;
-  shadow?: 'sm' | 'md' | 'lg' | 'none';
+  as?: 'div' | 'article' | 'section';
+  className?: string;
+  style?: CSSProperties;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
-export function Card({ 
-  children, 
-  className = '', 
+const SHADOW_MAP: Record<CardShadow, string> = {
+  none: 'none',
+  sm: '0 1px 2px rgba(0,0,0,0.03)',
+  md: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)',
+  lg: '0 4px 12px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.03)',
+};
+
+const SHADOW_HOVER_MAP: Record<CardShadow, string> = {
+  none: 'none',
+  sm: '0 4px 12px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.03)',
+  md: '0 8px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)',
+  lg: '0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.05)',
+};
+
+const PADDING_MAP: Record<CardPadding, string> = {
+  none: '',
+  sm: 'p-4',
+  md: 'p-5',
+  lg: 'p-6',
+};
+
+const BG_MAP: Record<CardVariant, CSSProperties> = {
+  white: { background: '#fff' },
+  warm: { background: 'var(--warm-200)' },
+  outlined: { background: 'transparent' },
+};
+
+const BORDER_MAP: Record<CardVariant, string> = {
+  white: '1px solid rgba(0,0,0,0.06)',
+  warm: '1px solid rgba(0,0,0,0.05)',
+  outlined: '1px solid rgba(0,0,0,0.10)',
+};
+
+const BORDER_HOVER_MAP: Record<CardVariant, string> = {
+  white: '1px solid rgba(0,0,0,0.10)',
+  warm: '1px solid rgba(0,0,0,0.08)',
+  outlined: '1px solid rgba(0,0,0,0.16)',
+};
+
+export function Card({
+  children,
   variant = 'white',
-  padding = 'md',
+  padding = 'none',
+  shadow = 'md',
   hover = false,
-  shadow = 'md'
+  as: Component = 'div',
+  className = '',
+  style = {},
+  onClick,
 }: CardProps) {
-  const variantClasses = {
-    white: 'bg-white border border-[#e5e5e5]',
-    warm: 'bg-[#f5f2f1] border border-[#eae5e3]',
-    outlined: 'bg-transparent border border-[#e5e5e5]',
+  const elRef = useRef<HTMLElement>(null);
+
+  const cardStyle: CSSProperties = {
+    ...BG_MAP[variant],
+    border: BORDER_MAP[variant],
+    borderRadius: 'var(--rc-radius-card)',
+    boxShadow: SHADOW_MAP[shadow],
+    transition: hover
+      ? 'box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease'
+      : undefined,
+    cursor: onClick ? 'pointer' : undefined,
+    ...style,
   };
 
-  const paddingClasses = {
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
-  };
+  const handleMouseEnter = hover
+    ? () => {
+        const el = elRef.current;
+        if (!el) return;
+        el.style.boxShadow = SHADOW_HOVER_MAP[shadow];
+        el.style.transform = 'translateY(-2px)';
+        el.style.borderColor = BORDER_HOVER_MAP[variant].split('solid ')[1];
+      }
+    : undefined;
 
-  const shadowClasses = {
-    none: '',
-    sm: 'shadow-[0_1px_2px_rgba(0,0,0,0.05)]',
-    md: 'shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]',
-    lg: 'shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]',
-  };
-
-  const hoverClass = hover 
-    ? 'transition-all duration-300 hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.15)] hover:-translate-y-0.5' 
-    : '';
+  const handleMouseLeave = hover
+    ? () => {
+        const el = elRef.current;
+        if (!el) return;
+        el.style.boxShadow = SHADOW_MAP[shadow];
+        el.style.transform = 'translateY(0)';
+        el.style.borderColor = BORDER_MAP[variant].split('solid ')[1];
+      }
+    : undefined;
 
   return (
-    <div 
-      className={`
-        rounded-[10px] 
-        ${variantClasses[variant]} 
-        ${paddingClasses[padding]} 
-        ${shadowClasses[shadow]}
-        ${hoverClass}
-        ${className}
-      `}
+    <Component
+      ref={elRef as any}
+      className={`${PADDING_MAP[padding]} ${className}`}
+      style={cardStyle}
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {children}
-    </div>
+    </Component>
   );
 }
+
+export default Card;
