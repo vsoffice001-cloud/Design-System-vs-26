@@ -152,15 +152,29 @@ Badge.tsx (canonical — 11 themes, 4 sizes, 3 variants, CSS custom property dri
   └── badges/index.ts (deprecated re-exports for backward compat)
 ```
 
-### Report Store Molecules (v4.1)
+### Report Store Card System (v4.1)
+```
+ReportCard.tsx (canonical — grid + list layouts)
+  ├── Card.tsx (v4.0 base container)
+  ├── Button.tsx (list layout CTA)
+  ├── ImageWithFallback (figma/ shim)
+  ├── IndustryBadge.tsx (subcategory label)
+  ├── CardMetaRow.tsx (A/B meta variants)
+  ├── CardFooterRow.tsx (date row)
+  └── iconColors.ts (lucide icon colors)
+
+ReportGridCard.tsx ── @deprecated wrapper → ReportCard layout="grid"
+
+ViewToggle.tsx ──── controls layout prop on ReportCard
+SkeletonCard.tsx ─── mirrors grid + list loading states
+```
+
+### Other Report Store Molecules
 ```
 molecules/
-  ├── ReportGridCard.tsx ──── Card.tsx, ImageWithFallback, IndustryBadge, CardMetaRow, CardFooterRow
   ├── AnalystPickCardB.tsx ── Card.tsx, Badge.tsx, Button.tsx, ImageWithFallback, IndustryBadge, CardMetaRow
   ├── StatCard.tsx ────────── Card.tsx, Badge.tsx, Button.tsx, Tooltip, iconColors
   ├── DataHighlightCard.tsx ─ Card.tsx, Tooltip, iconColors
-  ├── CardMetaRow.tsx ─────── Tooltip, iconColors (lucide: TrendingUp, MapPin, Calendar)
-  ├── CardFooterRow.tsx ───── iconColors (lucide: Calendar)
   ├── HorizontalScroll.tsx ── (standalone, lucide: ChevronLeft/Right)
   └── ScrollFade.tsx ──────── (standalone, lucide: ChevronLeft/Right)
 ```
@@ -284,13 +298,13 @@ Main application entry point using `react-router-dom` with routes:
 
 | File | Purpose |
 |------|--------|
-| `ImageWithFallback.tsx` | Simple `<img>` wrapper that matches Figma Make's ImageWithFallback API — used by ReportGridCard, AnalystPickCardB, RevealImage |
+| `ImageWithFallback.tsx` | Simple `<img>` wrapper that matches Figma Make's ImageWithFallback API — used by ReportCard, AnalystPickCardB, RevealImage |
 
-### `molecules/` — Report Store Molecules (v4.1 — 15 files)
+### `molecules/` — Report Store Molecules (v4.1 — 16 files)
 
 | File | Atomic Level | Purpose |
 |------|-------------|--------|
-| `index.ts` | Barrel | Re-exports all 14 molecules |
+| `index.ts` | Barrel | Re-exports all 15 molecules + types |
 | `IndustryBadge.tsx` | Atom | Text-only industry/subcategory eyebrow label |
 | `CardMetaRow.tsx` | Molecule | Inline meta row with A/B variants (projection+region or region+date) |
 | `CardFooterRow.tsx` | Molecule | Date footer with Calendar icon |
@@ -298,13 +312,31 @@ Main application entry point using `react-router-dom` with routes:
 | `RevealImage.tsx` | Molecule | Smooth blur-to-sharp image reveal on load |
 | `EmptyState.tsx` | Molecule | No-results state with icon, message, optional action |
 | `BackToTop.tsx` | Molecule | Floating scroll-to-top button (bottom-16 mobile, bottom-6 desktop) |
-| `SkeletonCard.tsx` | Molecule | Shimmer loading placeholders (grid + list variants) |
+| `SkeletonCard.tsx` | Molecule | Shimmer loading placeholders (**grid + list** variants) |
 | `HorizontalScroll.tsx` | Molecule | Transform-based carousel (overflow-x:clip, button/wheel/touch/mouse drag, momentum) |
 | `ScrollFade.tsx` | Molecule | Native scroll wrapper with edge fade masks and optional chevron buttons |
-| `ReportGridCard.tsx` | Organism | Standard grid card: image → IndustryBadge → title → CardMetaRow → CardFooterRow |
+| **`ReportCard.tsx`** | **Organism** | **Canonical report card: `layout="grid"` (vertical stack) or `layout="list"` (horizontal thumbnail+content+CTA). Composes Card, ImageWithFallback, IndustryBadge, CardMetaRow, CardFooterRow, Button.** |
+| `ReportGridCard.tsx` | Wrapper | **@deprecated** — Thin wrapper → `ReportCard layout="grid"`. Preserved for backward compat. |
 | `StatCard.tsx` | Molecule | Market indicator card: category badge → value → label → growth → description → CTA |
 | `DataHighlightCard.tsx` | Molecule | Daily data card: time → value → title → growth → source+arrow footer |
 | `AnalystPickCardB.tsx` | Molecule | Expert pick card: analyst header → blockquote → report mini-card → footer |
+
+#### ReportCard Layout Comparison
+
+```
+GRID (layout="grid", default)          LIST (layout="list")
+┌────────────────────┐            ┌────────────────────────────────────┐
+│ ┌──────────────────┐ │            │ ┌────┐  INDUSTRY BADGE      Date  │
+│ │                  │ │            │ │    │  Report Title       +12%  │
+│ │   16:9 IMAGE     │ │            │ │ IMG│  That Can Span               │
+│ │                  │ │            │ │    │  Two Lines                   │
+│ └──────────────────┘ │            │ └────┘  Region · Meta  [View →]│
+│  INDUSTRY BADGE      │            └────────────────────────────────────┘
+│  Report Title         │
+│  +12% · Region        │            Props: layout, description, ctaLabel
+│  📅 March 2026         │            Thumbnail: 80px mobile → 144px desktop
+└────────────────────┘            Right column hidden on small mobile
+```
 
 ### Design System Dashboard (8 files + 6 foundations sub-files)
 
@@ -434,6 +466,20 @@ The SectionHeading API changed from children-based to prop-based:
 ```
 **Status:** No existing files in the repo import SectionHeading — the 10 case study sections hand-code their headings inline. Adopting SectionHeading in those sections is an optional refactor, not a breaking fix.
 
+### ReportGridCard → ReportCard Migration
+
+```tsx
+// OLD (grid-only)
+import { ReportGridCard } from '@/app/components/molecules/ReportGridCard';
+<ReportGridCard id="1" image="..." title="..." ... />
+
+// NEW (grid + list)
+import { ReportCard } from '@/app/components/molecules/ReportCard';
+<ReportCard layout="grid" id="1" image="..." title="..." ... />  // same as before
+<ReportCard layout="list" id="1" image="..." title="..." description="..." ... />  // NEW
+```
+**ReportGridCard still works** (deprecated thin wrapper). New code should use ReportCard.
+
 ---
 
 ## Sync Checklist (Figma Make → GitHub)
@@ -453,6 +499,7 @@ The SectionHeading API changed from children-based to prop-based:
 
 | Date | Action | Files Affected |
 |------|--------|----------------|
+| Mar 11, 2026 | **ReportCard grid+list** — Unified card with `layout` prop; ReportGridCard → deprecated wrapper | ReportCard.tsx (new), ReportGridCard.tsx (refactored), molecules/index.ts, GITHUB_REPO_MANIFEST.md |
 | Mar 11, 2026 | **v4.1 Molecule Push** — 3 atoms, 14 molecules, 1 shim, barrel exports updated | Tooltip.tsx, ViewToggle.tsx, FadeInSection.tsx, molecules/*.tsx (14), figma/ImageWithFallback.tsx, molecules/index.ts, components/index.ts |
 | Mar 10, 2026 | **v4.0 Report Store sync** — 3 docs, 3 evolved components, 1 CSS additions file | REPORT_STORE_COMPONENTS_4WH.md, DESIGN_SYSTEM_UPDATES.md, ai-context/CORE.md, Button.tsx, SectionHeading.tsx, Card.tsx, report-store-additions.css |
 | Mar 6, 2026 | FoundationsContent.tsx split into 6 modular sub-files in `foundations/` | FoundationsContent.tsx, foundations/*.tsx (6 files) |
@@ -468,6 +515,7 @@ The SectionHeading API changed from children-based to prop-based:
 
 | Date | Changes |
 |------|---------||
+| Mar 11, 2026 | **v4.1 ReportCard grid+list:** `ReportCard.tsx` (canonical, `layout="grid"` \| `"list"`, description, ctaLabel); `ReportGridCard.tsx` refactored to deprecated wrapper; `molecules/index.ts` updated with ReportCard + types; `SkeletonCard.tsx` + `ViewToggle.tsx` already supported both formats |
 | Mar 11, 2026 | **v4.1 Molecule Push:** 3 atoms (Tooltip, ViewToggle, FadeInSection); 14 molecules in `molecules/` directory (IndustryBadge, CardMetaRow, CardFooterRow, CardReveal, RevealImage, EmptyState, BackToTop, SkeletonCard, HorizontalScroll, ScrollFade, ReportGridCard, StatCard, DataHighlightCard, AnalystPickCardB); `figma/ImageWithFallback.tsx` shim; `molecules/index.ts` barrel; `components/index.ts` updated with v4.0 atom/molecule exports |
 | Mar 10, 2026 | **v4.0 Report Store Components:** `REPORT_STORE_COMPONENTS_4WH.md` (33KB, 22 components, 4 flowcharts); `report-store-additions.css` (4KB, 10 new CSS classes); Button.tsx v4.0 (xs size, brand, iconOnly); SectionHeading.tsx v4.0 (prop-driven API, action/slots); Card.tsx v4.0 (ref-based hover, as/onClick); `CORE.md` v4.0 (Report Store reading order); `DESIGN_SYSTEM_UPDATES.md` v4.0 changelog |
 | Mar 6, 2026 | **v3.4.0 FoundationsContent Modular Split:** 110KB monolith → 6 sub-files in `foundations/`; Dashboard alignment all 5 phases on GitHub |
@@ -478,4 +526,4 @@ The SectionHeading API changed from children-based to prop-based:
 
 ---
 
-**Total Files on GitHub:** ~140 files across 8 directories (root, ai-context, src/app, src/app/components, src/app/components/figma, src/app/components/foundations, src/app/components/molecules, src/design-system, src/styles)
+**Total Files on GitHub:** ~142 files across 8 directories (root, ai-context, src/app, src/app/components, src/app/components/figma, src/app/components/foundations, src/app/components/molecules, src/design-system, src/styles)
