@@ -1,9 +1,9 @@
 # Report Store Components - 4W+H Framework
 ## Complete Reference for Building Product Pages with the Ken Bold Design System
 
-**Version:** 4.0 (March 2026)
+**Version:** 4.1 (March 2026)
 **Source Page:** Report Store (Ken Research)
-**Design System:** Ken Bold DS v4.0
+**Design System:** Ken Bold DS v4.1
 **Architecture:** Atomic Design (Atoms > Molecules > Organisms > Templates)
 
 ---
@@ -26,23 +26,24 @@ This document extends `COMPONENT_GUIDELINES_4WH.md` with every component created
 
 | Tier | Component | Reusability |
 |------|-----------|-------------|
-| Atom | `Tooltip` | Universal - any page |
-| Atom | `ViewToggle` | Universal - any listing page |
-| Atom | `FadeInSection` | Universal - any page |
-| Molecule | `CardReveal` | Universal - any card grid |
-| Molecule | `RevealImage` | Universal - any page with images |
-| Molecule | `SkeletonCard` | Universal - any async data page |
-| Molecule | `EmptyState` | Universal - any filterable listing |
-| Molecule | `BackToTop` | Universal - any long page |
-| Molecule | `HorizontalScroll` | Universal - any card carousel |
-| Molecule | `ScrollFade` | Universal - any overflow tabs/pills |
-| Molecule | `IndustryBadge` (EyebrowLabel) | Universal - any card/listing |
-| Molecule | `CardMetaRow` (MetaRow) | Universal - any card with metadata |
-| Molecule | `CardFooterRow` | Universal - any card with date |
-| Molecule | `ReportGridCard` | Reusable - report/content grid card |
-| Molecule | `StatCard` | Reusable - data visualization card |
-| Molecule | `DataHighlightCard` | Reusable - stat highlight card |
-| Molecule | `AnalystPickCardB` | Reusable - curated/expert card |
+| Atom | `Tooltip` | Universal — any page |
+| Atom | `ViewToggle` | Universal — any listing page |
+| Atom | `FadeInSection` | Universal — any page |
+| Molecule | `CardReveal` | Universal — any card grid |
+| Molecule | `RevealImage` | Universal — any page with images |
+| Molecule | `SkeletonCard` | Universal — any async data page |
+| Molecule | `EmptyState` | Universal — any filterable listing |
+| Molecule | `BackToTop` | Universal — any long page |
+| Molecule | `HorizontalScroll` | Universal — any card carousel |
+| Molecule | `ScrollFade` | Universal — any overflow tabs/pills |
+| Molecule | `IndustryBadge` (EyebrowLabel) | Universal — any card/listing |
+| Molecule | `CardMetaRow` (MetaRow) | Universal — any card with metadata |
+| Molecule | `CardFooterRow` | Universal — any card with date |
+| **Organism** | **`ReportCard`** ★ | **Canonical — grid + list layouts** |
+| ~~Organism~~ | ~~`ReportGridCard`~~ | **@deprecated** — wrapper → `ReportCard layout="grid"` |
+| Molecule | `StatCard` | Reusable — data visualization card |
+| Molecule | `DataHighlightCard` | Reusable — stat highlight card |
+| Molecule | `AnalystPickCardB` | Reusable — curated/expert card |
 
 ### Evolved Components (Report Store version is canonical)
 
@@ -105,7 +106,7 @@ A portal-based tooltip that appears on hover/focus with a dark bubble, direction
 
 ### WHEN NOT
 - Don't use for critical information (tooltips are hidden by default)
-- Don't use on touch-only mobile (no hover) -- pair with another pattern
+- Don't use on touch-only mobile (no hover) — pair with another pattern
 - Don't use for long text (keep under 8 words)
 - Don't use on elements that already have visible labels
 
@@ -143,13 +144,14 @@ A compact pill-shaped toggle with list/grid icon buttons. Uses warm-300 containe
 |------|------|---------|-------------|
 | `viewMode` | `'list' \| 'grid'` | required | Current active view |
 | `onViewModeChange` | function | required | Mode change callback |
-| `count` | number | - | Optional item count (shown on sm+) |
+| `count` | number | — | Optional item count (shown on sm+) |
 | `countLabel` | string | `'items'` | Label after count |
 
 ### WHEN
 - Use on any listing page with card content (reports, articles, case studies)
 - Use when both list and grid layouts are supported
 - Use in combination with sort controls in a toolbar
+- Use with `ReportCard` — ViewToggle's `viewMode` maps directly to ReportCard's `layout` prop
 
 ### WHEN NOT
 - Don't use if only one view mode exists
@@ -163,8 +165,9 @@ Atomic level: **Atom**. Used in listing mode toolbar.
 ```tsx
 import { ViewToggle } from './ViewToggle';
 import type { ViewMode } from './ViewToggle';
+import { ReportCard } from './molecules';
 
-const [viewMode, setViewMode] = useState<ViewMode>('list');
+const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
 <ViewToggle
   viewMode={viewMode}
@@ -172,6 +175,11 @@ const [viewMode, setViewMode] = useState<ViewMode>('list');
   count={filteredReports.length}
   countLabel="reports"
 />
+
+{/* viewMode maps directly to ReportCard layout */}
+{reports.map(r => (
+  <ReportCard key={r.id} layout={viewMode} {...r} />
+))}
 ```
 
 ---
@@ -201,7 +209,7 @@ A div wrapper that uses IntersectionObserver to fade-in children when they enter
 
 ### WHEN NOT
 - Don't use for above-the-fold content (should be immediately visible)
-- Don't use inside cards (use CardReveal instead -- lighter)
+- Don't use inside cards (use CardReveal instead — lighter)
 - Don't nest FadeInSection inside FadeInSection
 
 ### WHERE
@@ -233,7 +241,7 @@ import { FadeInSection } from './FadeInSection';
 ## IndustryBadge (EyebrowLabel)
 
 ### WHY
-Cards and listings need a consistent text-only eyebrow label above titles. This is NOT a chip or badge with background -- it is a subtle category identifier that sits at the top of card content areas.
+Cards and listings need a consistent text-only eyebrow label above titles. This is NOT a chip or badge with background — it is a subtle category identifier that sits at the top of card content areas.
 
 ### WHAT
 A `<span>` with uppercase text, `--text-2xs` (12px), `rgba(0,0,0,0.4)` color, `0.06em` letter-spacing, block truncate. No background, no border, no padding.
@@ -249,7 +257,7 @@ A `<span>` with uppercase text, `--text-2xs` (12px), `rgba(0,0,0,0.4)` color, `0
 - Don't use for more than one line (truncates)
 
 ### WHERE
-Atomic level: **Molecule** (composed atom). Used in ReportGridCard, AnalystPickCardB, ResourceCard.
+Atomic level: **Molecule** (composed atom). Used in ReportCard, AnalystPickCardB, ResourceCard.
 
 ### HOW
 ```tsx
@@ -287,7 +295,7 @@ An inline row with two layout variants:
 - Don't mix variants within the same card
 
 ### WHERE
-Atomic level: **Molecule**. Used in ReportGridCard, AnalystPickCardB, ResourceCard.
+Atomic level: **Molecule**. Used in ReportCard, AnalystPickCardB, ResourceCard.
 
 ### HOW
 ```tsx
@@ -310,13 +318,15 @@ A flex row with Calendar icon (`iconColors.utility`) + date text. Font size `--t
 ### WHEN
 - Use as the last element in card content areas when date needs separate display
 - Use with CardMetaRow Variant A (which shows projection + region, leaving date for footer)
+- Used in ReportCard `layout="grid"` with metaVariant A
 
 ### WHEN NOT
 - Don't use with CardMetaRow Variant B (date is already inline there)
 - Don't use when date is not relevant to the content
+- Not used in ReportCard `layout="list"` (date appears in right column instead)
 
 ### WHERE
-Atomic level: **Molecule**. Used in ReportGridCard (Variant A only).
+Atomic level: **Molecule**. Used in ReportCard (grid layout, Variant A only).
 
 ### HOW
 ```tsx
@@ -337,7 +347,7 @@ A div wrapper using IntersectionObserver that applies `.card-reveal` / `.card-re
 **Animation:** `opacity 0, translateY(12px)` to `opacity 1, translateY(0)` over `0.45s cubic-bezier(0.16, 1, 0.3, 1)`.
 
 ### WHEN
-- Use around each card in a grid listing (wrap each ResourceCard/ReportGridCard)
+- Use around each card in a grid listing (wrap each ReportCard)
 - Use with stagger: `delay={index * 50}` capped at first 8 cards
 - Use for any individual card that needs entrance animation
 
@@ -347,15 +357,16 @@ A div wrapper using IntersectionObserver that applies `.card-reveal` / `.card-re
 - Don't nest CardReveal inside FadeInSection (double animation)
 
 ### WHERE
-Atomic level: **Molecule**. Used in App.tsx listing mode around each ResourceCard.
+Atomic level: **Molecule**. Used in App.tsx listing mode around each ReportCard.
 
 ### HOW
 ```tsx
 import { CardReveal } from './molecules';
+import { ReportCard } from './molecules';
 
 {filteredReports.map((report, idx) => (
   <CardReveal key={report.id} delay={idx < 8 ? idx * 50 : 0}>
-    <ResourceCard variant="grid" report={report} />
+    <ReportCard layout={viewMode} {...report} />
   </CardReveal>
 ))}
 ```
@@ -404,7 +415,7 @@ Uses `.skeleton-shimmer` CSS class (animated gradient from `--warm-300` to `--wa
 
 ### WHEN
 - Use during initial page load, filter changes, or Load More transitions
-- Use the same variant as the final card (grid skeleton for grid view, list for list view)
+- Use the same variant as the current ViewToggle mode (`variant={viewMode}`)
 - Show 6-12 skeletons matching the expected grid layout
 
 ### WHEN NOT
@@ -418,8 +429,9 @@ Atomic level: **Molecule**. Used in App.tsx listing mode during loading states.
 ```tsx
 import { SkeletonCard } from './molecules';
 
+{/* Match skeleton variant to ViewToggle's viewMode */}
 {isLoading && Array.from({ length: 6 }).map((_, i) => (
-  <SkeletonCard key={i} variant="grid" aspectRatio="16/9" />
+  <SkeletonCard key={i} variant={viewMode} aspectRatio="16/9" />
 ))}
 ```
 
@@ -476,7 +488,7 @@ A circular floating button that appears after 600px scroll. Uses fade + scale en
 
 ### WHEN NOT
 - Don't use on short single-screen pages
-- Don't use alongside ScrollToTop from the DS (pick one -- BackToTop is mobile-aware)
+- Don't use alongside ScrollToTop from the DS (pick one — BackToTop is mobile-aware)
 
 ### WHERE
 Atomic level: **Molecule**. Used in App.tsx at page root level.
@@ -504,7 +516,7 @@ A transform-based horizontal scroll container with: button navigation (chevrons 
 - Use when cards need `overflow-y: visible` for shadows
 
 ### WHEN NOT
-- Don't use for simple tag/pill scrolling (use ScrollFade -- simpler)
+- Don't use for simple tag/pill scrolling (use ScrollFade — simpler)
 - Don't use for vertical content
 - Don't use when native `overflow-x: auto` works fine (no hover shadows to clip)
 
@@ -514,11 +526,12 @@ Atomic level: **Molecule**. Used in HomeSectionsA/B for card carousels.
 ### HOW
 ```tsx
 import { HorizontalScroll } from './molecules';
+import { ReportCard } from './molecules';
 
 <HorizontalScroll fadeBg="white" gap="gap-4">
   {reports.map(r => (
     <div key={r.id} className="flex-shrink-0 w-64">
-      <ReportGridCard {...r} />
+      <ReportCard layout="grid" {...r} />
     </div>
   ))}
 </HorizontalScroll>
@@ -561,37 +574,211 @@ import { ScrollFade } from './molecules';
 
 ---
 
-## ReportGridCard
+# ORGANISMS
+
+---
+
+## ReportCard ★ (Canonical — Grid + List Layouts)
 
 ### WHY
-A standalone grid card composition used across multiple home page sections. Simpler API than ResourceCard -- just pass flat props instead of a report object.
+The Report Store has two view modes controlled by ViewToggle: **grid** (vertical card stack) and **list** (horizontal card row). Originally `ReportGridCard` only supported the grid layout — so ViewToggle could switch modes but there was no list card to render. `ReportCard` unifies both layouts in a single component with a shared props interface, ensuring:
+
+1. **ViewToggle ↔ ReportCard ↔ SkeletonCard** are all aligned on `"grid" | "list"` values
+2. One component, one data shape — no prop mapping between two different card components
+3. Grid layout is identical to the original ReportGridCard (zero visual regression)
+4. List layout follows B2B market research listing conventions (thumbnail + content + CTA)
 
 ### WHAT
-Card anatomy: **16:9 image** (with gradient overlay + optional badge) > **IndustryBadge eyebrow** > **title** (2-line clamp) > **CardMetaRow** > **CardFooterRow** (Variant A only). Uses Card component for container.
+A dual-layout card organism that renders either a vertical grid card or a horizontal list card based on the `layout` prop.
+
+**Grid layout (default):**
+```
+┌────────────────────┐
+│ ┌────────────────┐ │
+│ │   16:9 IMAGE   │ │  ← overflow-hidden, img-zoom on group:hover
+│ │   + gradient   │ │  ← gradient overlay bottom 1/3
+│ └────────────────┘ │  ← optional overlayBadge
+│  INDUSTRY BADGE    │  ← IndustryBadge (subcat || industry)
+│  Report Title      │  ← h4, 2-line clamp, --text-nav
+│  +12% · Region     │  ← CardMetaRow variant A or B
+│  📅 March 2026     │  ← CardFooterRow (variant A only)
+└────────────────────┘
+```
+
+**List layout:**
+```
+┌──────────────────────────────────────────────────────┐
+│ ┌──────┐  INDUSTRY BADGE                  Mar 2026  │
+│ │      │  Report Title That Can             +12.4%  │
+│ │  IMG │  Span Two Lines                            │
+│ │      │  Optional description...    [View Report →]│
+│ └──────┘  Region · Meta (mt-auto)                   │
+└──────────────────────────────────────────────────────┘
+  80px mob   ← Content fills center →  ← Right column (sm+)
+  144px desk                              hidden on mobile
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | string | required | Unique report identifier |
+| `image` | string | required | Image URL |
+| `title` | string | required | Report title (2-line clamp) |
+| `industry` | string | required | Primary industry name |
+| `subcat` | string | — | Subcategory (preferred over industry for badge) |
+| `projection` | string \| null | — | Growth projection (e.g., "$133.4B by 2030") |
+| `region` | string | required | Geographic region |
+| `date` | string | required | Publication date |
+| `onClick` | `(id: string) => void` | — | Click handler |
+| **`layout`** | **`'grid' \| 'list'`** | **`'grid'`** | **Visual layout mode** |
+| `overlayBadge` | ReactNode | — | Badge overlay on image (e.g., "New") |
+| `aspectRatio` | string | `'16/9'` | Image aspect ratio (grid only) |
+| `className` | string | — | Additional CSS classes |
+| `metaVariant` | `'A' \| 'B'` | `'A'` | CardMetaRow layout variant |
+| `description` | string | — | Short description (list layout only, 1-line clamp) |
+| `ctaLabel` | string | `'View Report'` | CTA button text (list layout only) |
+
+**Composition (what it uses internally):**
+- `Card` (v4.0 base container with hover)
+- `ImageWithFallback` (image with shim)
+- `IndustryBadge` (eyebrow label)
+- `CardMetaRow` (projection/region/date row)
+- `CardFooterRow` (date footer — grid layout only)
+- `Button` (CTA — list layout only, variant="secondary" size="xs" showArrow)
+- `TrendingUp` icon (projection badge — list layout right column)
 
 ### WHEN
-- Use in horizontal carousels and curated grids on home pages
-- Use when you need a simple card with flat props (not a complex report object)
-- Use with `metaVariant="A"` (projection + region + date) or `"B"` (region + date only)
+- Use for **all report card rendering** on the Report Store — both discovery (home carousels) and listing (filtered grid/list)
+- Use `layout="grid"` for vertical card grids and horizontal carousels
+- Use `layout="list"` for compact list views in the listing mode
+- Use with ViewToggle: `<ReportCard layout={viewMode} />`
+- Use with SkeletonCard: `<SkeletonCard variant={viewMode} />`
+- Use with CardReveal for entrance animations
 
 ### WHEN NOT
-- Don't use in the main listing grid (use ResourceCard with `variant="grid"` there)
-- Don't use when you need list/compact/featured variants (use ResourceCard)
+- Don't use for analyst recommendation cards (use AnalystPickCardB — different anatomy)
+- Don't use for statistic/metric cards (use StatCard or DataHighlightCard)
+- Don't use for ResourceCard's 7-variant system in the case study DS (that's a separate component)
+- Don't pass `description` or `ctaLabel` when `layout="grid"` (they're ignored)
 
 ### WHERE
-Atomic level: **Molecule** (organism-level composition). Used in home page carousels.
+Atomic level: **Organism** (composes 6 sub-components). Lives in `molecules/ReportCard.tsx`.
+
+Used in:
+- Home mode carousels (FeaturedResearch, RecommendedForYou) with `layout="grid"`
+- Listing mode card grid with `layout={viewMode}` (toggleable)
+- Any future product page that lists research reports
 
 ### HOW
-```tsx
-import { ReportGridCard } from './molecules';
 
-<ReportGridCard
-  id={report.id} image={report.image} title={report.title}
-  industry={report.industry} subcat={report.subcat}
-  projection={report.projection} region={report.region}
-  date={report.date} onClick={handleView}
-  aspectRatio="16/9" metaVariant="A"
+**Basic grid usage (equivalent to old ReportGridCard):**
+```tsx
+import { ReportCard } from './molecules';
+
+<ReportCard
+  id="r1" image="/img/report.jpg" title="AI in Healthcare Market Report"
+  industry="Healthcare" subcat="Digital Health"
+  projection="$133.4B by 2030" region="Global" date="Dec 2024"
+  onClick={handleView} metaVariant="A"
 />
+```
+
+**List layout:**
+```tsx
+<ReportCard
+  layout="list"
+  id="r1" image="/img/report.jpg" title="AI in Healthcare Market Report"
+  industry="Healthcare" subcat="Digital Health"
+  projection="$133.4B by 2030" region="Global" date="Dec 2024"
+  description="Comprehensive analysis of AI adoption in healthcare diagnostics and treatment."
+  ctaLabel="View Report" onClick={handleView}
+/>
+```
+
+**With ViewToggle (the canonical pattern):**
+```tsx
+import { ViewToggle } from './ViewToggle';
+import type { ViewMode } from './ViewToggle';
+import { ReportCard, SkeletonCard, CardReveal, EmptyState } from './molecules';
+
+const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+{/* Toolbar */}
+<ViewToggle viewMode={viewMode} onViewModeChange={setViewMode}
+  count={reports.length} countLabel="reports" />
+
+{/* Card grid — layout synced with viewMode */}
+<div className={viewMode === 'grid'
+  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'
+  : 'flex flex-col gap-3'
+}>
+  {isLoading
+    ? Array.from({ length: 6 }).map((_, i) => (
+        <SkeletonCard key={i} variant={viewMode} />
+      ))
+    : reports.length === 0
+    ? <EmptyState message="No reports found." actionLabel="Clear filters" onAction={clearFilters} />
+    : reports.map((r, idx) => (
+        <CardReveal key={r.id} delay={idx < 8 ? idx * 50 : 0}>
+          <ReportCard layout={viewMode} {...r} onClick={handleView} />
+        </CardReveal>
+      ))
+  }
+</div>
+```
+
+### ALIGNMENT TABLE
+
+All three components use the same `"grid" | "list"` value:
+
+| Component | Prop | Controls |
+|-----------|------|----------|
+| `ViewToggle` | `viewMode: 'grid' \| 'list'` | User switches mode |
+| `ReportCard` | `layout: 'grid' \| 'list'` | Renders correct card layout |
+| `SkeletonCard` | `variant: 'grid' \| 'list'` | Renders matching loading skeleton |
+
+### MIGRATION FROM ReportGridCard
+
+```tsx
+// BEFORE (grid-only, @deprecated)
+import { ReportGridCard } from './molecules/ReportGridCard';
+<ReportGridCard id="1" image="..." title="..." industry="..." region="..." date="..." />
+
+// AFTER (grid + list)
+import { ReportCard } from './molecules';
+<ReportCard layout="grid" id="1" image="..." title="..." industry="..." region="..." date="..." />
+<ReportCard layout="list" id="1" image="..." title="..." industry="..." region="..." date="..." />
+```
+
+`ReportGridCard` still works (thin wrapper that passes `layout="grid"`), but new code should always use `ReportCard`.
+
+---
+
+## ReportGridCard ~~(Organism)~~ → @deprecated Wrapper
+
+### WHY (Deprecated)
+Originally the only report card component. **Replaced by `ReportCard`** which supports both grid AND list layouts. ReportGridCard now exists solely as a backward-compatible wrapper.
+
+### WHAT (Now)
+A thin function component that spreads all props to `<ReportCard layout="grid" />`. Zero logic of its own.
+
+### WHEN
+- **Don't use in new code.** Import `ReportCard` instead.
+- Only remains for existing consumers that haven't migrated yet.
+
+### WHERE
+File: `molecules/ReportGridCard.tsx`. Exported from barrel with `@deprecated` JSDoc.
+
+### HOW (Migration)
+```tsx
+// OLD
+import { ReportGridCard } from './molecules';
+<ReportGridCard id="1" image="..." title="..." ... />
+
+// NEW — drop-in replacement
+import { ReportCard } from './molecules';
+<ReportCard id="1" image="..." title="..." ... />  // layout defaults to "grid"
 ```
 
 ---
@@ -604,14 +791,28 @@ Market indicator sections need a consistent card layout for displaying key stati
 ### WHAT
 Card anatomy: **Category badge** (coral/rounded) + **content icon** > **serif value** (Major Third xl) > **label** > **growth metric** (green chip with CAGR Tooltip) > **description** (2-line clamp) > **footer CTA** (secondary xs button).
 
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `category` | string | required | Badge label (e.g., "Healthcare") |
+| `value` | string | required | Serif display value (e.g., "$133.4B") |
+| `label` | string | required | Value description (e.g., "AI in Healthcare Market") |
+| `description` | string | required | 2-line clamp detail text |
+| `growth` | string | required | Growth percentage (e.g., "38.4%") |
+| `metric` | string | required | Growth period (e.g., "2024-2030") |
+| `icon` | ReactNode | BarChart3 | Override content icon |
+| `className` | string | — | Additional CSS classes |
+| `onClick` | `() => void` | — | Click handler |
+
 ### WHEN
 - Use for Key Market Indicators, Trending Statistics sections
 - Use when displaying numeric values with growth rates
 - Use in grids of 2-4 cards
 
 ### WHEN NOT
-- Don't use for content cards (reports, articles) -- use ReportGridCard
-- Don't use for simple stat numbers without descriptions -- too heavy
+- Don't use for content cards (reports, articles) — use ReportCard
+- Don't use for simple stat numbers without descriptions — too heavy
 
 ### WHERE
 Atomic level: **Molecule**. Used in TrendingStatistics section.
@@ -620,9 +821,15 @@ Atomic level: **Molecule**. Used in TrendingStatistics section.
 ```tsx
 import { StatCard } from './molecules';
 
-<StatCard category="Healthcare" value="$133.4B" label="AI in Healthcare Market"
-  growth="38.4%" metric="2024-2030" description="Driven by diagnostic AI adoption..."
-  onClick={() => handleView('healthcare-ai')} />
+<StatCard
+  category="Healthcare"
+  value="$133.4B"
+  label="AI in Healthcare Market"
+  growth="38.4%"
+  metric="2024-2030"
+  description="Driven by diagnostic AI adoption and personalized medicine platforms."
+  onClick={() => handleView('healthcare-ai')}
+/>
 ```
 
 ---
@@ -630,22 +837,71 @@ import { StatCard } from './molecules';
 ## DataHighlightCard
 
 ### WHY
-Daily data feeds need compact, data-first cards that prioritize the numeric value over descriptions.
+Daily data feeds need compact, data-first cards that prioritize the numeric value over descriptions. Unlike StatCard (which has a category badge, description paragraph, and CTA button), DataHighlightCard is minimal: value → title → growth → source.
 
 ### WHAT
-Compact card: **time label** + **Zap icon** > **serif value** > **title** > **growth badge** (green chip) > **footer** (source + arrow).
+Compact card: **time label** + **Zap icon** > **serif value** > **title** > **growth badge** (green chip with TrendingUp) > **footer** (source text + ArrowRight icon, border-top divider).
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | string | required | Serif display value (e.g., "$2.4T") |
+| `title` | string | required | Metric name (e.g., "Global Cloud Computing") |
+| `source` | string | required | Data source (e.g., "Gartner", "IDC") |
+| `growth` | string | required | Growth rate (e.g., "+18.2%") |
+| `time` | string | required | Time label (e.g., "Today", "This Week") |
+| `icon` | ReactNode | Zap | Override header icon |
+| `className` | string | — | Additional CSS classes |
+| `onClick` | `() => void` | — | Click handler |
+
+**Visual differences from StatCard:**
+
+| Feature | StatCard | DataHighlightCard |
+|---------|----------|-------------------|
+| Category badge | ✅ Coral rounded badge | ❌ None |
+| Header icon | BarChart3 (in purple container) | Zap (inline, no container) |
+| Value font size | `--text-xl` (Major Third) | `--text-base` (smaller) |
+| Description | ✅ 2-line clamp paragraph | ❌ None |
+| CTA button | ✅ "View Reports" secondary xs | ❌ None (ArrowRight hint) |
+| Footer | Border-top + Button | Border-top + source + arrow |
+| Padding | Card `padding="sm"` preset | Manual `padding: 14px` |
+| Weight | Heavy (6 content layers) | Light (4 content layers) |
 
 ### WHEN
-- Use for Daily Data Highlights, Market Pulse sections
+- Use for Daily Data Highlights, Market Pulse, data feed sections
 - Use for real-time or frequently updated data points
 - Use in grids of 3-6 compact cards
+- Use when the numeric value is the hero (not the description)
 
 ### WHEN NOT
-- Don't use for detailed content (too compact)
-- Don't use when growth data is unavailable
+- Don't use for detailed content with descriptions (use StatCard)
+- Don't use when growth data is unavailable (growth badge is a key visual element)
+- Don't use for report cards (use ReportCard)
 
 ### WHERE
 Atomic level: **Molecule**. Used in DailyDataHighlights section.
+
+### HOW
+```tsx
+import { DataHighlightCard } from './molecules';
+
+<DataHighlightCard
+  time="Today"
+  value="$2.4T"
+  title="Global Cloud Computing Market"
+  growth="+18.2%"
+  source="Gartner"
+  onClick={() => handleView('cloud-computing')}
+/>
+
+{/* In a grid */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {highlights.map(h => (
+    <DataHighlightCard key={h.id} {...h} />
+  ))}
+</div>
+```
 
 ---
 
@@ -664,7 +920,7 @@ Card anatomy: **Analyst header** (initials avatar + name/role + Expert Pick cora
 
 ### WHEN NOT
 - Don't use without analyst data (name, role, quote)
-- Don't use for algorithmic recommendations (use ReportGridCard)
+- Don't use for algorithmic recommendations (use ReportCard)
 
 ### WHERE
 Atomic level: **Molecule**. Used in AnalystPicksSection.
@@ -692,11 +948,11 @@ import { AnalystPickCardB } from './molecules';
 
 | Addition | Description |
 |----------|-------------|
-| `xs` size | 28px height, 12px font -- for compact card CTAs |
-| `brand` variant | Red gradient shimmer -- for high-impact CTAs |
+| `xs` size | 28px height, 12px font — for compact card CTAs |
+| `brand` variant | Red gradient shimmer — for high-impact CTAs |
 | `iconOnly` mode | Square button (width = height) for icon-only buttons |
 | `type` prop | `'button' \| 'submit' \| 'reset'` for form integration |
-| `fullWidth` responsive | `w-full sm:w-auto` -- full on mobile, auto on desktop |
+| `fullWidth` responsive | `w-full sm:w-auto` — full on mobile, auto on desktop |
 
 ### New Size: xs
 
@@ -710,6 +966,7 @@ import { AnalystPickCardB } from './molecules';
 
 ### WHEN to use xs
 - Card footer CTAs (View Report, Explore Resources)
+- ReportCard list layout CTA button
 - Inline actions within tight layouts
 - Secondary actions that should not compete with primary buttons
 
@@ -731,14 +988,14 @@ import { AnalystPickCardB } from './molecules';
 
 | Addition | Description |
 |----------|-------------|
-| `level` prop | `1 \| 2 \| 3` -- renders correct h1/h2/h3 tag |
-| `action` prop | `{ text, onClick }` -- right-aligned CTALink |
-| `endSlot` prop | ReactNode -- right-aligned custom content (hidden mobile) |
-| `labelEndSlot` prop | ReactNode -- beside label (collapses below heading on mobile) |
-| `labelPulse` prop | boolean -- animated green dot before label |
-| `title` as prop | string -- heading text is now a prop, not children |
-| `subtitle` prop | string -- description below heading |
-| `spacing` prop | `'default' \| 'compact'` -- controls bottom margin |
+| `level` prop | `1 \| 2 \| 3` — renders correct h1/h2/h3 tag |
+| `action` prop | `{ text, onClick }` — right-aligned CTALink |
+| `endSlot` prop | ReactNode — right-aligned custom content (hidden mobile) |
+| `labelEndSlot` prop | ReactNode — beside label (collapses below heading on mobile) |
+| `labelPulse` prop | boolean — animated green dot before label |
+| `title` as prop | string — heading text is now a prop, not children |
+| `subtitle` prop | string — description below heading |
+| `spacing` prop | `'default' \| 'compact'` — controls bottom margin |
 
 ### Heading Font
 Font family `--font-serif`, weight `--font-weight-normal` (400), responsive size `clamp(1.375rem, 3vw, 1.875rem)`, color `rgba(0,0,0,0.88)`, tracking `[-0.01em]`.
@@ -768,7 +1025,7 @@ The Report Store needs a multi-tier navigation distinct from the case study Navb
 ### WHAT
 Three-tier header: (1) Top utility bar (trust message + contact, lg+ only), (2) Main navigation with logo + nav links + industry dropdown + contact CTA, (3) Mobile menu overlay with full nav + search.
 
-**Key pattern:** Dropdown `onBlur` uses `relatedTarget`-based container check -- NOT `setTimeout`.
+**Key pattern:** Dropdown `onBlur` uses `relatedTarget`-based container check — NOT `setTimeout`.
 
 ### WHEN
 - Use for Report Store and similar multi-section product pages
@@ -812,8 +1069,8 @@ Product listing pages need a standardized assembly pattern that handles two mode
 ### WHAT
 A dual-mode page template:
 
-**Mode 1 -- Home (Discovery):** Curated editorial sections when no filters are active.
-**Mode 2 -- Listing (Filtered):** Sidebar + card grid when industry/filters/search is active.
+**Mode 1 — Home (Discovery):** Curated editorial sections when no filters are active.
+**Mode 2 — Listing (Filtered):** Sidebar + card grid when industry/filters/search is active.
 
 ### Page Assembly
 
@@ -834,7 +1091,7 @@ IF listing mode:
   Container(page)
     2-column grid (lg):
       Left: IndustrySidebar (desktop filters)
-      Right: Sort toolbar + ViewToggle + card grid + pagination
+      Right: Sort toolbar + ViewToggle + ReportCard grid/list + pagination
 
 Footer (dark)
 MobileFilterBar (floating, < lg)
@@ -853,31 +1110,52 @@ Toaster (sonner)
 
 ---
 
-## Card Anatomy Standard (GridCard)
+## Card Anatomy Standard
 
 ### WHY
-Every grid card across the page must follow the same visual anatomy for consistency.
+Every report card across the page must follow the same visual anatomy for consistency across both grid and list layouts.
 
-### WHAT
-The canonical grid card anatomy:
+### WHAT — Grid Layout
+The canonical grid card anatomy (ReportCard `layout="grid"`):
 
 ```
 1. Image (16:9 aspect ratio)
    - overflow-hidden for img-zoom
    - gradient overlay (bottom 1/3)
-   - optional badge (top-left)
+   - optional overlayBadge (top-left)
 2. Content padding (p-4, gap-2.5)
    a. IndustryBadge eyebrow (subcat or industry)
    b. Title (2-line clamp, --text-nav, font-weight 500)
    c. CardMetaRow (projection + region OR region + date)
-   d. CardFooterRow (date -- Variant A only)
+   d. CardFooterRow (date — Variant A only)
 ```
 
-### What is NOT in the card
+### WHAT — List Layout
+The canonical list card anatomy (ReportCard `layout="list"`):
+
+```
+1. Horizontal flex container
+   a. Thumbnail (w-20 sm:w-28 md:w-36, self-stretch)
+      - overflow-hidden for img-zoom
+      - optional overlayBadge (top-left)
+   b. Content column (flex-1, py-3 px-3 sm:px-4, gap-1.5)
+      - IndustryBadge eyebrow
+      - Title (2-line clamp, --text-nav)
+      - Description (1-line clamp, sm+ only, optional)
+      - CardMetaRow (mt-auto, pinned to bottom)
+   c. Right column (hidden sm:flex, flex-col, items-end, py-3 pr-4)
+      - Date (--text-2xs, top)
+      - Projection badge (TrendingUp green, middle, if present)
+      - CTA Button (secondary xs showArrow, bottom)
+```
+
+### What is NOT in either card layout
 - No tables/figures meta
 - No spacer div
-- No border-top divider
-- No View Report button (removed from grid variant)
+- No border-top divider inside content area
+- Grid: No "View Report" button (CTA is in list layout only)
+- List: No CardFooterRow (date is in right column)
+- List: No image gradient overlay (image is too small)
 
 ---
 
@@ -888,31 +1166,31 @@ The canonical grid card anatomy:
 ## Which Card Component Should I Use?
 
 ```
-Am I building a horizontal carousel?
-  YES -> Use ReportGridCard (simpler API, flat props)
-  NO  |
-
-Am I building a main listing grid/list?
-  YES -> Use ResourceCard with variant="grid" or variant="list"
-  NO  |
-
-Am I showing a featured/hero card?
-  YES -> Use ResourceCard with variant="featured"
-  NO  |
-
-Am I showing a ranked list (top downloads)?
-  YES -> Use ResourceCard with variant="compact"
+Am I showing report/content cards?
+  YES |
+      Am I in a horizontal carousel on the home page?
+        YES -> Use ReportCard layout="grid" (simpler, in flex-shrink-0 wrapper)
+        NO  |
+      Am I in the main listing grid/list with ViewToggle?
+        YES -> Use ReportCard layout={viewMode} (grid or list, synced with toggle)
+        NO  |
+      Am I showing a featured/hero card?
+        YES -> Use ResourceCard with variant="featured" (case study DS)
+        NO  |
+      Am I showing a ranked list (top downloads)?
+        YES -> Use ResourceCard with variant="compact" (case study DS)
+        NO  -> Use ReportCard layout="grid" (safe default)
   NO  |
 
 Am I showing analyst recommendations?
   YES -> Use AnalystPickCardB
   NO  |
 
-Am I showing key statistics?
+Am I showing key statistics with descriptions and CTAs?
   YES -> Use StatCard
   NO  |
 
-Am I showing real-time data points?
+Am I showing compact real-time data points?
   YES -> Use DataHighlightCard
   NO  -> Use Card component directly with custom content
 ```
@@ -943,7 +1221,8 @@ Do I need a scroll-to-top button?
 
 ```
 Is data loading for a card grid?
-  YES -> Use SkeletonCard (match variant to view mode)
+  YES -> Use SkeletonCard with variant matching ViewToggle's viewMode
+         (variant="grid" for grid mode, variant="list" for list mode)
   NO  |
 
 Did filters return zero results?
@@ -990,11 +1269,13 @@ Am I animating an image load?
 
 3. For listing/catalog pages:
    - Add ViewToggle for list/grid switch
+   - Add ReportCard with layout={viewMode} for cards
+   - Add SkeletonCard with variant={viewMode} for loading
    - Add FiltersPanel for desktop filters
    - Add MobileFilterBar + MobileFilterSheet for mobile
-   - Add SkeletonCard for loading states
    - Add EmptyState for zero results
    - Add BackToTop for long scrolling
+   - Wrap each card in CardReveal for entrance animations
 
 4. For editorial/content pages:
    - Use FeaturedResearch pattern for hero + side grid
@@ -1004,9 +1285,9 @@ Am I animating an image load?
 
 5. Final checks:
    - All icons use iconColors.content or iconColors.utility
-   - All cards follow the standard anatomy (no rogue dividers/buttons)
+   - All report cards use ReportCard (not deprecated ReportGridCard)
    - Touch targets meet 44px minimum on mobile
-   - SkeletonCard variant matches view mode
+   - SkeletonCard variant matches ViewToggle viewMode
    - EmptyState has recovery action
    - BackToTop positioned to clear MobileFilterBar
    - prefers-reduced-motion respected
@@ -1015,7 +1296,37 @@ Am I animating an image load?
 
 ---
 
-**Last Updated:** March 10, 2026
-**Design System Version:** 4.0
+## Component Triad: ViewToggle ↔ ReportCard ↔ SkeletonCard
+
+These three components are designed to work as a unified system. Their mode/layout/variant values are intentionally aligned:
+
+```
+ViewToggle.viewMode ───→ ReportCard.layout ───→ card renders in matching format
+         │
+         └──────────→ SkeletonCard.variant ──→ loading skeleton matches format
+
+  "grid"  ─→  layout="grid"   ─→  Vertical card (image top, content bottom)
+              variant="grid"  ─→  Vertical skeleton
+
+  "list"  ─→  layout="list"   ─→  Horizontal card (thumbnail left, content+CTA right)
+              variant="list"  ─→  Horizontal skeleton
+```
+
+This alignment means you can use a single `viewMode` state variable to drive all three:
+
+```tsx
+const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+<ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+{isLoading
+  ? <SkeletonCard variant={viewMode} />
+  : <ReportCard layout={viewMode} {...report} />
+}
+```
+
+---
+
+**Last Updated:** March 11, 2026
+**Design System Version:** 4.1
 **Repository:** vsoffice001-cloud/Design-System-vs-26
 **Companion Docs:** `COMPONENT_GUIDELINES_4WH.md`, `ai-context/CORE.md`
