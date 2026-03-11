@@ -1,78 +1,131 @@
 import { ReactNode } from 'react';
+import { CTALink } from '@/app/components/CTALink';
 
 /**
- * SectionHeading Component
- * 
- * Reusable heading molecule with optional eyebrow text.
- * Enforces Major Third (1.25) typography scale and serif/sans rules.
- * 
- * Typography Scale:
- * - H1: 2.441rem → 3.052rem (Hero only — one per page)
- * - H2: 1.953rem → 2.441rem (Section headings)
- * - H3: 1.563rem → 1.953rem (Subsection headings)
- * 
- * Font Rule: Serif (light) at 1.953rem+; sans (medium) below.
- * H3 switches from sans on mobile to serif on sm+ breakpoint.
- * 
- * @param level - Heading level (1, 2, or 3)
- * @param children - Heading text content
- * @param eyebrow - Optional small text above the heading
- * @param align - Text alignment: 'left' | 'center' | 'right'
- * @param className - Additional CSS classes
- * 
- * @example
- * ```tsx
- * <SectionHeading level={2} eyebrow="MARKET INSIGHTS" align="center">
- *   AI in Healthcare: A $45B Opportunity
- * </SectionHeading>
- * ```
+ * SectionHeading — Ken Bold DS v4.0
+ *
+ * Clean section header with generous whitespace and editorial feel.
+ * Supports semantic heading levels (h1/h2/h3) via `level` prop.
+ * Prop-driven API: title, subtitle, label, action, slots.
  */
 
 interface SectionHeadingProps {
+  title: string;
+  subtitle?: string;
+  label?: string;
+  action?: { text: string; onClick?: () => void };
+  spacing?: 'default' | 'compact';
+  align?: 'left' | 'center';
+  maxWidth?: 'xl' | 'lg' | 'none';
+  /** Semantic heading level: 1 = h1 (hero only), 2 = h2 (default), 3 = h3 (subsection) */
   level?: 1 | 2 | 3;
-  children: ReactNode;
-  className?: string;
-  eyebrow?: string;
-  align?: 'left' | 'center' | 'right';
+  children?: ReactNode;
+  endSlot?: ReactNode;
+  labelEndSlot?: ReactNode;
+  labelPulse?: boolean;
 }
 
-export function SectionHeading({ 
-  level = 2, 
-  children, 
-  className = '', 
-  eyebrow,
-  align = 'center' 
+export function SectionHeading({
+  title,
+  subtitle,
+  label,
+  action,
+  spacing = 'default',
+  align = 'left',
+  maxWidth = 'none',
+  level = 2,
+  endSlot,
+  labelEndSlot,
+  labelPulse,
 }: SectionHeadingProps) {
-  const alignClasses = {
-    left: 'text-left',
-    center: 'text-center',
-    right: 'text-right',
-  };
-
-  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
-  
-  const sizeClasses = {
-    1: 'text-[2.441rem] sm:text-[3.052rem] leading-tight',
-    2: 'text-[1.953rem] sm:text-[2.441rem] leading-tight',
-    3: 'text-[1.563rem] sm:text-[1.953rem] leading-tight',
-  };
-
-  const fontClasses = {
-    1: 'font-serif font-light',
-    2: 'font-serif font-light',
-    3: 'font-sans font-medium sm:font-serif sm:font-light',
-  };
+  const spacingClass = spacing === 'compact' ? 'mb-8 md:mb-10' : 'mb-10 md:mb-12';
+  const isCenter = align === 'center';
+  const widthClass =
+    isCenter ? 'max-w-lg' : maxWidth === 'xl' ? 'max-w-xl' : maxWidth === 'lg' ? 'max-w-lg' : '';
 
   return (
-    <div className={`${alignClasses[align]} ${className}`}>
-      {eyebrow && (
-        <p className="text-[0.8rem] uppercase tracking-wider mb-3 text-[#737373] font-sans">
-          {eyebrow}
-        </p>
+    <div className={`${spacingClass} ${isCenter ? 'text-center' : ''}`}>
+      {(label || labelEndSlot) && (
+        <div className="flex items-center justify-between mb-2">
+          {label && (
+            <p
+              className="tracking-[0.15em] uppercase flex items-center gap-2"
+              style={{ fontSize: 'var(--text-2xs)', color: 'rgba(0,0,0,0.35)' }}
+            >
+              {labelPulse && (
+                <span
+                  className="w-2 h-2 rounded-full animate-pulse flex-shrink-0"
+                  style={{ background: 'var(--green-500)' }}
+                />
+              )}
+              {label}
+            </p>
+          )}
+          {labelEndSlot && (
+            <div className="hidden md:flex">
+              {labelEndSlot}
+            </div>
+          )}
+        </div>
       )}
-      <HeadingTag className={`${fontClasses[level]} ${sizeClasses[level]}`}>
-        {children}
-      </HeadingTag>
+      <div
+        className={`flex items-end ${
+          isCenter ? 'justify-center' : 'justify-between'
+        } gap-6`}
+      >
+        <div className={widthClass}>
+          {(() => {
+            const headingStyle = {
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 'var(--font-weight-normal, 400)' as any,
+              fontSize: 'clamp(1.375rem, 3vw, 1.875rem)',
+              color: 'rgba(0,0,0,0.88)',
+            };
+            const headingClass = "leading-[1.1] tracking-[-0.01em]";
+
+            if (level === 1) return (
+              <h1 className={headingClass} style={headingStyle}>{title}</h1>
+            );
+            if (level === 3) return (
+              <h3 className={headingClass} style={headingStyle}>{title}</h3>
+            );
+            return (
+              <h2 className={headingClass} style={headingStyle}>{title}</h2>
+            );
+          })()}
+          {subtitle && (
+            <p
+              className={`mt-2 leading-relaxed ${isCenter ? 'mx-auto' : ''}`}
+              style={{ fontSize: 'var(--text-nav)', color: 'rgba(0,0,0,0.4)' }}
+            >
+              {subtitle}
+            </p>
+          )}
+        </div>
+        {(action || endSlot) && (
+          <div className="flex items-center gap-3 flex-shrink-0">
+            {endSlot && (
+              <div className="hidden sm:flex">
+                {endSlot}
+              </div>
+            )}
+            {action && (
+              <div className="flex">
+                <CTALink size="md" onClick={action.onClick}>
+                  {action.text}
+                </CTALink>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* labelEndSlot — show below heading on mobile, inline on md+ */}
+      {labelEndSlot && (
+        <div className="flex md:hidden mt-3">
+          {labelEndSlot}
+        </div>
+      )}
     </div>
   );
 }
