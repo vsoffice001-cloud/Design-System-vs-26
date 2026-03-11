@@ -3,7 +3,7 @@
  *
  * Atomic Design hierarchy:
  * - Atoms:      Badge, Button, CTALink, InlineLink, Container, Tooltip, ViewToggle, FadeInSection
- * - Molecules:  IndustryBadge, CardMetaRow, CardFooterRow, ReportGridCard, HorizontalScroll, etc.
+ * - Molecules:  IndustryBadge, CardMetaRow, CardFooterRow, ReportCard, HorizontalScroll, etc.
  * - Organisms:  Section components (HomeSectionsA/B/C, IndustryReportSection)
  * - Templates:  Page layouts
  * - Pages:      App.tsx
@@ -12,6 +12,9 @@ export { IndustryBadge } from "./IndustryBadge";
 export { CardMetaRow } from "./CardMetaRow";
 export type { CardMetaVariant } from "./CardMetaRow";
 export { CardFooterRow } from "./CardFooterRow";
+export { ReportCard } from "./ReportCard";
+export type { ReportCardLayout, ReportCardProps } from "./ReportCard";
+/** @deprecated Use ReportCard with layout="grid" | "list" instead */
 export { ReportGridCard } from "./ReportGridCard";
 export { HorizontalScroll } from "./HorizontalScroll";
 export { ScrollFade } from "./ScrollFade";
