@@ -9,7 +9,7 @@
  *               FilterAccordion, SidebarPanel, ActiveFilterChip, CategoryListCard,
  *               SkeletonCard, EmptyState, BackToTop, CardReveal, RevealImage, ScrollFade
  * - Organisms:  IndustrySidebar, IndustrySectorsGrid, MobileFilterSheet, MobileFilterBar,
- *               ReportCard, ResourceCard, Section components
+ *               ReportCard, Section components
  * - Templates:  Page layouts
  * - Pages:      App.tsx
  */

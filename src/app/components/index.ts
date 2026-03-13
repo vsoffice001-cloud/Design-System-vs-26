@@ -1,6 +1,7 @@
 /**
- * VS Design System - Component Library Exports
- * 
+ * VS Design System — Component Library Exports
+ * v4.2
+ *
  * Centralized export file for all design system components.
  * Import components using: import { Button, CTALink, InlineLink } from '@/app/components'
  */
@@ -18,15 +19,12 @@ export { InlineLink } from './InlineLink';
 export { AnimatedArrow } from './AnimatedArrow';
 
 // 🏷️ BADGE & LABEL SYSTEM
-// Badge.tsx: Unified component for Badges, Section Labels, and Chapter Labels
 export { Badge, SectionLabel } from './Badge';
 export type { BadgeVariant, BadgeSize, BadgeTheme, BadgeMode, BadgeProps } from './Badge';
-// Convenience wrappers (pre-configured Badge patterns)
 export { StepPill, ObjectivePill, ObjectivePillInteractive } from './Badge';
 export { InfoCardLabel, CategoryBadge, StatusBadge, InfoBadge, MutedBadge, ClickableBadge } from './Badge';
 export { BADGE_TOKENS } from './Badge';
 
-// Label.tsx: Semantic <label> for forms (NOT for section headers)
 export { Label } from './Label';
 export type { LabelVariant } from './Label';
 
@@ -35,6 +33,11 @@ export { Tooltip } from './Tooltip';
 export { ViewToggle } from './ViewToggle';
 export type { ViewMode } from './ViewToggle';
 export { FadeInSection } from './FadeInSection';
+export { FilterCheckbox } from './FilterCheckbox';
+export { FilterChip } from './FilterChip';
+export { FilterSearchInput } from './FilterSearchInput';
+export { IconBadge } from './IconBadge';
+export { CategoryListItem } from './CategoryListItem';
 
 // 🧱 MOLECULES (v4.0 — Report Store)
 export {
@@ -52,8 +55,54 @@ export {
   SkeletonCard,
   CardReveal,
   RevealImage,
+  FilterAccordion,
+  SidebarPanel,
+  ActiveFilterChip,
+  CategoryListCard,
 } from './molecules';
-export type { CardMetaVariant } from './molecules';
+export type {
+  CardMetaVariant,
+  FilterAccordionVariant,
+  ActiveFilterType,
+  CategoryListCardItem,
+  CategoryListCardProps,
+} from './molecules';
+
+// 🏛️ REPORT STORE ORGANISMS (v4.2)
+export { ReportCard } from './ReportCard';
+export type { ReportCardData, ReportCardVariant } from './ReportCard';
+export { ReportStoreHero } from './ReportStoreHero';
+export { FeaturedResearch } from './FeaturedResearch';
+export { IndustrySectorsGrid } from './IndustrySectorsGrid';
+export { IndustryReportSection } from './IndustryReportSection';
+export { IndustrySidebar } from './IndustrySidebar';
+export { FiltersPanel } from './FiltersPanel';
+export { ListingContextBanner } from './ListingContextBanner';
+export { MobileFilterSheet } from './MobileFilterSheet';
+export { MobileFilterBar } from './MobileFilterBar';
+export { CustomResearchCTA } from './CustomResearchCTA';
+export { RecommendedForYou } from './RecommendedForYou';
+export { AnalystPicks } from './AnalystPicks';
+export { TrendingStatistics } from './TrendingStatistics';
+export { DailyDataHighlights } from './DailyDataHighlights';
+export { QuickAccess } from './QuickAccess';
+export { TopDownloads } from './TopDownloads';
+export { TrendingTopics } from './TrendingTopics';
+export { ExploreByRegion } from './ExploreByRegion';
+export { Testimonials } from './Testimonials';
+export { UpcomingReports } from './UpcomingReports';
+export { NewsletterSignup } from './NewsletterSignup';
+
+// 📄 REPORT STORE TEMPLATE (v4.2)
+// export { ReportStorePage } from './ReportStorePage';
+
+// 🪝 HOOKS (v4.2 — Report Store)
+export {
+  useReportFilters,
+  useProgressiveLoad,
+  useCrossfade,
+  useMountTransition,
+} from './hooks';
 
 // Demo/Testing Components
 export { LinkSystemDemo } from './LinkSystemDemo';
@@ -67,7 +116,7 @@ export { Navbar } from './Navbar';
 export { DesignSystemDashboard } from './DesignSystemDashboard';
 export { DesignSystemSidebar } from './DesignSystemSidebar';
 
-// Resource System Components
+// Resource System Components (Case Study)
 export { ResourceCard } from './ResourceCard';
 export { SubtleVariantSwitcher } from './SubtleVariantSwitcher';
 
@@ -94,7 +143,6 @@ export {
   ElevationContent,
   BorderRadiusContent
 } from './FoundationsContent';
-// Re-exported "All Tokens" pages (originally from their own files, barrel-exported via FoundationsContent)
 export {
   AllColorsPaletteContent,
   AllTypographyTokensContent,
@@ -112,7 +160,6 @@ export {
   FeedbackContent,
   IconsContent
 } from './ComponentsContent';
-// Re-exported documentation pages (originally from their own files, barrel-exported via ComponentsContent)
 export {
   ButtonDocumentation as ButtonDocumentationPage,
   LinksDocumentation as LinksDocumentationPage,
@@ -168,6 +215,7 @@ export { ScrollProgress } from './ScrollProgress';
 // 🎨 ICON COLOR SYSTEM (v3.3)
 export { iconColors, getIconColor } from './iconColors';
 export type { IconColorType } from './iconColors';
+export { industryIconMap } from './industryIconMap';
 
 // Modal/Overlay Components
 export { ContactModal } from './ContactModal';
