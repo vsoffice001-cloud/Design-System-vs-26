@@ -8,6 +8,7 @@
  * - Molecules:  IndustryBadge, CardMetaRow, CardFooterRow, HorizontalScroll,
  *               FilterAccordion, SidebarPanel, ActiveFilterChip, CategoryListCard,
  *               SkeletonCard, EmptyState, BackToTop, CardReveal, RevealImage, ScrollFade
+ *               LoadMoreSentinel
  * - Organisms:  IndustrySidebar, IndustrySectorsGrid, MobileFilterSheet, MobileFilterBar,
  *               ReportCard, Section components
  * - Templates:  Page layouts
@@ -35,3 +36,5 @@ export { ActiveFilterChip } from "./ActiveFilterChip";
 export type { ActiveFilterType } from "./ActiveFilterChip";
 export { CategoryListCard } from "./CategoryListCard";
 export type { CategoryListCardItem, CategoryListCardProps } from "./CategoryListCard";
+export { LoadMoreSentinel } from "./LoadMoreSentinel";
+export type { LoadMoreSentinelProps } from "./LoadMoreSentinel";
