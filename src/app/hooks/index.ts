@@ -22,3 +22,10 @@ export { useMagneticEffect } from './useMagneticEffect';
 
 // Layout Hooks
 export { useResponsiveGutter } from './useResponsiveGutter';
+
+// ── Report Store Hooks (v4.3) ────────────────────────────
+export { useReportFilters } from './useReportFilters';
+export type { ActiveChip, ReportFilters } from './useReportFilters';
+export { useProgressiveLoad } from './useProgressiveLoad';
+export { useCrossfade } from './useCrossfade';
+export { useMountTransition } from './useMountTransition';
