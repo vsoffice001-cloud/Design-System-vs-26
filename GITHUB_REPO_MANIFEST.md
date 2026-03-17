@@ -71,9 +71,9 @@ src/
  │   ├── components/                # All UI components
  │   │   ├── figma/                 # ImageWithFallback shim
  │   │   ├── foundations/           # Modular Foundations tab content (v3.4.0)
- │   │   ├── molecules/            # Molecules (26 files, v4.3)
- │   │   └── organisms/           # Organisms (30 files — 6 cross-pillar + 24 RS, v4.3)
- │   └── hooks/                     # Custom React hooks
+ │   │   ├── molecules/            # 26 molecule components + index.ts barrel (v4.3)
+ │   │   └── organisms/            # 30 organism components + index.ts barrel — 6 cross-pillar + 24 RS (v4.3)
+ │   └── hooks/                     # 14 custom hooks + index.ts barrel
  ├── design-system/                 # Design tokens & showcase components
  ├── imports/                       # SVG imports from Figma
  └── styles/                        # CSS files (theme, fonts, tailwind, report-store-additions)
@@ -137,7 +137,7 @@ Molecules:
 
 ---
 
-## `src/app/hooks/` (15 files)
+## `src/app/hooks/` (14 hooks + index.ts barrel)
 
 | File | Purpose |
 |------|--------|
@@ -174,9 +174,9 @@ Molecules:
 
 | Date | Changes |
 |------|---------|
-| Mar 17, 2026 | **v4.3 DS Audit:** 5 code fixes (arrow prop, hex→rgba, hex→var), documentation v4.3 (CORE.md, COMPONENTS.md, AI_CONTEXT, MANIFEST), FiltersDocumentation enhanced |
-| Mar 13, 2026 | **v4.3 Report Store Architecture:** Monolithic → organism architecture. 4 hooks, 9 organisms, `ReportStorePage.tsx` template |
-| Mar 11, 2026 | **v4.2 Filter System:** 3 atoms + 3 molecules extracted from monolithic code |
+| Mar 17, 2026 | **v4.3 DS Audit:** 5 code fixes (arrow prop, hex→rgba, hex→var), documentation v4.3 (CORE.md, COMPONENTS.md, AI_CONTEXT, MANIFEST), FiltersDocumentation full push (75KB) |
+| Mar 13, 2026 | **v4.0 Report Store Architecture:** Monolithic → organism architecture. 4 hooks, 30 organisms, `ReportStorePage.tsx` template |
+| Mar 11, 2026 | **v4.2 Filter System:** 6 atoms + 4 molecules extracted from monolithic code |
 | Mar 11, 2026 | **v4.1 ReportCard grid+list:** Unified card with `layout` prop |
 | Mar 11, 2026 | **v4.1 Molecule Push:** 3 atoms, 14 molecules, 1 shim |
 | Mar 10, 2026 | **v4.0 Report Store Components:** 4WH doc, evolved Button/SectionHeading/Card |
