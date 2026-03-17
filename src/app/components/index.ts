@@ -36,12 +36,11 @@ export { ViewToggle } from './ViewToggle';
 export type { ViewMode } from './ViewToggle';
 export { FadeInSection } from './FadeInSection';
 
-// 🧱 MOLECULES (v4.3 — Report Store + Surveys + Filters)
+// 🧱 MOLECULES (v4.0 — Report Store)
 export {
   IndustryBadge,
   CardMetaRow,
   CardFooterRow,
-  ReportCard,
   ReportGridCard,
   HorizontalScroll,
   ScrollFade,
@@ -53,22 +52,8 @@ export {
   SkeletonCard,
   CardReveal,
   RevealImage,
-  CompletionBadge,
-  SurveyCard,
-  ResponseChart,
-  QuestionPreview,
-  SurveySkeleton,
-  FilterAccordion,
-  SidebarPanel,
-  ActiveFilterChipBar,
-  MobileFilterSheet,
-  CategoryListCard,
-  LoadMoreSentinel,
 } from './molecules';
 export type { CardMetaVariant } from './molecules';
-export type { ReportCardLayout, ReportCardProps } from './molecules';
-export type { SurveyCardLayout, SurveyCardProps } from './molecules';
-export type { QuestionType, QuestionPreviewProps } from './molecules';
 
 // Demo/Testing Components
 export { LinkSystemDemo } from './LinkSystemDemo';
@@ -80,7 +65,6 @@ export { ShimmerDemo } from './ShimmerDemo';
 export { Container } from './Container';
 export { Navbar } from './Navbar';
 export { DesignSystemDashboard } from './DesignSystemDashboard';
-export { DesignSystemSidebar } from './DesignSystemSidebar';
 
 // Resource System Components
 export { ResourceCard } from './ResourceCard';
