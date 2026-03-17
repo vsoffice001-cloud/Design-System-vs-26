@@ -1,16 +1,12 @@
 /**
- * Molecules barrel export
+ * Molecules barrel export (v4.3)
  *
  * Atomic Design hierarchy:
- * - Atoms:      Badge, Button, CTALink, InlineLink, Container, iconColors,
- *               FilterCheckbox, FilterChip, FilterSearchInput, Tooltip, ViewToggle,
- *               IconBadge, CategoryListItem
- * - Molecules:  IndustryBadge, CardMetaRow, CardFooterRow, HorizontalScroll,
- *               FilterAccordion, SidebarPanel, ActiveFilterChip, CategoryListCard,
- *               SkeletonCard, EmptyState, BackToTop, CardReveal, RevealImage, ScrollFade
- *               LoadMoreSentinel
- * - Organisms:  IndustrySidebar, IndustrySectorsGrid, MobileFilterSheet, MobileFilterBar,
- *               ReportCard, Section components
+ * - Atoms:      Badge, Button, CTALink, InlineLink, Container, Tooltip, ViewToggle,
+ *               FadeInSection, FilterCheckbox, FilterChip, FilterSearchInput
+ * - Molecules:  IndustryBadge, CardMetaRow, CardFooterRow, ReportCard, HorizontalScroll,
+ *               FilterAccordion, SidebarPanel, ActiveFilterChipBar, etc.
+ * - Organisms:  Section components (HomeSectionsA/B/C, IndustryReportSection)
  * - Templates:  Page layouts
  * - Pages:      App.tsx
  */
@@ -18,6 +14,9 @@ export { IndustryBadge } from "./IndustryBadge";
 export { CardMetaRow } from "./CardMetaRow";
 export type { CardMetaVariant } from "./CardMetaRow";
 export { CardFooterRow } from "./CardFooterRow";
+export { ReportCard } from "./ReportCard";
+export type { ReportCardLayout, ReportCardProps } from "./ReportCard";
+/** @deprecated Use ReportCard with layout="grid" | "list" instead */
 export { ReportGridCard } from "./ReportGridCard";
 export { HorizontalScroll } from "./HorizontalScroll";
 export { ScrollFade } from "./ScrollFade";
@@ -29,12 +28,22 @@ export { BackToTop } from "./BackToTop";
 export { SkeletonCard } from "./SkeletonCard";
 export { CardReveal } from "./CardReveal";
 export { RevealImage } from "./RevealImage";
+
+// ── Surveys pillar molecules (v4.2) ──────────────────────
+export { CompletionBadge } from "./CompletionBadge";
+export { SurveyCard } from "./SurveyCard";
+export type { SurveyCardLayout, SurveyCardProps } from "./SurveyCard";
+export { ResponseChart } from "./ResponseChart";
+export { QuestionPreview } from "./QuestionPreview";
+export type { QuestionType, QuestionPreviewProps } from "./QuestionPreview";
+export { SurveySkeleton } from "./SurveySkeleton";
+
+// ── Filter system molecules (v4.2 extraction) ───────────
 export { FilterAccordion } from "./FilterAccordion";
-export type { FilterAccordionVariant } from "./FilterAccordion";
 export { SidebarPanel } from "./SidebarPanel";
-export { ActiveFilterChip } from "./ActiveFilterChip";
-export type { ActiveFilterType } from "./ActiveFilterChip";
+export { ActiveFilterChipBar } from "./ActiveFilterChip";
+export { MobileFilterSheet } from "./MobileFilterSheet";
+
+// ── v4.3 additions ──────────────────────────────
 export { CategoryListCard } from "./CategoryListCard";
-export type { CategoryListCardItem, CategoryListCardProps } from "./CategoryListCard";
 export { LoadMoreSentinel } from "./LoadMoreSentinel";
-export type { LoadMoreSentinelProps } from "./LoadMoreSentinel";
