@@ -1,8 +1,8 @@
 # Design System — Core Rules & AI Checklist
 
 **Module:** `ai-context/CORE.md`  
-**Version:** 4.0  
-**Date:** 2026-03-10  
+**Version:** 4.3  
+**Date:** 2026-03-17  
 **Part of:** [DESIGN_SYSTEM_AI_CONTEXT.md](../DESIGN_SYSTEM_AI_CONTEXT.md) modularization
 
 ---
@@ -71,23 +71,42 @@ Import components from `/src/app/components/`, use CSS variables from `theme.css
 
 ---
 
-## Component Inventory (v4.0)
+## Component Inventory (v4.3)
 
-### Atoms (15)
-Button, Badge, AnimatedArrow, CTALink, InlineLink, Label, Container, SectionHeading, SectionWrapper, Card, **Tooltip**, **ViewToggle**, **FadeInSection**, iconColors
+### Atoms — Core (18)
+Button, CTALink, InlineLink, AnimatedArrow, Badge (+ SectionLabel, StepPill, StatusBadge, etc.), Label, Card, IconBadge, Tooltip, ViewToggle, FadeInSection, FilterCheckbox, FilterChip, FilterSearchInput, FilterSectionHeader, FilterCheckboxItem, FilterIndustryItem, CategoryListItem
 
-### Molecules (20+)
-ResourceCard, ReportGridCard, StatCard, DataHighlightCard, AnalystPickCardB, IndustryBadge, CardMetaRow, CardFooterRow, CardReveal, RevealImage, SkeletonCard, EmptyState, BackToTop, HorizontalScroll, ScrollFade, CollapsibleSection, CodeBlockWithCopy, SpacingHelpers, VariantSwitcher
+### Atoms — Layout & Utility (14)
+Container, SectionHeading, SectionWrapper, Navbar, CodeBlockWithCopy, CollapsibleSection, ReadingProgressBar, ScrollProgress, ScrollToTop, SpacingHelpers, VariantSwitcher, SubtleVariantSwitcher, TableOfContents, NextSectionCTA
 
-### Organisms (Case Study)
-HeroSection, ClientContextSection, ChallengesSection, EngagementObjectivesSection, MethodologySection, ImpactSection, ValuePillarsSection, TestimonialSection, ResourcesSection, FinalCTASection, Navbar, ContactModal, StickyCTA
+### Atoms — Overlays (2)
+ContactModal, StickyCTA
 
-### Organisms (Report Store)
-Header, HeroSection, Footer, FiltersPanel, MobileFilterBar, MobileFilterSheet, IndustrySidebar, FeaturedResearch, IndustrySectorsGrid, ListingContextBanner, CustomResearchCTA
+### Data & Config (3 files)
+`data.ts` (mock data), `iconColors.ts` (icon color tokens), `industryIconMap.ts` (industry→icon mapping)
+
+### Molecules (26 in `/components/molecules/`)
+IndustryBadge, CardMetaRow, CardFooterRow, ReportCard, ReportGridCard (deprecated), HorizontalScroll, ScrollFade, AnalystPickCardB, StatCard, DataHighlightCard, EmptyState, BackToTop, SkeletonCard, CardReveal, RevealImage, CompletionBadge, SurveyCard, ResponseChart, QuestionPreview, SurveySkeleton, FilterAccordion, SidebarPanel, ActiveFilterChipBar, MobileFilterSheet, CategoryListCard, LoadMoreSentinel
+
+### Molecules — Resource (1 in root)
+ResourceCard (7 variants — flat, article, minimal, dark-overlay, image-top, image-top-new, compact)
+
+### Organisms — Cross-Pillar (6 in `/components/organisms/`)
+ProductHero, FeaturedCarousel, StatsRow, BrowseGrid, CTABanner, ProductPageTemplate
+
+### Organisms — Report Store (24 in `/components/organisms/`)
+ReportStoreHero, FeaturedResearch, ListingToolbar, CardListing, FiltersPanel, IndustrySidebar, IndustryFocusBanner, DailyDataHighlights, AnalystPicks, IndustrySectorsGrid, KeyMarketIndicators, RecommendedForYou, CustomResearchCTA, TrendingTopics, TopDownloads, RecentlyViewed, UpcomingReports, ResearchMethodology, NewsletterSignup, IndustrySpotlight, ComparisonTable, ReportPreview, TestimonialsRS, QuickAccessBar
+
+### Organisms — Case Study / Display (10 in root `/components/`)
+HeroSection, ClientContextSection, ChallengesSection, EngagementObjectivesSection, MethodologySection, ImpactSection, ValuePillarsSection, TestimonialSection, ResourcesSection, FinalCTASection
 
 ### Templates
 - **Case Study:** Black/White/Warm alternating, ReadingProgressBar, StickyCTA, Navbar
-- **Report Store:** Dual-mode (home/listing), Header+Footer, MobileFilterBar, BackToTop
+- **Report Store:** Dual-mode (home/listing) via `ReportStorePage.tsx`, declarative via `ProductPageTemplate`
+- **Surveys:** SurveysDemoContent, SurveysListingDemoContent (reuses RS organisms + survey molecules)
+
+### Custom Hooks (14 in `/app/hooks/`)
+useShimmer, useActiveSection, useScrollDirection, useScrollAnimation, useReadingProgress, useSectionProgress, useHeroVisibility, useCounter, useMagneticEffect, useResponsiveGutter, useReportFilters, useProgressiveLoad, useCrossfade, useMountTransition
 
 ---
 
@@ -135,6 +154,12 @@ Before generating ANY code, verify:
 13. Mix HorizontalScroll and ScrollFade (different use cases — see flowchart)
 14. Nest CardReveal inside FadeInSection (double animation)
 15. Use BackToTop AND ScrollToTop together (pick one per page)
+16. Use `ArrowRight` or `ChevronRight` on buttons — ALWAYS use `ArrowUpRight` via `showArrow` prop
+17. Embed static `<ArrowUpRight>` inside Button/CTALink — use `showArrow` prop instead
+18. Use hex colors in inline styles — ALWAYS use `rgba()` format or CSS variables
+19. Use CSS shorthand for `border` or `background` in inline styles — use longhand properties
+20. Use `--text-card-micro` (10px) for main items — ONLY for side numbers/counts
+21. Duplicate `px-4 sm:px-6 md:px-8` padding inside `SectionWrapper` children (double-padding bug)
 
 ### DO
 1. Use `variant="brand"` ONLY for conversion CTAs
@@ -152,6 +177,10 @@ Before generating ANY code, verify:
 13. Use `CardReveal` with stagger delay for card grid entrances
 14. Use `SkeletonCard` for loading states, `EmptyState` for zero results
 15. Use `ScrollFade` for pill/tab overflow, `HorizontalScroll` for card carousels
+16. Use `AnimatedArrow` with `isHovered` prop for bare arrows outside Button/CTALink (card footers, etc.)
+17. Use `rgba()` or `var()` for ALL inline style colors — never hex
+18. Use `--text-xs` (12.8px) for all main items, sub-items, and labels
+19. Use `--text-card-micro` (10px) ONLY for side numbers, counts, and micro-labels
 
 ---
 
@@ -190,10 +219,10 @@ AI-generated code should score:
 2. **Case Study Components:** `COMPONENT_GUIDELINES_4WH.md` (Button, Badge, CTALink, Card, Container, SectionHeading, etc.)
 3. **Report Store Components:** `REPORT_STORE_COMPONENTS_4WH.md` (Tooltip, ViewToggle, CardReveal, SkeletonCard, HorizontalScroll, StatCard, etc.)
 4. **Section Examples (Case Study):** `HeroSection.tsx`, `ChallengesSection.tsx`, `MethodologySection.tsx`
-5. **Section Examples (Report Store):** `Header.tsx`, `FeaturedResearch.tsx`, `IndustryReportSection.tsx`, `MobileFilterBar.tsx`
+5. **Section Examples (Report Store):** `ReportStoreHero.tsx`, `FeaturedResearch.tsx`, `IndustrySectorsGrid.tsx`, `ResearchMethodology.tsx`
 6. **Dashboard:** `DesignSystemDashboard.tsx` (visual reference)
 7. **Decision Flowcharts:** End of both 4WH docs
 
 ---
 
-**v4.0 | March 10, 2026 | Updated for Report Store page components**
+**v4.3 | March 17, 2026 | Full audit — accurate inventory, DS rule compliance verified, all arrow/token/hex fixes applied**

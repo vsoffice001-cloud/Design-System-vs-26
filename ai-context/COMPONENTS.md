@@ -1,7 +1,7 @@
 # Design System — Component Systems
 
 **Module:** `ai-context/COMPONENTS.md`  
-**Version:** 3.4  
+**Version:** 4.3  
 **Source of truth:** `/src/app/components/`  
 **Detailed 4W+H:** `COMPONENT_GUIDELINES_4WH.md`
 
@@ -117,7 +117,7 @@ Badge.tsx (JS)                    theme.css (CSS)
 ──────────────────────────────    ──────────────────────────────
 THEME_COLORS[theme][mode]         .badge { color: var(--badge-text) }
   ↓ sets inline CSS vars           .badge:hover {
-style={{                            background: var(--badge-hover-bg)
+ style={{                            background: var(--badge-hover-bg)
   '--badge-text': ...,            }
   '--badge-bg': ...,              .badge-shimmer { uses --badge-shimmer }
   '--badge-border': ...,
@@ -201,6 +201,66 @@ import { Label } from '@/app/components/Label';
 
 ---
 
+## Filter System (v4.3)
+
+Extracted from monolithic IndustrySidebar + MobileFilterSheet. 6 atoms + 4 molecules serving both Research and Surveys pillars.
+
+### Component Inventory
+
+| Component | Level | File | Purpose |
+|-----------|-------|------|---------|
+| `FilterCheckbox` | Atom | `FilterCheckbox.tsx` | Single filter option (label + count) |
+| `FilterChip` | Atom | `FilterChip.tsx` | Dismissible active filter pill |
+| `FilterSearchInput` | Atom | `FilterSearchInput.tsx` | Search input with clear button |
+| `FilterSectionHeader` | Atom | `FilterSectionHeader.tsx` | Collapsible section header with count badge |
+| `FilterCheckboxItem` | Atom | `FilterCheckboxItem.tsx` | Checkbox + label + count row (custom checkbox UI) |
+| `FilterIndustryItem` | Atom | `FilterIndustryItem.tsx` | Expandable industry row with sub-items |
+| `FilterAccordion` | Molecule | `molecules/FilterAccordion.tsx` | Titled filter group (static or collapsible) |
+| `SidebarPanel` | Molecule | `molecules/SidebarPanel.tsx` | Reusable sidebar container |
+| `ActiveFilterChipBar` | Molecule | `molecules/ActiveFilterChip.tsx` | Bar of active chips + "Clear all" |
+| `MobileFilterSheet` | Molecule | `molecules/MobileFilterSheet.tsx` | Full-screen mobile filter overlay |
+
+### Usage
+
+```tsx
+import { FilterSearchInput } from '@/app/components/FilterSearchInput';
+import { FilterCheckbox } from '@/app/components/FilterCheckbox';
+import { FilterChip } from '@/app/components/FilterChip';
+import {
+  FilterAccordion,
+  SidebarPanel,
+  ActiveFilterChipBar,
+} from '@/app/components/molecules';
+```
+
+### Decision Flowchart
+
+```
+Need a sidebar shell?              → SidebarPanel
+Need a filter group with heading?  → FilterAccordion (static or collapsible)
+Need a single filter option?       → FilterCheckbox
+Need a search bar with clear?      → FilterSearchInput
+Need a dismissible filter pill?    → FilterChip
+Need a bar of active filter pills? → ActiveFilterChipBar
+```
+
+### Token Bindings
+
+| Component | Font Token | Color |
+|-----------|-----------|-------|
+| FilterCheckbox label | `--text-xs` (12.8px) | black/50 default, black/[0.85] hover, black/90 selected |
+| FilterCheckbox count | `--text-card-micro` (10px) | black/[0.18] default, black/[0.45] selected |
+| FilterChip | `--text-card-micro` (10px) | bg-black/[0.06], text-black/70 |
+| FilterSearchInput | `--text-xs` (12.8px) | border rgba(0,0,0,0.06), text-black/70 |
+| FilterAccordion heading | `--text-card-micro` (10px) | text-black/50, tracking-[0.1em] |
+| ActiveFilterChipBar label | `--text-card-micro` (10px) | text-black/40 |
+
+**Color system:** ALL filter components use pure monochromatic black/opacity. No colour hue. Selected state = `border-l-[3px] border-black` + `bg-black/[0.04]` + `text-black/90`. This follows the DS 92-5-3 hierarchy and matches the IndustrySidebar source exactly.
+
+**Full docs:** `COMPONENT_GUIDELINES_4WH.md` → Filter System section (v4.2)
+
+---
+
 ## Component Quick Reference
 
 ```tsx
@@ -225,8 +285,17 @@ import { Badge, SectionLabel, StepPill, StatusBadge } from '@/app/components/Bad
 
 // Form labels
 import { Label } from '@/app/components/Label';
+
+// Filter system (v4.3)
+import { FilterSearchInput } from '@/app/components/FilterSearchInput';
+import { FilterCheckbox } from '@/app/components/FilterCheckbox';
+import { FilterChip } from '@/app/components/FilterChip';
+import { FilterSectionHeader } from '@/app/components/FilterSectionHeader';
+import { FilterCheckboxItem } from '@/app/components/FilterCheckboxItem';
+import { FilterIndustryItem } from '@/app/components/FilterIndustryItem';
+import { FilterAccordion, SidebarPanel, ActiveFilterChipBar, MobileFilterSheet } from '@/app/components/molecules';
 ```
 
 ---
 
-**v3.4 | Part of [ai-context/](.) module system**
+**v4.3 | Part of [ai-context/](.) module system**
