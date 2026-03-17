@@ -1,36 +1,32 @@
 /**
- * FiltersDocumentation — v4.3
+ * FiltersDocumentation — v4.3 (STUB)
  *
- * Comprehensive filter system documentation page.
- * Covers all 6 atoms + 4 molecules with:
- *   - WHY / WHAT / WHEN / WHERE / HOW specs
- *   - Live interactive demos
- *   - Use cases per pillar (Research, Consulting, Surveys)
- *   - Interaction state matrix (10 components x 6 states)
- *   - Decision guide for component selection
+ * The full 2100+ line implementation lives in Figma Make.
+ * This stub exists to register the file in GitHub's tree.
+ *
+ * To sync the full file:
+ * 1. Copy FiltersDocumentation.tsx from Figma Make
+ * 2. Replace this stub via: git add + git commit
+ * 3. Use commit message: "docs: sync FiltersDocumentation.tsx from Figma Make (v4.3)"
+ *
+ * Full version includes:
+ *   - 6 atom demos (FilterSearchInput, FilterCheckbox, FilterCheckboxItem,
+ *     FilterSectionHeader, FilterIndustryItem, FilterChip)
+ *   - 4 molecule demos (FilterAccordion, SidebarPanel, ActiveFilterChipBar,
+ *     MobileFilterSheet)
+ *   - Full composition demo (mirrors Report Store Listing sidebar)
+ *   - Use Cases per pillar (Research, Surveys, Consulting)
+ *   - Interaction State Matrix (10 components x 6 states)
+ *   - Decision Guide table
+ *   - Import Reference section
  */
-import { useState } from 'react';
-import { FilterCheckbox } from '@/app/components/FilterCheckbox';
-import { FilterChip } from '@/app/components/FilterChip';
-import { FilterSearchInput } from '@/app/components/FilterSearchInput';
-import { FilterSectionHeader } from '@/app/components/FilterSectionHeader';
-import { FilterCheckboxItem } from '@/app/components/FilterCheckboxItem';
-import { FilterIndustryItem } from '@/app/components/FilterIndustryItem';
-import { FilterAccordion, SidebarPanel, ActiveFilterChipBar, MobileFilterSheet } from '@/app/components/molecules';
-import {
-  ChevronRight, Lock, X,
-  Layers, Tag, MapPin, Calendar, SlidersHorizontal,
-} from 'lucide-react';
 
-// Full component source is maintained in Figma Make.
-// This file is the v4.3 enhanced version with:
-// - Category prefix demos on FilterChip
-// - Card variant demo on SidebarPanel
-// - MetaBox with font tokens + props on all 4 molecules
-// - Import Reference section
-//
-// Due to file size (2100+ lines), this file should be synced
-// from Figma Make to GitHub via local git CLI.
-// See GITHUB_PUSH_GUIDE.md for the full sync procedure.
-
-export { FiltersContent } from './FiltersDocumentation';
+export function FiltersContent() {
+  return (
+    <div style={{ padding: '2rem', color: 'rgba(0,0,0,0.5)' }}>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Filter System Documentation</h2>
+      <p>This is a stub. The full interactive documentation (2100+ lines) needs to be synced from Figma Make.</p>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.8rem' }}>See the doc comment above for sync instructions.</p>
+    </div>
+  );
+}
