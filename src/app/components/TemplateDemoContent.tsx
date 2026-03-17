@@ -15,7 +15,7 @@ import { CTALink } from '@/app/components/CTALink';
 import type { ViewMode } from '@/app/components/ViewToggle';
 import { ProductPageTemplate } from '@/app/components/organisms';
 
-// ─── Minimal card for Training courses ──────────────────────────
+// ─── Minimal card for Training courses ──────────────────────
 
 function CourseCard({ title, category, duration, enrolled, layout }: {
   id: string;
@@ -57,7 +57,7 @@ function CourseCard({ title, category, duration, enrolled, layout }: {
   );
 }
 
-// ─── Mock Data ──────────────────────────────────────────
+// ─── Mock Data ──────────────────────────────────────────────
 
 const featuredCourses = [
   { id: 'fc-1', title: 'Advanced Market Research Methodologies', category: 'Research Methods', duration: '6 weeks', enrolled: 342 },
@@ -82,7 +82,7 @@ const statsData = [
   { category: 'Certification', value: '2,100', label: 'Certifications Earned', description: 'Professional certifications awarded upon successful completion', growth: '62%', metric: 'YoY growth' },
 ];
 
-// ─── Demo Component ─────────────────────────────────────
+// ─── Demo Component ─────────────────────────────────────────
 
 export function TemplateDemoContent() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -102,8 +102,8 @@ export function TemplateDemoContent() {
           <span className="px-2 py-0.5 text-[10px] font-medium bg-[var(--brand-red)]/10 text-[var(--brand-red)] rounded">Template</span>
         </div>
         <p className="text-sm text-black/70 mb-4">
-          A hypothetical new pillar assembled <strong>entirely via ProductPageTemplate</strong> — zero custom
-          layout code. All 5 organism zones + 1 bespoke slot rendered from config objects. This proves a new
+          A hypothetical new pillar assembled <strong>entirely via ProductPageTemplate</strong> — zero custom 
+          layout code. All 5 organism zones + 1 bespoke slot rendered from config objects. This proves a new 
           Product page can be spun up in ~80 lines of configuration.
         </p>
         <div className="flex gap-3 mb-6">
@@ -117,18 +117,18 @@ export function TemplateDemoContent() {
         </div>
 
         {/* Code comparison */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-white border border-black/8 rounded-[5px] p-4">
             <h4 className="text-xs font-mono text-black/40 mb-2">MANUAL COMPOSITION (Report Store Demo)</h4>
             <p className="text-xs text-black/60">
-              ~350 lines — imports each organism individually, wraps in SectionWrapper, manages layout manually,
+              ~350 lines — imports each organism individually, wraps in SectionWrapper, manages layout manually, 
               handles all className strings and spacing.
             </p>
           </div>
           <div className="bg-black text-white rounded-[5px] p-4">
             <h4 className="text-xs font-mono text-white/40 mb-2">TEMPLATE COMPOSITION (This Demo)</h4>
             <p className="text-xs text-white/70">
-              ~80 lines of config — passes objects to ProductPageTemplate, organisms render automatically,
+              ~80 lines of config — passes objects to ProductPageTemplate, organisms render automatically, 
               bespoke content injected via slots. Same visual output.
             </p>
           </div>
@@ -246,9 +246,9 @@ export function TemplateDemoContent() {
         </div>
         <div className="mt-4 p-3 bg-white border border-black/8 rounded-[5px]">
           <p className="text-[11px] text-black/50">
-            <strong className="text-black/70">5 zones from config objects</strong> (hero, featured, stats, browse, cta) +
-            <strong className="text-black/70"> 1 bespoke slot</strong> (afterStats → Learning Tracks).
-            Total custom layout code: <strong className="text-black/70">0 lines</strong>.
+            <strong className="text-black/70">5 zones from config objects</strong> (hero, featured, stats, browse, cta) + 
+            <strong className="text-black/70"> 1 bespoke slot</strong> (afterStats → Learning Tracks). 
+            Total custom layout code: <strong className="text-black/70">0 lines</strong>. 
             All layout, spacing, SectionWrapper, and SectionHeading handled by the template.
           </p>
         </div>
@@ -257,27 +257,20 @@ export function TemplateDemoContent() {
       {/* Badge Comparison */}
       <div className="border border-black/8 rounded-[5px] p-6 bg-[#fafaf9]">
         <h3 className="text-sm font-medium mb-4">Template vs Manual — Side by Side</h3>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 border border-black/8 rounded-[5px] bg-white">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="rounded" size="sm" theme="neutral">Report Store</Badge>
-              <span className="text-[10px] text-black/40">Manual</span>
-            </div>
-            <p className="text-xs text-black/60">5 organism imports + 3 bespoke sections. Full control over each section.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white border border-black/8 rounded-[5px] p-4">
+            <h4 className="text-xs font-mono text-black/40 mb-2">MANUAL COMPOSITION (Report Store Demo)</h4>
+            <p className="text-xs text-black/60">
+              ~350 lines — imports each organism individually, wraps in SectionWrapper, manages layout manually, 
+              handles all className strings and spacing.
+            </p>
           </div>
-          <div className="p-4 border border-black/8 rounded-[5px] bg-white">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="rounded" size="sm" theme="neutral">Surveys</Badge>
-              <span className="text-[10px] text-black/40">Manual</span>
-            </div>
-            <p className="text-xs text-black/60">4 organism imports + 2 bespoke sections. Reuses same organism APIs.</p>
-          </div>
-          <div className="p-4 border border-[var(--brand-red)]/20 rounded-[5px] bg-[var(--brand-red)]/[0.02]">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="rounded" size="sm" theme="brand">Training</Badge>
-              <span className="text-[10px] text-[var(--brand-red)]">Template</span>
-            </div>
-            <p className="text-xs text-black/60">1 template import + config objects. Zero layout code. Same visual fidelity.</p>
+          <div className="bg-black text-white rounded-[5px] p-4">
+            <h4 className="text-xs font-mono text-white/40 mb-2">TEMPLATE COMPOSITION (This Demo)</h4>
+            <p className="text-xs text-white/70">
+              ~80 lines of config — passes objects to ProductPageTemplate, organisms render automatically, 
+              bespoke content injected via slots. Same visual output.
+            </p>
           </div>
         </div>
       </div>
