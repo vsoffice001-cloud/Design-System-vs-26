@@ -240,20 +240,20 @@ export function AnimatedArrowDemo() {
 
           <div className="bg-black/5 rounded-[5px] p-4 font-mono text-sm">
             <p className="text-black/60 mb-2">// Custom size and color</p>
-            <p className="text-blue-600">&lt;AnimatedArrow size={'24'} color=&quot;#b01f24&quot; /&gt;</p>
+            <p className="text-blue-600">&lt;AnimatedArrow size={'{24}'} color=&quot;#b01f24&quot; /&gt;</p>
           </div>
 
           <div className="bg-black/5 rounded-[5px] p-4 font-mono text-sm">
             <p className="text-black/60 mb-2">// In a button</p>
             <p className="text-purple-600">&lt;button className=&quot;flex items-center gap-2&quot;&gt;</p>
             <p className="ml-4">Learn More</p>
-            <p className="ml-4 text-blue-600">&lt;AnimatedArrow size={'18'} /&gt;</p>
+            <p className="ml-4 text-blue-600">&lt;AnimatedArrow size={'{18}'} /&gt;</p>
             <p className="text-purple-600">&lt;/button&gt;</p>
           </div>
 
           <div className="bg-black/5 rounded-[5px] p-4 font-mono text-sm">
             <p className="text-black/60 mb-2">// Custom animation speed</p>
-            <p className="text-blue-600">&lt;AnimatedArrow size={'20'} duration={'500'} /&gt;</p>
+            <p className="text-blue-600">&lt;AnimatedArrow size={'{20}'} duration={'{500}'} /&gt;</p>
           </div>
         </div>
       </section>

@@ -19,7 +19,7 @@ interface ComponentPreviewProps {
 
 function ComponentPreview({ title, description, children, bg = 'white' }: ComponentPreviewProps) {
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
+    <div className="border border-black/8 rounded-[5px] overflow-hidden">
       <div className="p-4 bg-black/[0.02] border-b border-black/8">
         <h4 className="font-semibold text-sm">{title}</h4>
         {description && <p className="text-xs text-black/60 mt-1">{description}</p>}
@@ -41,15 +41,15 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
   };
 
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
+    <div className="border border-black/8 rounded-[5px] overflow-hidden">
       {title && (
         <div className="bg-black/[0.02] px-4 py-2 border-b border-black/8 flex items-center justify-between">
           <span className="text-sm font-semibold">{title}</span>
           <button
             onClick={copyCode}
-            className="text-xs px-3 py-1 hover:bg-black/5 rounded transition-colors"
+            className="text-xs px-3 py-1 hover:bg-black/5 rounded-[5px] transition-colors"
           >
-            {copied ? '✓ Copied!' : 'Copy'}
+            {copied ? '\u2713 Copied!' : 'Copy'}
           </button>
         </div>
       )}
@@ -64,20 +64,20 @@ export function ButtonControlsGuide() {
   return (
     <div className="space-y-12">
       {/* ==================== HEADER ==================== */}
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-lg p-8">
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-[10px] p-8">
         <h2 className="text-3xl font-normal mb-4">Button Controls & Use Cases</h2>
         <p className="text-lg text-purple-900 mb-6">
           Complete guide to button animations: <strong>Shimmer</strong> (always active) + <strong>Simple Arrow</strong> (optional).
           Both effects trigger simultaneously on hover for maximum impact.
         </p>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white rounded-lg p-4">
-            <h4 className="font-semibold text-purple-900 mb-2">✨ Shimmer Effect</h4>
+          <div className="bg-white rounded-[5px] p-4">
+            <h4 className="font-semibold text-purple-900 mb-2">\u2728 Shimmer Effect</h4>
             <p className="text-sm text-purple-900">Always active on all buttons<br />Core brand identity</p>
           </div>
-          <div className="bg-white rounded-lg p-4">
-            <h4 className="font-semibold text-purple-900 mb-2">➡️ Simple Arrow</h4>
-            <p className="text-sm text-purple-900">Optional via <code className="bg-purple-200 px-1 rounded">showArrow</code> prop<br />2-arrow replacement animation</p>
+          <div className="bg-white rounded-[5px] p-4">
+            <h4 className="font-semibold text-purple-900 mb-2">\u27a1\ufe0f Simple Arrow</h4>
+            <p className="text-sm text-purple-900">Optional via <code className="bg-purple-200 px-1 rounded-[5px]">showArrow</code> prop<br />2-arrow replacement animation</p>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ export function ButtonControlsGuide() {
       {/* ==================== SHIMMER EFFECT ==================== */}
       <section className="space-y-6">
         <div>
-          <h3 className="text-2xl font-normal mb-3">✨ Shimmer Effect (Always Active)</h3>
+          <h3 className="text-2xl font-normal mb-3">\u2728 Shimmer Effect (Always Active)</h3>
           <div className="space-y-3">
             <div className="mb-3">
               <span className="text-sm font-semibold text-black/50 uppercase tracking-wide">WHY</span>
@@ -107,7 +107,7 @@ export function ButtonControlsGuide() {
         <ComponentPreview title="Shimmer on All Variants" description="Hover to see signature shimmer effect">
           <div className="space-y-6">
             <div>
-              <p className="text-xs text-black/60 mb-3 font-semibold">Primary Shimmer (Dark → Grey Gradient)</p>
+              <p className="text-xs text-black/60 mb-3 font-semibold">Primary Shimmer (Dark \u2192 Grey Gradient)</p>
               <div className="flex flex-wrap gap-4">
                 <Button variant="primary" size="lg">Hover to Shimmer</Button>
                 <Button variant="primary" size="lg" icon={<Download size={18} />}>Download Report</Button>
@@ -134,14 +134,14 @@ export function ButtonControlsGuide() {
 
         <CodeBlock 
           title="Shimmer Usage"
-          code={`// ✨ Shimmer is ALWAYS active (no prop needed)\n<Button variant="brand">\n  Get Started\n</Button>\n\n// Custom shimmer duration (optional)\n<Button variant="brand" shimmerDuration={1000}>\n  Slow Shimmer (1000ms)\n</Button>`}
+          code={`// \u2728 Shimmer is ALWAYS active (no prop needed)\n<Button variant="brand">\n  Get Started\n</Button>\n\n// Custom shimmer duration (optional)\n<Button variant="brand" shimmerDuration={1000}>\n  Slow Shimmer (1000ms)\n</Button>`}
         />
       </section>
 
       {/* ==================== SIMPLE ARROW (showArrow prop) ==================== */}
       <section className="space-y-6">
         <div>
-          <h3 className="text-2xl font-normal mb-3">➡️ Simple Arrow with showArrow Prop</h3>
+          <h3 className="text-2xl font-normal mb-3">\u27a1\ufe0f Simple Arrow with showArrow Prop</h3>
           <div className="space-y-3">
             <div className="mb-3">
               <span className="text-sm font-semibold text-black/50 uppercase tracking-wide">WHY</span>
@@ -153,7 +153,7 @@ export function ButtonControlsGuide() {
             <div className="mb-3">
               <span className="text-sm font-semibold text-black/50 uppercase tracking-wide">WHAT</span>
               <p className="text-sm text-black/70 mt-1">
-                When <code className="bg-black/5 px-1 rounded">showArrow={`{true}`}</code>, renders AnimatedArrow component inside button.
+                When <code className="bg-black/5 px-1 rounded-[5px]">showArrow={`{true}`}</code>, renders AnimatedArrow component inside button.
                 2-arrow replacement animation (300ms). Triggers simultaneously with shimmer on hover.
               </p>
             </div>
@@ -219,14 +219,14 @@ export function ButtonControlsGuide() {
 
         <CodeBlock 
           title="showArrow Prop Usage"
-          code={`import { Button } from '@/app/components/Button';\n\n// Enable arrow with showArrow prop\n<Button \n  variant="brand" \n  size="lg" \n  showArrow  // ← Adds AnimatedArrow component\n>\n  Submit Application\n</Button>\n\n// Works with all variants\n<Button variant="primary" showArrow>\n  Proceed to Checkout\n</Button>\n\n<Button variant="secondary" showArrow>\n  Skip to Dashboard\n</Button>`}
+          code={`import { Button } from '@/app/components/Button';\n\n// Enable arrow with showArrow prop\n<Button \n  variant="brand" \n  size="lg" \n  showArrow  // \u2190 Adds AnimatedArrow component\n>\n  Submit Application\n</Button>\n\n// Works with all variants\n<Button variant="primary" showArrow>\n  Proceed to Checkout\n</Button>\n\n<Button variant="secondary" showArrow>\n  Skip to Dashboard\n</Button>`}
         />
       </section>
 
       {/* ==================== ANIMATED ARROW COMPONENT ==================== */}
       <section className="space-y-6">
         <div>
-          <h3 className="text-2xl font-normal mb-3">🔧 AnimatedArrow Component (Custom Elements)</h3>
+          <h3 className="text-2xl font-normal mb-3">\ud83d\udd27 AnimatedArrow Component (Custom Elements)</h3>
           <div className="space-y-3">
             <div className="mb-3">
               <span className="text-sm font-semibold text-black/50 uppercase tracking-wide">WHY</span>
@@ -250,19 +250,19 @@ export function ButtonControlsGuide() {
             <div>
               <p className="text-xs text-black/60 mb-3">Hover to see 2-arrow replacement</p>
               <div className="flex flex-wrap gap-4">
-                <button className="px-6 py-3 bg-black text-white rounded-md flex items-center gap-2 hover:bg-black/90 transition-colors">
+                <button className="px-6 py-3 bg-black text-white rounded-[5px] flex items-center gap-2 hover:bg-black/90 transition-colors">
                   <span>Learn More</span>
                   <AnimatedArrow size={18} color="white" />
                 </button>
                 
-                <button className="px-6 py-3 bg-white text-black border border-black/20 rounded-md flex items-center gap-2 hover:border-black/40 transition-colors">
+                <button className="px-6 py-3 bg-white text-black border border-black/20 rounded-[5px] flex items-center gap-2 hover:border-black/40 transition-colors">
                   <span>View Details</span>
                   <AnimatedArrow size={18} color="black" />
                 </button>
                 
                 <button 
-                  className="px-6 py-3 text-white rounded-md flex items-center gap-2 hover:opacity-90 transition-opacity"
-                  style={{ backgroundColor: '#b01f24' }}
+                  className="px-6 py-3 text-white rounded-[5px] flex items-center gap-2 hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: 'var(--brand-red)' }}
                 >
                   <span>Get Started</span>
                   <AnimatedArrow size={18} color="white" />
@@ -282,9 +282,9 @@ export function ButtonControlsGuide() {
               
               <br />
               
-              <a href="#" className="inline-flex items-center gap-2 hover:underline" style={{ color: '#b01f24' }}>
+              <a href="#" className="inline-flex items-center gap-2 hover:underline" style={{ color: 'var(--brand-red)' }}>
                 <span>View case study</span>
-                <AnimatedArrow size={16} color="#b01f24" />
+                <AnimatedArrow size={16} color="var(--brand-red)" />
               </a>
               
               <br />
@@ -306,7 +306,7 @@ export function ButtonControlsGuide() {
       {/* ==================== USE CASES GUIDE ==================== */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-2xl font-normal mb-3">📋 Use Cases Guide</h2>
+          <h2 className="text-2xl font-normal mb-3">\ud83d\udccb Use Cases Guide</h2>
           <p className="text-sm text-black/70">
             Real-world scenarios with code examples.
           </p>
@@ -314,11 +314,11 @@ export function ButtonControlsGuide() {
 
         <ComponentPreview title="1. Form Submissions (Shimmer + Arrow)">
           <div className="space-y-4">
-            <div className="bg-white border border-black/8 rounded-lg p-6 max-w-md">
+            <div className="bg-white border border-black/8 rounded-[5px] p-6 max-w-md">
               <h4 className="font-semibold mb-4">Contact Form</h4>
               <div className="space-y-3 mb-6">
-                <input type="text" placeholder="Name" className="w-full px-3 py-2 border border-black/10 rounded text-sm" />
-                <input type="email" placeholder="Email" className="w-full px-3 py-2 border border-black/10 rounded text-sm" />
+                <input type="text" placeholder="Name" className="w-full px-3 py-2 border border-black/10 rounded-[5px] bg-white text-black/90 placeholder:text-black/30 hover:border-black/25 focus:border-black/90 focus:outline-none transition-colors duration-150" />
+                <input type="email" placeholder="Email" className="w-full px-3 py-2 border border-black/10 rounded-[5px] bg-white text-black/90 placeholder:text-black/30 hover:border-black/25 focus:border-black/90 focus:outline-none transition-colors duration-150" />
               </div>
               <Button variant="brand" size="lg" fullWidth showArrow>
                 Submit Application
@@ -329,12 +329,12 @@ export function ButtonControlsGuide() {
 
         <CodeBlock 
           title="Form Submit Pattern"
-          code={`// Urgency CTA - Form submission\n<Button \n  variant="brand" \n  size="lg" \n  fullWidth \n  showArrow  // ← Adds urgency with arrow\n>\n  Submit Application\n</Button>`}
+          code={`// Urgency CTA - Form submission\n<Button \n  variant="brand" \n  size="lg" \n  fullWidth \n  showArrow  // \u2190 Adds urgency with arrow\n>\n  Submit Application\n</Button>`}
         />
 
         <ComponentPreview title="2. Checkout Flow (Shimmer + Arrow)">
           <div className="space-y-4">
-            <div className="bg-white border border-black/8 rounded-lg p-6 max-w-md">
+            <div className="bg-white border border-black/8 rounded-[5px] p-6 max-w-md">
               <h4 className="font-semibold mb-4">Order Summary</h4>
               <div className="space-y-2 mb-6">
                 <div className="flex justify-between text-sm">
@@ -393,8 +393,8 @@ export function ButtonControlsGuide() {
         <ComponentPreview title="4. Card CTAs (AnimatedArrow Component)">
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="border border-black/8 rounded-lg p-4 hover:border-black/20 transition-colors">
-                <div className="w-full h-32 bg-black/5 rounded mb-3" />
+              <div className="border border-black/8 rounded-[5px] p-4 hover:border-black/20 transition-colors">
+                <div className="w-full h-32 bg-black/5 rounded-[2.5px] mb-3" />
                 <h4 className="font-semibold text-sm mb-2">Project Alpha</h4>
                 <p className="text-xs text-black/60 mb-3">Web application redesign</p>
                 <button className="flex items-center gap-2 text-sm hover:underline">
@@ -403,8 +403,8 @@ export function ButtonControlsGuide() {
                 </button>
               </div>
               
-              <div className="border border-black/8 rounded-lg p-4 hover:border-black/20 transition-colors">
-                <div className="w-full h-32 bg-black/5 rounded mb-3" />
+              <div className="border border-black/8 rounded-[5px] p-4 hover:border-black/20 transition-colors">
+                <div className="w-full h-32 bg-black/5 rounded-[2.5px] mb-3" />
                 <h4 className="font-semibold text-sm mb-2">Project Beta</h4>
                 <p className="text-xs text-black/60 mb-3">Mobile app development</p>
                 <button className="flex items-center gap-2 text-sm hover:underline">
@@ -413,8 +413,8 @@ export function ButtonControlsGuide() {
                 </button>
               </div>
               
-              <div className="border border-black/8 rounded-lg p-4 hover:border-black/20 transition-colors">
-                <div className="w-full h-32 bg-black/5 rounded mb-3" />
+              <div className="border border-black/8 rounded-[5px] p-4 hover:border-black/20 transition-colors">
+                <div className="w-full h-32 bg-black/5 rounded-[2.5px] mb-3" />
                 <h4 className="font-semibold text-sm mb-2">Project Gamma</h4>
                 <p className="text-xs text-black/60 mb-3">Brand identity system</p>
                 <button className="flex items-center gap-2 text-sm hover:underline">
@@ -433,53 +433,53 @@ export function ButtonControlsGuide() {
       </section>
 
       {/* ==================== DECISION GUIDE ==================== */}
-      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-lg p-8">
-        <h3 className="text-xl font-semibold text-amber-900 mb-4">🎯 Quick Decision Guide</h3>
+      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-[10px] p-8">
+        <h3 className="text-xl font-semibold text-amber-900 mb-4">\ud83c\udfaf Quick Decision Guide</h3>
         <div className="space-y-4">
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-[5px] p-4">
             <h4 className="font-semibold text-amber-900 mb-2">Use Shimmer (Always Active):</h4>
             <p className="text-sm text-amber-900">
-              ✅ Every button has shimmer automatically<br />
-              ✅ Core brand identity - cannot be disabled<br />
-              ✅ Optional: customize duration with <code className="bg-amber-200 px-1 rounded">shimmerDuration</code> prop
+              \u2705 Every button has shimmer automatically<br />
+              \u2705 Core brand identity - cannot be disabled<br />
+              \u2705 Optional: customize duration with <code className="bg-amber-200 px-1 rounded-[5px]">shimmerDuration</code> prop
             </p>
           </div>
 
-          <div className="bg-white rounded-lg p-4">
-            <h4 className="font-semibold text-amber-900 mb-2">Use <code className="bg-amber-200 px-1 rounded">showArrow</code> Prop (Button Component):</h4>
+          <div className="bg-white rounded-[5px] p-4">
+            <h4 className="font-semibold text-amber-900 mb-2">Use <code className="bg-amber-200 px-1 rounded-[5px]">showArrow</code> Prop (Button Component):</h4>
             <p className="text-sm text-amber-900">
-              ✅ Form submissions, checkout, urgent page navigation<br />
-              ✅ Conversion-critical moments<br />
-              ✅ Maximum urgency without being obnoxious<br />
-              ✅ Usage: <code className="bg-amber-200 px-1 rounded">{'<Button showArrow>Submit</Button>'}</code>
+              \u2705 Form submissions, checkout, urgent page navigation<br />
+              \u2705 Conversion-critical moments<br />
+              \u2705 Maximum urgency without being obnoxious<br />
+              \u2705 Usage: <code className="bg-amber-200 px-1 rounded-[5px]">{'<Button showArrow>Submit</Button>'}</code>
             </p>
           </div>
 
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-[5px] p-4">
             <h4 className="font-semibold text-amber-900 mb-2">Use AnimatedArrow Component (Custom Elements):</h4>
             <p className="text-sm text-amber-900">
-              ✅ Text links, card CTAs, custom styled buttons<br />
-              ✅ Any element outside Button component<br />
-              ✅ Full styling control<br />
-              ✅ Import: <code className="bg-amber-200 px-1 rounded">{'import { AnimatedArrow } from "@/app/components/AnimatedArrow"'}</code>
+              \u2705 Text links, card CTAs, custom styled buttons<br />
+              \u2705 Any element outside Button component<br />
+              \u2705 Full styling control<br />
+              \u2705 Import: <code className="bg-amber-200 px-1 rounded-[5px]">{'import { AnimatedArrow } from "@/app/components/AnimatedArrow"'}</code>
             </p>
           </div>
         </div>
 
-        <div className="mt-6 bg-white rounded-lg p-4">
+        <div className="mt-6 bg-white rounded-[5px] p-4">
           <h4 className="font-semibold text-amber-900 mb-3">Decision Tree:</h4>
           <pre className="text-xs font-mono text-amber-900">
 {`Need arrow animation?
-    │
-    ├─ YES → Is it inside Button component?
-    │         │
-    │         ├─ YES → Use showArrow prop
-    │         │         <Button showArrow>Text</Button>
-    │         │
-    │         └─ NO → Use AnimatedArrow component
-    │                   <AnimatedArrow size={18} />
-    │
-    └─ NO → Use Button without arrow
+    |
+    \u251c\u2500 YES \u2192 Is it inside Button component?
+    |         |
+    |         \u251c\u2500 YES \u2192 Use showArrow prop
+    |         |         <Button showArrow>Text</Button>
+    |         |
+    |         \u2514\u2500 NO \u2192 Use AnimatedArrow component
+    |                   <AnimatedArrow size={18} />
+    |
+    \u2514\u2500 NO \u2192 Use Button without arrow
               <Button>Text</Button>
               (Shimmer still active automatically)`}
           </pre>
