@@ -82,9 +82,9 @@ function ComponentPreview({
   bg?: 'white' | 'dark';
 }) {
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
-      <div className="p-4 bg-black/[0.02] border-b border-black/8">
-        <h4 className="font-semibold text-sm">{title}</h4>
+    <div className="border border-black/8 rounded-[5px] overflow-hidden">
+      <div className="bg-black/[0.02] px-6 py-4 border-b border-black/8">
+        <h3 className="font-semibold text-sm">{title}</h3>
         {description && <p className="text-xs text-black/60 mt-1">{description}</p>}
       </div>
       <div className={`p-6 ${bg === 'dark' ? 'bg-black' : 'bg-white'}`}>
@@ -104,18 +104,16 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
   };
 
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
-      {title && (
-        <div className="bg-black/[0.02] px-4 py-2 border-b border-black/8 flex items-center justify-between">
-          <span className="text-sm font-semibold">{title}</span>
-          <button
-            onClick={copyCode}
-            className="text-xs px-3 py-1 hover:bg-black/5 rounded transition-colors"
-          >
-            {copied ? '✓ Copied!' : 'Copy'}
-          </button>
-        </div>
-      )}
+    <div className="border border-black/8 rounded-[5px] overflow-hidden">
+      <div className="bg-black/[0.02] px-4 py-2 border-b border-black/8 flex items-center justify-between">
+        <span className="text-sm font-semibold">{title || 'Code'}</span>
+        <button
+          onClick={copyCode}
+          className="text-xs px-3 py-1 hover:bg-black/5 rounded transition-colors"
+        >
+          {copied ? '\u2713 Copied!' : 'Copy'}
+        </button>
+      </div>
       <pre className="p-4 overflow-x-auto bg-black/[0.02]">
         <code className="text-xs font-mono text-black/80">{code}</code>
       </pre>
@@ -123,12 +121,10 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
   );
 }
 
-function SpecTable({ specs }: {
-  specs: { property: string; value: string; description: string; }[]
-}) {
+function PropsTable({ props }: { props: PropItem[] }) {
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
-      <table className="w-full">
+    <div className="border border-black/8 rounded-[5px] overflow-x-auto">
+      <table className="w-full min-w-[500px]">
         <thead>
           <tr className="border-b border-black/8 bg-black/[0.02]">
             <th className="text-left p-3 text-xs font-bold">Property</th>
@@ -137,21 +133,27 @@ function SpecTable({ specs }: {
           </tr>
         </thead>
         <tbody>
-          {specs.map((spec, idx) => (
+          {props.map((prop, idx) => (
             <tr key={idx} className="border-b border-black/8 last:border-0">
               <td className="p-3">
-                <code className="text-xs font-mono bg-black/5 px-2 py-1 rounded">{spec.property}</code>
+                <code className="text-xs font-mono bg-black/5 px-2 py-1 rounded">{prop.property}</code>
               </td>
               <td className="p-3">
-                <code className="text-xs font-mono text-black/60">{spec.value}</code>
+                <code className="text-xs font-mono text-black/60">{prop.value}</code>
               </td>
-              <td className="p-3 text-xs text-black/70">{spec.description}</td>
+              <td className="p-3 text-xs text-black/70">{prop.description}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
+}
+
+interface PropItem {
+  property: string;
+  value: string;
+  description: string;
 }
 
 // ==================== MAIN COMPONENT ====================
@@ -199,16 +201,16 @@ export function ButtonDocumentation() {
   return (
     <div className="space-y-12">
       {/* ==================== HERO HEADER ==================== */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-8">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-[5px] p-8">
         <h1 className="text-3xl font-normal mb-3">Button Component</h1>
         <p className="text-lg text-black/70 mb-4">
           A versatile button component with 4 variants, 4 sizes, interactive states, and shimmer animation.
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-black/60">
-          <span>🎨 4 variants</span>
-          <span>📏 4 sizes</span>
-          <span>✨ Shimmer animation (always active)</span>
-          <span>♿ WCAG AA compliant</span>
+          <span>\ud83c\udfa8 4 variants</span>
+          <span>\ud83d\udccf 4 sizes</span>
+          <span>\u2728 Shimmer animation (always active)</span>
+          <span>\u267f WCAG AA compliant</span>
         </div>
       </div>
 
@@ -259,23 +261,17 @@ export function ButtonDocumentation() {
       <DocSection
         title="Variants"
         why="Different visual weights communicate action hierarchy and guide users toward primary actions"
-        what="4 distinct button variants: Primary (black gradient), Brand (Ken Bold Red), Secondary (two-state: neutral at rest → brand-red on hover), Ghost (transparent)"
-        when="Use Primary for main actions, Brand for CTAs, Secondary for supporting actions (neutral border/text transitions to brand-red on hover — v3.3 two-state design), Ghost for tertiary actions on dark backgrounds"
+        what="4 distinct button variants: Primary (black gradient), Brand (Ken Bold Red), Secondary (two-state: neutral at rest \u2192 brand-red on hover), Ghost (transparent)"
+        when="Use Primary for main actions, Brand for CTAs, Secondary for supporting actions (neutral border/text transitions to brand-red on hover \u2014 v3.3 two-state design), Ghost for tertiary actions on dark backgrounds"
       >
         <ComponentPreview 
           title="Primary - Black with Dark Gradient" 
           description="High-emphasis actions. Maximum one per screen section."
         >
           <div className="flex flex-wrap gap-4">
-            <Button variant="primary" size="lg">
-              Primary Action
-            </Button>
-            <Button variant="primary" size="lg" icon={<Download size={18} />}>
-              Download Report
-            </Button>
-            <Button variant="primary" size="lg" icon={<Send size={18} />} iconPosition="left">
-              Send Message
-            </Button>
+            <Button variant="primary" size="lg">Primary Action</Button>
+            <Button variant="primary" size="lg" icon={<Download size={18} />}>Download Report</Button>
+            <Button variant="primary" size="lg" icon={<Send size={18} />} iconPosition="left">Send Message</Button>
           </div>
         </ComponentPreview>
 
@@ -284,56 +280,34 @@ export function ButtonDocumentation() {
           description="Special CTAs and conversion moments. Use sparingly for maximum impact."
         >
           <div className="flex flex-wrap gap-4">
-            <Button variant="brand" size="lg">
-              Get Started Free
-            </Button>
-            <Button variant="brand" size="lg" icon={<Star size={18} />}>
-              Premium Feature
-            </Button>
-            <Button variant="brand" size="lg" icon={<Send size={18} />}>
-              Schedule Demo
-            </Button>
+            <Button variant="brand" size="lg">Get Started Free</Button>
+            <Button variant="brand" size="lg" icon={<Star size={18} />}>Premium Feature</Button>
+            <Button variant="brand" size="lg" icon={<Send size={18} />}>Schedule Demo</Button>
           </div>
         </ComponentPreview>
 
         <ComponentPreview 
           title="Secondary - Light Background (v3.3 Two-State)" 
-          description="Neutral at rest (black/12 border, black/70 text) → Brand-red on hover (brand-red border, text, shadow). 300ms ease-out transition."
+          description="Neutral at rest (black/12 border, black/70 text) \u2192 Brand-red on hover (brand-red border, text, shadow). 300ms ease-out transition."
         >
           <div className="flex flex-wrap gap-4 items-center">
-            <Button variant="secondary" size="lg">
-              Learn More
-            </Button>
-            <Button variant="secondary" size="lg" icon={<Download size={18} />}>
-              Export Data
-            </Button>
-            <Button variant="secondary" size="lg" icon={<Heart size={18} />} iconPosition="left">
-              Save for Later
-            </Button>
-            <Button variant="secondary" size="lg" disabled>
-              Disabled
-            </Button>
+            <Button variant="secondary" size="lg">Learn More</Button>
+            <Button variant="secondary" size="lg" icon={<Download size={18} />}>Export Data</Button>
+            <Button variant="secondary" size="lg" icon={<Heart size={18} />} iconPosition="left">Save for Later</Button>
+            <Button variant="secondary" size="lg" disabled>Disabled</Button>
           </div>
         </ComponentPreview>
 
         <ComponentPreview 
           title="Secondary - Dark Background" 
-          description="Frosted glass base, white/30 border → solid white on hover. Subtle white shimmer sweep."
+          description="Frosted glass base, white/30 border \u2192 solid white on hover. Subtle white shimmer sweep."
           bg="dark"
         >
           <div className="flex flex-wrap gap-4 items-center">
-            <Button variant="secondary" background="dark" size="lg">
-              Learn More
-            </Button>
-            <Button variant="secondary" background="dark" size="lg" icon={<Download size={18} />}>
-              Export Data
-            </Button>
-            <Button variant="secondary" background="dark" size="lg" icon={<Heart size={18} />} iconPosition="left">
-              Save for Later
-            </Button>
-            <Button variant="secondary" background="dark" size="lg" disabled>
-              Disabled
-            </Button>
+            <Button variant="secondary" background="dark" size="lg">Learn More</Button>
+            <Button variant="secondary" background="dark" size="lg" icon={<Download size={18} />}>Export Data</Button>
+            <Button variant="secondary" background="dark" size="lg" icon={<Heart size={18} />} iconPosition="left">Save for Later</Button>
+            <Button variant="secondary" background="dark" size="lg" disabled>Disabled</Button>
           </div>
         </ComponentPreview>
 
@@ -343,15 +317,9 @@ export function ButtonDocumentation() {
           bg="dark"
         >
           <div className="flex flex-wrap gap-4">
-            <Button variant="ghost" background="dark" size="lg">
-              Ghost Action
-            </Button>
-            <Button variant="ghost" background="dark" size="lg" icon={<Edit size={18} />}>
-              Edit Content
-            </Button>
-            <Button variant="ghost" background="dark" size="lg" icon={<ArrowUpRight size={18} />}>
-              Learn More
-            </Button>
+            <Button variant="ghost" background="dark" size="lg">Ghost Action</Button>
+            <Button variant="ghost" background="dark" size="lg" icon={<Edit size={18} />}>Edit Content</Button>
+            <Button variant="ghost" background="dark" size="lg" showArrow>Learn More</Button>
           </div>
         </ComponentPreview>
 
@@ -369,8 +337,8 @@ export function ButtonDocumentation() {
         when="Use md (default) for 90% of buttons including report page heroes. Reserve lg for homepage/major landing heroes only."
         whenNot="Don't use lg as default. Don't use xl frequently (dilutes impact)."
       >
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h4 className="font-semibold mb-2 text-blue-900">🎯 Sizing Strategy Update</h4>
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-[5px]">
+          <h4 className="font-semibold mb-2 text-blue-900">\ud83c\udfaf Sizing Strategy Update</h4>
           <p className="text-sm text-blue-800">
             <strong>md (42px)</strong> is now the BASE/DEFAULT size. Use for report pages (v0, v0.1, v0.2, etc.) and standard CTAs.
             <br />
@@ -387,33 +355,27 @@ export function ButtonDocumentation() {
                 <Button variant="brand" size="sm">Small Button</Button>
                 <Button variant="secondary" size="sm">Small Button</Button>
               </div>
-              <p className="text-xs text-black/50 mt-2">
-                Font: var(--button-font-sm) = 14px = var(--text-nav) - Perfect for TOC items, compact CTAs
-              </p>
+              <p className="text-xs text-black/50 mt-2">Font: var(--button-font-sm) = 14px = var(--text-nav) - Perfect for TOC items, compact CTAs</p>
             </div>
             
-            <div className="p-4 bg-green-50 border-2 border-green-300 rounded-lg">
-              <p className="text-xs text-green-900 mb-3 font-bold uppercase">✅ Medium (42px) - DEFAULT - Report Pages & Standard CTAs</p>
+            <div className="p-4 bg-green-50 border-2 border-green-300 rounded-[5px]">
+              <p className="text-xs text-green-900 mb-3 font-bold uppercase">\u2705 Medium (42px) - DEFAULT - Report Pages & Standard CTAs</p>
               <div className="flex flex-wrap items-center gap-4">
                 <Button variant="primary">Medium Button (Default)</Button>
                 <Button variant="brand">Medium Button (Default)</Button>
                 <Button variant="secondary">Medium Button (Default)</Button>
               </div>
-              <p className="text-xs text-green-800 mt-3">
-                Use this size for: Report page heroes, standard CTAs, forms, modals, card actions
-              </p>
+              <p className="text-xs text-green-800 mt-3">Use this size for: Report page heroes, standard CTAs, forms, modals, card actions</p>
             </div>
             
-            <div className="p-4 bg-yellow-50 border-2 border-yellow-300 rounded-lg">
-              <p className="text-xs text-yellow-900 mb-3 font-bold uppercase">⚡ Large (48px) - BIG HEROES ONLY</p>
+            <div className="p-4 bg-yellow-50 border-2 border-yellow-300 rounded-[5px]">
+              <p className="text-xs text-yellow-900 mb-3 font-bold uppercase">\u26a1 Large (48px) - BIG HEROES ONLY</p>
               <div className="flex flex-wrap items-center gap-4">
                 <Button variant="primary" size="lg">Large Button</Button>
                 <Button variant="brand" size="lg">Large Button</Button>
                 <Button variant="secondary" size="lg">Large Button</Button>
               </div>
-              <p className="text-xs text-yellow-800 mt-3">
-                Use this size for: Homepage heroes, major landing pages, marketing campaigns
-              </p>
+              <p className="text-xs text-yellow-800 mt-3">Use this size for: Homepage heroes, major landing pages, marketing campaigns</p>
             </div>
             
             <div>
@@ -434,41 +396,41 @@ export function ButtonDocumentation() {
       </DocSection>
 
       {/* ==================== ARROW ANIMATION RULES ==================== */}
-      <section className="border border-black/8 rounded-lg p-6">
+      <section className="border border-black/8 rounded-[5px] p-6">
         <h3 className="text-2xl font-normal mb-4">Arrow Animation Rules</h3>
         <p className="text-sm text-black/60 mb-6">
-          <code className="font-mono text-xs bg-black/5 px-1 rounded">showArrow={'{'}true{'}'}</code> adds an animated ArrowUpRight (45° diagonal). Use ONLY for urgency CTAs.
+          <code className="font-mono text-xs bg-black/5 px-1 rounded">showArrow=&#123;true&#125;</code> adds an animated ArrowUpRight (45\u00b0 diagonal). Use ONLY for urgency CTAs.
         </p>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="bg-green-50 border border-green-200 rounded-[5px] p-5">
             <h4 className="font-semibold text-green-900 text-sm mb-3">Use showArrow for:</h4>
             <ul className="text-sm text-green-800 space-y-2">
-              <li>• "Unlock Full Report"</li>
-              <li>• "Schedule Demo"</li>
-              <li>• "Get Started"</li>
-              <li>• "Register Now"</li>
-              <li>• Redirecting to forms/pages with urgency</li>
+              <li>\u2022 "Unlock Full Report"</li>
+              <li>\u2022 "Schedule Demo"</li>
+              <li>\u2022 "Get Started"</li>
+              <li>\u2022 "Register Now"</li>
+              <li>\u2022 Redirecting to forms/pages with urgency</li>
             </ul>
           </div>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-5">
+          <div className="bg-red-50 border border-red-200 rounded-[5px] p-5">
             <h4 className="font-semibold text-red-900 text-sm mb-3">NEVER use showArrow for:</h4>
             <ul className="text-sm text-red-800 space-y-2">
-              <li>• "Learn More"</li>
-              <li>• "View Details"</li>
-              <li>• "Cancel" / "Back"</li>
-              <li>• "Close" / "Dismiss"</li>
-              <li>• Exploratory or non-urgent actions</li>
+              <li>\u2022 "Learn More"</li>
+              <li>\u2022 "View Details"</li>
+              <li>\u2022 "Cancel" / "Back"</li>
+              <li>\u2022 "Close" / "Dismiss"</li>
+              <li>\u2022 Exploratory or non-urgent actions</li>
             </ul>
           </div>
         </div>
 
-        <div className="bg-black/[0.02] border border-black/8 rounded-lg p-4">
+        <div className="bg-black/[0.02] border border-black/8 rounded-[5px] p-4">
           <p className="text-xs text-black/60 mb-2">Icon Rules:</p>
           <ul className="text-xs text-black/70 space-y-1">
-            <li>• Always <strong>ArrowUpRight</strong> (45° diagonal) — never ArrowRight or ChevronRight</li>
-            <li>• Arrow color matches text color and transitions on hover</li>
-            <li>• Animation: subtle bounce on hover, static at rest</li>
+            <li>\u2022 Always <strong>ArrowUpRight</strong> (45\u00b0 diagonal) \u2014 never ArrowRight or ChevronRight</li>
+            <li>\u2022 Arrow color matches text color and transitions on hover</li>
+            <li>\u2022 Animation: subtle bounce on hover, static at rest</li>
           </ul>
         </div>
       </section>
@@ -484,7 +446,6 @@ export function ButtonDocumentation() {
             <div>
               <p className="text-xs text-black/60 mb-3">Default & Hover - Hover to see shimmer and gradient shift</p>
               <div className="flex flex-wrap gap-4">
-                <Button variant="primary" size="lg">Hover Me</Button>
                 <Button variant="brand" size="lg">Hover Me</Button>
                 <Button variant="secondary" size="lg">Hover Me</Button>
               </div>
@@ -544,13 +505,13 @@ export function ButtonDocumentation() {
           </p>
         </div>
 
-        <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-red-900 mb-3">✨ Shimmer Effect (Core Brand Signature)</h3>
+        <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-[5px] p-6">
+          <h3 className="text-xl font-semibold text-red-900 mb-3">\u2728 Shimmer Effect (Core Brand Signature)</h3>
           <p className="text-sm text-red-900 mb-4">
             The shimmer effect is <strong>ALWAYS active</strong> on every button - it's our core brand identity. 
             Like Apple's animations or Stripe's polish, this signature shine sets us apart from competitors.
           </p>
-          <div className="bg-white rounded-lg p-4 space-y-3">
+          <div className="bg-white rounded-[5px] p-4 space-y-3">
             <div className="flex flex-wrap gap-4">
               <Button variant="brand" size="lg">Hover to See Shimmer</Button>
               <Button variant="primary" size="lg">Metallic Shimmer</Button>
@@ -565,7 +526,7 @@ export function ButtonDocumentation() {
 
         <CodeBlock 
           title="Shimmer Usage"
-          code={`// ✨ Shimmer is ALWAYS active (no prop needed)\n<Button variant="brand">\n  Shimmer Automatic\n</Button>\n\n// Custom shimmer duration (optional)\n<Button variant="brand" shimmerDuration={1000}>\n  Slow Shimmer\n</Button>`}
+          code={`// \u2728 Shimmer is ALWAYS active (no prop needed)\n<Button variant="brand">\n  Shimmer Automatic\n</Button>\n\n// Custom shimmer duration (optional)\n<Button variant="brand" shimmerDuration={1000}>\n  Slow Shimmer\n</Button>`}
         />
       </section>
 
@@ -580,23 +541,15 @@ export function ButtonDocumentation() {
             <div>
               <p className="text-xs text-black/60 mb-3">Icon Right (default)</p>
               <div className="flex flex-wrap gap-4">
-                <Button variant="primary" size="lg" icon={<Download size={18} />}>
-                  Download Report
-                </Button>
-                <Button variant="secondary" size="lg" icon={<Share2 size={18} />}>
-                  Share Content
-                </Button>
+                <Button variant="primary" size="lg" icon={<Download size={18} />}>Download Report</Button>
+                <Button variant="secondary" size="lg" icon={<Share2 size={18} />}>Share Content</Button>
               </div>
             </div>
             <div>
               <p className="text-xs text-black/60 mb-3">Icon Left</p>
               <div className="flex flex-wrap gap-4">
-                <Button variant="primary" size="lg" icon={<Send size={18} />} iconPosition="left">
-                  Send Message
-                </Button>
-                <Button variant="secondary" size="lg" icon={<Bookmark size={18} />} iconPosition="left">
-                  Save for Later
-                </Button>
+                <Button variant="primary" size="lg" icon={<Send size={18} />} iconPosition="left">Send Message</Button>
+                <Button variant="secondary" size="lg" icon={<Bookmark size={18} />} iconPosition="left">Save for Later</Button>
               </div>
             </div>
           </div>
@@ -618,16 +571,14 @@ export function ButtonDocumentation() {
       {/* ==================== INTERACTIVE PLAYGROUND ==================== */}
       <section className="space-y-6">
         <h2 className="text-2xl font-normal">Interactive Playground</h2>
-        <p className="text-sm text-black/70">
-          Experiment with different button configurations and see the generated code.
-        </p>
+        <p className="text-sm text-black/70">Experiment with different button configurations and see the generated code.</p>
 
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-8 border border-black/8">
+        <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-[5px] p-8 border border-black/8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Preview */}
             <div>
               <h4 className="text-sm font-bold text-black mb-4">Preview</h4>
-              <div className="bg-white rounded-lg p-8 border border-black/10 flex items-center justify-center min-h-[200px]">
+              <div className="bg-white rounded-[5px] p-8 border border-black/10 flex items-center justify-center min-h-[200px]">
                 <Button
                   variant={playgroundVariant}
                   size={playgroundSize}
@@ -645,7 +596,6 @@ export function ButtonDocumentation() {
             <div>
               <h4 className="text-sm font-bold text-black mb-4">Controls</h4>
               <div className="space-y-4">
-                {/* Variant */}
                 <div>
                   <label className="text-xs font-bold text-black/70 mb-2 block">Variant</label>
                   <div className="grid grid-cols-2 gap-2">
@@ -665,7 +615,6 @@ export function ButtonDocumentation() {
                   </div>
                 </div>
 
-                {/* Size */}
                 <div>
                   <label className="text-xs font-bold text-black/70 mb-2 block">Size</label>
                   <div className="grid grid-cols-4 gap-2">
@@ -685,7 +634,6 @@ export function ButtonDocumentation() {
                   </div>
                 </div>
 
-                {/* Icon */}
                 <div>
                   <label className="text-xs font-bold text-black/70 mb-2 block">Icon</label>
                   <div className="grid grid-cols-3 gap-2 mb-2">
@@ -720,7 +668,6 @@ export function ButtonDocumentation() {
                   </div>
                 </div>
 
-                {/* States */}
                 <div>
                   <label className="text-xs font-bold text-black/70 mb-2 block">States</label>
                   <div className="space-y-2">
@@ -729,7 +676,7 @@ export function ButtonDocumentation() {
                         type="checkbox"
                         checked={playgroundLoading}
                         onChange={(e) => setPlaygroundLoading(e.target.checked)}
-                        className="w-4 h-4 rounded"
+                        className="w-4 h-4 border-2 border-black/25 rounded-[2.5px] checked:bg-black checked:border-black accent-black cursor-pointer transition-colors duration-150"
                       />
                       <span className="text-sm text-black">Loading</span>
                     </label>
@@ -738,28 +685,26 @@ export function ButtonDocumentation() {
                         type="checkbox"
                         checked={playgroundDisabled}
                         onChange={(e) => setPlaygroundDisabled(e.target.checked)}
-                        className="w-4 h-4 rounded"
+                        className="w-4 h-4 border-2 border-black/25 rounded-[2.5px] checked:bg-black checked:border-black accent-black cursor-pointer transition-colors duration-150"
                       />
                       <span className="text-sm text-black">Disabled</span>
                     </label>
                   </div>
                 </div>
 
-                {/* Text */}
                 <div>
                   <label className="text-xs font-bold text-black/70 mb-2 block">Button Text</label>
                   <input
                     type="text"
                     value={playgroundText}
                     onChange={(e) => setPlaygroundText(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-black/10 rounded focus:outline-none focus:border-black"
+                    className="w-full px-3 py-2 border border-black/10 rounded-[5px] bg-white text-black/90 placeholder:text-black/30 hover:border-black/25 focus:border-black/90 focus:outline-none transition-colors duration-150"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Generated Code */}
           <div className="mt-8">
             <h4 className="text-sm font-bold text-black mb-4">Generated Code</h4>
             <CodeBlock code={generatePlaygroundCode()} />
@@ -770,43 +715,31 @@ export function ButtonDocumentation() {
       {/* ==================== REAL-WORLD EXAMPLES ==================== */}
       <section className="space-y-6">
         <h2 className="text-2xl font-normal">Real-World Examples</h2>
-        <p className="text-sm text-black/70">
-          Common button patterns from production applications.
-        </p>
+        <p className="text-sm text-black/70">Common button patterns from production applications.</p>
 
-        {/* Navbar CTA */}
         <ComponentPreview title="1. Navbar CTA" description="Primary conversion action in navigation bar">
           <div className="bg-white border-b border-black/8 p-4 flex items-center justify-between">
             <div className="text-sm font-semibold">Company Logo</div>
             <div className="flex items-center gap-6">
               <a href="#" className="text-sm text-black/70 hover:text-black">Features</a>
               <a href="#" className="text-sm text-black/70 hover:text-black">Pricing</a>
-              <Button variant="brand" size="sm">
-                Get Started
-              </Button>
+              <Button variant="brand" size="sm">Get Started</Button>
             </div>
           </div>
         </ComponentPreview>
 
         <CodeBlock 
           title="Navbar Pattern"
-          code={`<Button \n  variant="brand"     // ✅ Red for high visibility\n  size="sm"           // ✅ Small to fit navbar height\n>\n  Get Started\n</Button>`}
+          code={`<Button \n  variant="brand"     // \u2705 Red for high visibility\n  size="sm"           // \u2705 Small to fit navbar height\n>\n  Get Started\n</Button>`}
         />
 
-        {/* Hero Section */}
         <ComponentPreview title="2. Hero Section CTAs" description="Primary and secondary actions in hero">
-          <div className="bg-gradient-to-r from-gray-900 to-black p-12 text-center rounded-lg">
+          <div className="bg-gradient-to-r from-gray-900 to-black p-12 text-center rounded-[5px]">
             <h3 className="text-3xl text-white mb-3">Transform Your Business Today</h3>
-            <p className="text-white/70 mb-8 max-w-md mx-auto">
-              Join thousands of companies using our platform to scale faster
-            </p>
+            <p className="text-white/70 mb-8 max-w-md mx-auto">Join thousands of companies using our platform to scale faster</p>
             <div className="flex justify-center gap-4">
-              <Button variant="brand" size="lg">
-                Get Started Free
-              </Button>
-              <Button variant="ghost" background="dark" size="lg" icon={<FileText size={18} />}>
-                View Demo
-              </Button>
+              <Button variant="brand" size="lg">Get Started Free</Button>
+              <Button variant="ghost" background="dark" size="lg" icon={<FileText size={18} />}>View Demo</Button>
             </div>
           </div>
         </ComponentPreview>
@@ -816,29 +749,16 @@ export function ButtonDocumentation() {
           code={`// Primary CTA - High conversion\n<Button \n  variant="brand" \n  size="lg"\n>\n  Get Started Free\n</Button>\n\n// Secondary action - Lower emphasis\n<Button \n  variant="ghost" \n  background="dark" \n  size="lg" \n  icon={<FileText size={18} />}\n>\n  View Demo\n</Button>`}
         />
 
-        {/* Form Submit */}
         <ComponentPreview title="3. Form Actions" description="Submit and cancel buttons in forms">
-          <div className="bg-white border border-black/8 rounded-lg p-6 max-w-md">
+          <div className="bg-white border border-black/8 rounded-[5px] p-6 max-w-md">
             <h4 className="font-semibold mb-4">Contact Information</h4>
             <div className="space-y-3 mb-6">
-              <input 
-                type="text" 
-                placeholder="Name" 
-                className="w-full px-3 py-2 border border-black/10 rounded text-sm"
-              />
-              <input 
-                type="email" 
-                placeholder="Email" 
-                className="w-full px-3 py-2 border border-black/10 rounded text-sm"
-              />
+              <input type="text" placeholder="Name" className="w-full px-3 py-2 border border-black/10 rounded-[5px] bg-white text-black/90 placeholder:text-black/30 hover:border-black/25 focus:border-black/90 focus:outline-none transition-colors duration-150" />
+              <input type="email" placeholder="Email" className="w-full px-3 py-2 border border-black/10 rounded-[5px] bg-white text-black/90 placeholder:text-black/30 hover:border-black/25 focus:border-black/90 focus:outline-none transition-colors duration-150" />
             </div>
             <div className="flex gap-3">
-              <Button variant="primary" size="md" fullWidth type="submit">
-                Submit
-              </Button>
-              <Button variant="secondary" size="md">
-                Cancel
-              </Button>
+              <Button variant="primary" size="md" fullWidth type="submit">Submit</Button>
+              <Button variant="secondary" size="md">Cancel</Button>
             </div>
           </div>
         </ComponentPreview>
@@ -852,14 +772,14 @@ export function ButtonDocumentation() {
       {/* ==================== PROPS API ==================== */}
       <section className="space-y-4">
         <h2 className="text-2xl font-normal">Props API Reference</h2>
-        <SpecTable specs={[
+        <PropsTable props={[
           { property: 'variant', value: 'primary | secondary | ghost | brand', description: 'Visual style variant (default: primary)' },
           { property: 'size', value: 'sm | md | lg | xl', description: 'Button size (default: lg)' },
           { property: 'background', value: 'light | dark', description: 'Background context for ghost/secondary variants (default: light)' },
           { property: 'icon', value: 'ReactNode', description: 'Optional icon element from lucide-react' },
           { property: 'iconPosition', value: 'left | right', description: 'Icon placement (default: right)' },
           { property: 'iconOnly', value: 'boolean', description: 'Icon-only button mode (square shape, requires ariaLabel)' },
-          { property: 'shimmerDuration', value: 'number', description: '✨ Shimmer speed in ms - always active (default: 700)' },
+          { property: 'shimmerDuration', value: 'number', description: '\u2728 Shimmer speed in ms - always active (default: 700)' },
           { property: 'loading', value: 'boolean', description: 'Loading state with spinner (default: false)' },
           { property: 'disabled', value: 'boolean', description: 'Disabled state (default: false)' },
           { property: 'fullWidth', value: 'boolean', description: 'Full container width (default: false)' },
@@ -874,62 +794,32 @@ export function ButtonDocumentation() {
       {/* ==================== ACCESSIBILITY ==================== */}
       <section className="space-y-4">
         <h2 className="text-2xl font-normal">Accessibility (WCAG AA)</h2>
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-          <h4 className="font-semibold text-purple-900 mb-4">♿ Accessibility Features</h4>
+        <div className="bg-purple-50 border border-purple-200 rounded-[5px] p-6">
+          <h4 className="font-semibold text-purple-900 mb-4">\u267f Accessibility Features</h4>
           <ul className="space-y-3 text-sm text-purple-900">
-            <li className="flex items-start gap-2">
-              <span className="font-bold">✓</span>
-              <span><strong>Keyboard Navigation:</strong> All buttons focusable with Tab, activatable with Enter/Space</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold">✓</span>
-              <span><strong>Focus Indicators:</strong> Visible focus ring (2px black outline + 2px offset)</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold">✓</span>
-              <span><strong>Screen Readers:</strong> Semantic button elements with aria-label support</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold">✓</span>
-              <span><strong>Touch Targets:</strong> Minimum 40px × 40px (WCAG 2.5.5)</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold">✓</span>
-              <span><strong>Color Contrast:</strong> All variants meet WCAG AA (4.5:1 minimum)</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold">✓</span>
-              <span><strong>Reduced Motion:</strong> Respects prefers-reduced-motion preference</span>
-            </li>
+            <li className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Keyboard Navigation:</strong> All buttons focusable with Tab, activatable with Enter/Space</span></li>
+            <li className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Focus Indicators:</strong> Visible focus ring (2px black outline + 2px offset)</span></li>
+            <li className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Screen Readers:</strong> Semantic button elements with aria-label support</span></li>
+            <li className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Touch Targets:</strong> Minimum 40px \u00d7 40px (WCAG 2.5.5)</span></li>
+            <li className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Color Contrast:</strong> All variants meet WCAG AA (4.5:1 minimum)</span></li>
+            <li className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Reduced Motion:</strong> Respects prefers-reduced-motion preference</span></li>
           </ul>
         </div>
 
         <CodeBlock 
           title="Accessibility Best Practices"
-          code={`// ✅ GOOD: Icon-only with aria-label\n<Button \n  iconOnly \n  icon={<Download size={20} />}\n  ariaLabel="Download annual report PDF"\n/>\n\n// ✅ GOOD: Proper form button\n<Button type="submit" disabled={!formValid}>\n  Submit Form\n</Button>\n\n// ❌ BAD: Icon-only without aria-label\n<Button iconOnly icon={<Download size={20} />} />\n// Screen readers can't describe this!`}
+          code={`// \u2705 GOOD: Icon-only with aria-label\n<Button \n  iconOnly \n  icon={<Download size={20} />}\n  ariaLabel="Download annual report PDF"\n/>\n\n// \u2705 GOOD: Proper form button\n<Button type="submit" disabled={!formValid}>\n  Submit Form\n</Button>\n\n// \u274c BAD: Icon-only without aria-label\n<Button iconOnly icon={<Download size={20} />} />\n// Screen readers can't describe this!`}
         />
       </section>
 
       {/* ==================== PERFORMANCE ==================== */}
-      <div className="bg-gradient-to-r from-green-50 to-teal-50 border border-green-200 rounded-lg p-6">
-        <h3 className="font-semibold text-green-900 mb-4">⚡ Performance & Optimization</h3>
+      <div className="bg-gradient-to-r from-green-50 to-teal-50 border border-green-200 rounded-[5px] p-6">
+        <h3 className="font-semibold text-green-900 mb-4">\u26a1 Performance & Optimization</h3>
         <div className="space-y-2 text-sm text-green-900">
-          <div className="flex items-start gap-2">
-            <span className="font-bold">✓</span>
-            <span><strong>Hardware Acceleration:</strong> Transitions use transform + opacity (GPU-accelerated)</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="font-bold">✓</span>
-            <span><strong>60fps Interactions:</strong> All hover and active states maintain 60fps</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="font-bold">✓</span>
-            <span><strong>CSS-Only Effects:</strong> No JavaScript for visual transitions (better performance)</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="font-bold">✓</span>
-            <span><strong>No Layout Shifts:</strong> Fixed icon dimensions prevent CLS</span>
-          </div>
+          <div className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>Hardware Acceleration:</strong> Transitions use transform + opacity (GPU-accelerated)</span></div>
+          <div className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>60fps Interactions:</strong> All hover and active states maintain 60fps</span></div>
+          <div className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>CSS-Only Effects:</strong> No JavaScript for visual transitions (better performance)</span></div>
+          <div className="flex items-start gap-2"><span className="font-bold">\u2713</span><span><strong>No Layout Shifts:</strong> Fixed icon dimensions prevent CLS</span></div>
         </div>
       </div>
     </div>
