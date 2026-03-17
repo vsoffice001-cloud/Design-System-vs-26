@@ -96,10 +96,10 @@ function ColorFamilySection({ title, description, baseColor, purpose, usage, col
   }>;
 }) {
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
+    <div className="border border-black/8 rounded-[5px] overflow-hidden">
       {/* Header */}
-      <div className="p-6 bg-black/[0.02] border-b border-black/8">
-        <h3 className="text-xl font-semibold mb-3">{title}</h3>
+      <div className="p-4 sm:p-6 bg-black/[0.02] border-b border-black/8">
+        <h3 className="text-lg sm:text-xl font-semibold mb-3">{title}</h3>
         <p className="text-sm text-black/70 mb-2"><strong>PURPOSE:</strong> {description}</p>
         <p className="text-sm text-black/70 mb-2"><strong>BASE:</strong> {baseColor}</p>
         <p className="text-sm text-black/70"><strong>USAGE:</strong> {usage}</p>
@@ -110,7 +110,7 @@ function ColorFamilySection({ title, description, baseColor, purpose, usage, col
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse min-w-[600px]">
           <thead>
             <tr className="border-b-2 border-black/20 bg-black/[0.02]">
               <th className="text-left p-3 text-xs font-bold">Shade</th>
@@ -140,6 +140,7 @@ export function AllColorsPaletteContent() {
   const [downloadFormat, setDownloadFormat] = useState<'json' | 'css'>('json');
 
   const downloadPalette = () => {
+    // Implementation for downloading color tokens
     const data = downloadFormat === 'json' 
       ? JSON.stringify(colorData, null, 2)
       : generateCSSExport();
@@ -156,24 +157,24 @@ export function AllColorsPaletteContent() {
   return (
     <div className="space-y-10">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-8">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h1 className="text-3xl font-normal mb-3">Complete Color Palette Reference</h1>
-            <p className="text-lg text-black/70 mb-4">
+      <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-[5px] p-5 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-normal mb-3">Complete Color Palette Reference</h1>
+            <p className="text-sm sm:text-base md:text-lg text-black/70 mb-4">
               Every color token in the design system with full 50-900 scales, RGB values for gradients, 
               and specific use cases. Click any token to copy to clipboard.
             </p>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-black/60">📋 100+ color tokens</span>
-              <span className="text-sm text-black/60">🎨 10 color families</span>
-              <span className="text-sm text-black/60">⚡ Copy-to-clipboard enabled</span>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <span className="text-xs sm:text-sm text-black/60">📋 100+ color tokens</span>
+              <span className="text-xs sm:text-sm text-black/60">🎨 10 color families</span>
+              <span className="text-xs sm:text-sm text-black/60">⚡ Copy-to-clipboard enabled</span>
             </div>
           </div>
-          <div>
+          <div className="flex-shrink-0">
             <button
               onClick={downloadPalette}
-              className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-black/90 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-[5px] hover:bg-black/90 transition-colors"
             >
               <Download size={16} />
               <span className="text-sm font-medium">Download Palette</span>
@@ -201,7 +202,7 @@ export function AllColorsPaletteContent() {
       </div>
 
       {/* Quick Reference Legend */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+      <div className="bg-blue-50 border border-blue-200 rounded-[5px] p-5">
         <h3 className="font-semibold text-blue-900 mb-3">📖 How to Use This Reference</h3>
         <ul className="space-y-2 text-sm text-blue-900">
           <li className="flex items-start gap-2">
@@ -437,7 +438,7 @@ export function AllColorsPaletteContent() {
       />
 
       {/* CLOSING PRINCIPLE BOX */}
-      <div className="bg-green-50 border border-green-300 rounded-lg p-6">
+      <div className="bg-green-50 border border-green-300 rounded-[5px] p-6">
         <h3 className="font-semibold text-green-900 mb-3">✅ COMPLETE PALETTE - USAGE PRINCIPLES</h3>
         <ul className="space-y-2 text-sm text-green-900">
           <li className="flex items-start gap-2">
@@ -464,22 +465,69 @@ export function AllColorsPaletteContent() {
       </div>
 
       {/* CODE SNIPPET EXAMPLES */}
-      <div className="border border-black/8 rounded-lg p-6 bg-black/[0.02]">
+      <div className="border border-black/8 rounded-[5px] p-6 bg-black/[0.02]">
         <h3 className="text-xl font-semibold mb-4">💻 Code Snippet Examples</h3>
         <div className="space-y-4">
           <CodeSnippetBox
             title="CSS Variables"
-            code={`/* Using color tokens in CSS */\n.my-button {\n  background: var(--red-600);\n  color: var(--white);\n}\n\n.my-button:hover {\n  background: var(--red-700);\n}\n\n.success-message {\n  color: var(--green-600);\n  background: var(--green-50);\n  border: 1px solid var(--green-300);\n}`}
+            code={`/* Using color tokens in CSS */
+.my-button {
+  background: var(--red-600);
+  color: var(--white);
+}
+
+.my-button:hover {
+  background: var(--red-700);
+}
+
+.success-message {
+  color: var(--green-600);
+  background: var(--green-50);
+  border: 1px solid var(--green-300);
+}`}
           />
           
           <CodeSnippetBox
             title="Gradient with RGB Values"
-            code={`/* Using RGB values for gradients */\n.hero-section {\n  background: linear-gradient(\n    135deg,\n    rgba(128, 108, 224, 0.12) 0%,    /* purple-600 at 12% opacity */\n    rgba(176, 31, 36, 0.08) 100%     /* red-600 at 8% opacity */\n  );\n}\n\n/* Radial gradient for soft glow */\n.feature-card {\n  background: radial-gradient(\n    circle 600px at 100% 100%,\n    rgba(234, 122, 95, 0.06) 0%,     /* coral-600 at 6% opacity */\n    transparent 70%\n  );\n}`}
+            code={`/* Using RGB values for gradients */
+.hero-section {
+  background: linear-gradient(
+    135deg,
+    rgba(128, 108, 224, 0.12) 0%,    /* purple-600 at 12% opacity */
+    rgba(176, 31, 36, 0.08) 100%     /* red-600 at 8% opacity */
+  );
+}
+
+/* Radial gradient for soft glow */
+.feature-card {
+  background: radial-gradient(
+    circle 600px at 100% 100%,
+    rgba(234, 122, 95, 0.06) 0%,     /* coral-600 at 6% opacity */
+    transparent 70%
+  );
+}`}
           />
           
           <CodeSnippetBox
             title="React/Tailwind Usage"
-            code={`// Using color tokens in React components\n<button \n  style={{ background: 'var(--red-600)' }}\n  className="px-6 py-3 rounded-lg text-white"\n>\n  Primary CTA\n</button>\n\n// Success state with semantic colors\n<div \n  style={{ \n    background: 'var(--green-50)', \n    border: '1px solid var(--green-300)',\n    color: 'var(--green-700)'\n  }}\n>\n  Success: Your changes have been saved.\n</div>`}
+            code={`// Using color tokens in React components
+<button 
+  style={{ background: 'var(--red-600)' }}
+  className="px-6 py-3 rounded-[5px] text-white"
+>
+  Primary CTA
+</button>
+
+// Success state with semantic colors
+<div 
+  style={{ 
+    background: 'var(--green-50)', 
+    border: '1px solid var(--green-300)',
+    color: 'var(--green-700)'
+  }}
+>
+  Success: Your changes have been saved.
+</div>`}
           />
         </div>
       </div>
@@ -498,7 +546,7 @@ function CodeSnippetBox({ title, code }: { title: string; code: string }) {
   };
 
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
+    <div className="border border-black/8 rounded-[5px] overflow-hidden">
       <div className="bg-black/5 px-4 py-2 border-b border-black/8 flex items-center justify-between">
         <span className="text-sm font-semibold">{title}</span>
         <button
