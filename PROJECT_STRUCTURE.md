@@ -56,7 +56,7 @@ case-study-project/
 │   │   │   ├── ReadingProgressBar.tsx           #   Case-study progress bar
 │   │   │   ├── NextSectionCTA.tsx               #   Scroll-to-next section button
 │   │   │   ├── TableOfContents.tsx              #   Sidebar TOC with active tracking
-│   │   │   ├── ResourceCard.tsx                 #   Content card (7 variants)
+│   │   │   ├── ResourceCard.tsx                 #   Content card (7 variants) — molecule-level, in root not /molecules/
 │   │   │   ├── SubtleVariantSwitcher.tsx        #   Dev-only card style toggle
 │   │   │   ├── CodeBlockWithCopy.tsx            #   Code display with copy button
 │   │   │   ├── CollapsibleSection.tsx           #   Expandable content section
@@ -92,7 +92,7 @@ case-study-project/
 │   │   │   ├── FilterCheckboxItem.tsx           #   Custom checkbox + label + count
 │   │   │   ├── FilterIndustryItem.tsx           #   Expandable industry row
 │   │   │   │
-│   │   │   ├── FiltersDocumentation.tsx         #   Filter system docs page
+│   │   │   ├── FiltersDocumentation.tsx         #   Filter system docs page (~75KB, full interactive)
 │   │   │   ├── ButtonDocumentation.tsx          #   Button showcase
 │   │   │   ├── LinksDocumentation.tsx           #   Link system showcase
 │   │   │   ├── BadgeLabelsDocumentation.tsx     #   Badge showcase
@@ -115,8 +115,8 @@ case-study-project/
 │   │   │   ├── iconColors.ts                    #   Icon color tokens
 │   │   │   ├── industryIconMap.ts               #   Industry → icon mapping
 │   │   │   │
-│   │   │   ├── molecules/                       #   26 molecule components (v4.3)
-│   │   │   │   ├── index.ts
+│   │   │   ├── molecules/                       #   26 molecule components + index.ts barrel (v4.3)
+│   │   │   │   ├── index.ts                     #   Barrel re-exports all 26 molecules
 │   │   │   │   ├── ReportCard.tsx
 │   │   │   │   ├── ReportGridCard.tsx           #   [DEPRECATED]
 │   │   │   │   ├── StatCard.tsx
@@ -144,8 +144,8 @@ case-study-project/
 │   │   │   │   ├── ActiveFilterChip.tsx
 │   │   │   │   └── MobileFilterSheet.tsx
 │   │   │   │
-│   │   │   └── organisms/                       #   30 organism components (v4.3)
-│   │   │       ├── index.ts
+│   │   │   └── organisms/                       #   30 organism components + index.ts barrel (v4.3)
+│   │   │       ├── index.ts                     #   Barrel re-exports all 30 organisms
 │   │   │       ├── ProductHero.tsx
 │   │   │       ├── FeaturedCarousel.tsx
 │   │   │       ├── StatsRow.tsx
@@ -177,8 +177,8 @@ case-study-project/
 │   │   │       ├── TestimonialsRS.tsx
 │   │   │       └── QuickAccessBar.tsx
 │   │   │
-│   │   ├── hooks/                               #   14 custom React hooks
-│   │   │   ├── index.ts
+│   │   ├── hooks/                               #   14 custom hooks + index.ts barrel
+│   │   │   ├── index.ts                         #   Barrel re-exports all 14 hooks
 │   │   │   ├── useShimmer.ts                    #   [DO NOT DELETE]
 │   │   │   ├── useScrollDirection.ts
 │   │   │   ├── useHeroVisibility.ts
@@ -232,9 +232,9 @@ case-study-project/
 
 ```
 Total Atoms:          ~35 (18 core + 14 layout/utility + 3 data files)
-Total Molecules:      26 (in /molecules/)
+Total Molecules:      26 in /molecules/ + 1 ResourceCard in root = 27 molecule-level components
 Total Organisms:      40 (30 in /organisms/ + 10 case study in root)
-Total Hooks:          14
+Total Hooks:          14 (+ index.ts barrel = 15 files in /hooks/)
 Total Documentation:  7+ AI context files + 6 reference docs
 Total Code Files:     120+ TypeScript/TSX files
 Design Tokens:        470+ CSS custom properties (theme.css)
