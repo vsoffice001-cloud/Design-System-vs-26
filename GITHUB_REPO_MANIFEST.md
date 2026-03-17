@@ -28,7 +28,8 @@ Canonical file inventory for the entire repository. Use this when syncing betwee
 | `DESIGN_SYSTEM_AI_CONTEXT.md` | **Lightweight index** — points to 6 modules in `ai-context/` | v4.3 |
 | `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v4.0) | **v4.0** |
 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for Case Study DS components — 17 entries + 5 flowcharts | v3.3 |
-| `REPORT_STORE_COMPONENTS_4WH.md` | **NEW** — 4W+H for Report Store atoms/molecules/organisms/templates — 22 entries + 4 flowcharts + page assembly checklist | **v4.0** |
+| `REPORT_STORE_COMPONENTS_4WH.md` | 4W+H for Report Store atoms/molecules/organisms/templates — 22 entries + 4 flowcharts + page assembly checklist | **v4.0** |
+| `FILTER_SEARCH_SYSTEM_4WH.md` | 4W+H for Filter & Search system — 4 atoms + 2 molecules + 4 organisms + 1 hook + decision flowcharts | **v4.1** |
 | `design-system-checklist.md` | File map — 52 files, 11 groups, barrel export instructions | v2.2 |
 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | v3.3.2 |
 | `GITHUB_PUSH_GUIDE.md` | Push checklist by Atomic level, merge safety, commit format | v1.3 |
@@ -174,6 +175,7 @@ Molecules:
 
 | Date | Changes |
 |------|---------|
+| Mar 17, 2026 | **v4.3 Sync Push:** 6 missing molecules, 4 missing hooks, barrel updates, FILTER_SEARCH_SYSTEM_4WH.md documented |
 | Mar 17, 2026 | **v4.3 DS Audit:** 5 code fixes (arrow prop, hex→rgba, hex→var), documentation v4.3 (CORE.md, COMPONENTS.md, AI_CONTEXT, MANIFEST), FiltersDocumentation full push (75KB) |
 | Mar 13, 2026 | **v4.0 Report Store Architecture:** Monolithic → organism architecture. 4 hooks, 30 organisms, `ReportStorePage.tsx` template |
 | Mar 11, 2026 | **v4.2 Filter System:** 6 atoms + 4 molecules extracted from monolithic code |
@@ -185,4 +187,4 @@ Molecules:
 
 ---
 
-**Total Files on GitHub:** ~152 files across 8 directories
+**Total Files on GitHub:** ~155 files across 8 directories
