@@ -53,7 +53,7 @@ const PADDING_MAP: Record<CardPadding, string> = {
 };
 
 const BG_MAP: Record<CardVariant, CSSProperties> = {
-  white: { background: '#fff' },
+  white: { background: 'rgba(255,255,255,1)' },
   warm: { background: 'var(--warm-200)' },
   outlined: { background: 'transparent' },
 };
