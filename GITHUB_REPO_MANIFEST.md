@@ -1,9 +1,9 @@
 # GitHub Repository Manifest - Design System vs 26
 
-**Last Updated:** March 11, 2026  
+**Last Updated:** March 17, 2026  
 **Branch:** `main`  
 **Repo:** `vsoffice001-cloud/Design-System-vs-26`  
-**Design System Version:** v4.2
+**Design System Version:** v4.3
 
 Canonical file inventory for the entire repository. Use this when syncing between Figma Make and GitHub.
 
@@ -19,16 +19,16 @@ Canonical file inventory for the entire repository. Use this when syncing betwee
 | `postcss.config.mjs` | PostCSS configuration | Stable |
 | `vite.config.ts` | Vite build configuration | Stable |
 | `README.md` | Project readme (v3.3.2) | Updated Mar 1 |
-| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 11 |
+| `GITHUB_REPO_MANIFEST.md` | **This file** — Canonical repository inventory | Updated Mar 17 |
 
-### Root - AI Context System (v4.0)
+### Root - AI Context System (v4.3)
 
 | File | Purpose | Version |
 |------|---------|--------|
-| `DESIGN_SYSTEM_AI_CONTEXT.md` | **Lightweight index** — points to 6 modules in `ai-context/` | v3.4.0 (3KB index) |
+| `DESIGN_SYSTEM_AI_CONTEXT.md` | **Lightweight index** — points to 6 modules in `ai-context/` | v4.3 |
 | `DESIGN_SYSTEM_UPDATES.md` | Changelog & migration log (v3.2.1 → v4.0) | **v4.0** |
 | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for Case Study DS components — 17 entries + 5 flowcharts | v3.3 |
-| `REPORT_STORE_COMPONENTS_4WH.md` | **v4.2** — 4W+H for Report Store components — 32+ entries + 5 flowcharts + interaction state matrix + filter system architecture | **v4.2** |
+| `REPORT_STORE_COMPONENTS_4WH.md` | **NEW** — 4W+H for Report Store atoms/molecules/organisms/templates — 22 entries + 4 flowcharts + page assembly checklist | **v4.0** |
 | `design-system-checklist.md` | File map — 52 files, 11 groups, barrel export instructions | v2.2 |
 | `QUICK_START_PROMPT.md` | Copy-paste prompt for fast AI sessions | v3.3.2 |
 | `GITHUB_PUSH_GUIDE.md` | Push checklist by Atomic level, merge safety, commit format | v1.3 |
@@ -51,10 +51,10 @@ Split from the original 53KB `DESIGN_SYSTEM_AI_CONTEXT.md` monolith. Each file i
 
 | File | Content | Size |
 |------|---------|------|
-| `CORE.md` | Overview, critical rules, AI checklist, common mistakes, quality metrics — **v4.0 with Report Store references** | 9KB |
+| `CORE.md` | Overview, critical rules, AI checklist, common mistakes, quality metrics — **v4.3** | 9KB |
 | `TYPOGRAPHY.md` | Font pairing (Serif/Sans/Mono), Major Third scale (1.25), custom sizes, weights | 4KB |
 | `COLORS.md` | 92-5-3 hierarchy, brand/black/warm/red/accent/utility colors, section color recipe | 8KB |
-| `COMPONENTS.md` | Button (4 variants + two-state secondary), Link system, Badge (CSS driven), Animation | 7KB |
+| `COMPONENTS.md` | Button (4 variants + two-state secondary), Link system, Badge (CSS driven), Animation, Filter system (v4.3) | 7KB |
 | `LAYOUT.md` | Spacing scale, 5 container widths, responsive padding, section pattern, page assembly | 7KB |
 | `PROMPTS.md` | 7 copy-paste AI implementation prompts | 6KB |
 
@@ -71,7 +71,8 @@ src/
  │   ├── components/                # All UI components
  │   │   ├── figma/                 # ImageWithFallback shim
  │   │   ├── foundations/           # Modular Foundations tab content (v3.4.0)
- │   │   └── molecules/            # Report Store molecules (v4.2)
+ │   │   ├── molecules/            # Molecules (26 files, v4.3)
+ │   │   └── organisms/           # Organisms (30 files — 6 cross-pillar + 24 RS, v4.3)
  │   └── hooks/                     # Custom React hooks
  ├── design-system/                 # Design tokens & showcase components
  ├── imports/                       # SVG imports from Figma
@@ -80,131 +81,108 @@ src/
 
 ---
 
-## Report Store Section Order (v4.0)
+## Case Study Section Order
 
 ```
-Home Mode (discovery):
- 1. Header                   → WHITE (glass-header)
- 2. HeroSection              → BLACK (globe, search)
- 3. FeaturedResearch          → WHITE
- 4. IndustrySectorsGrid       → NEUTRAL50 (--warm-200)
- 5. RecommendedForYou         → WHITE
- 6. AnalystPicksSection       → NEUTRAL50
- 7. TrendingStatistics        → WHITE
- 8. DailyDataHighlights       → NEUTRAL50
- 9. CustomResearchCTA         → BLACK
-10. Footer                    → BLACK
-
-Listing Mode (filtered):
- Header → HeroSection → ListingContextBanner → Sidebar + CardGrid → Footer
+ 1. HeroSection              → BLACK
+ 2. ClientContextSection     → WHITE
+ 3. ChallengesSection        → WARM (#f5f2f1)
+ 4. EngagementObjectives     → WHITE
+ 5. MethodologySection       → WARM
+ 6. ImpactSection            → WHITE
+ 7. ValuePillarsSection      → WHITE (border-t separator)
+ 8. TestimonialSection       → WHITE (border-t separator)
+ 9. ResourcesSection         → BLACK (dark gradient mesh)
+10. FinalCTASection          → WHITE (border-t separator)
 ```
 
----
+## Report Store Section Order (v4.3)
 
-## Key Dependency Chains
-
-### Filter System (v4.2 — most complex interaction system)
 ```
-useReportFilters.ts (hook — all filter state + cascade logic)
-  ├── IndustrySidebar.tsx (organism, lg+ only)
-  │     ├── SidebarPanel.tsx (container: sticky, elevation, header/footer)
-  │     ├── FilterSearchInput.tsx (atom: search within filters)
-  │     ├── FilterAccordion.tsx[sidebar] × 4 sections
-  │     │     └── FilterCheckbox.tsx × N per section
-  │     └── Industry tree rows (custom expand/collapse/select)
-  ├── MobileFilterBar.tsx (floating pill, <lg only)
-  │     └── Opens MobileFilterSheet
-  ├── MobileFilterSheet.tsx (organism, <lg only)
-  │     ├── FilterAccordion.tsx[sheet] × 5 sections
-  │     │     └── FilterChip.tsx × N per section
-  │     └── Button.tsx[brand] "Show Results"
-  └── ListingContextBanner.tsx (organism)
-        ├── Zone A: Industry hero + subcategory pills
-        └── Zone B: Color-coded removable filter chips
-```
+Home Mode (10 self-contained organisms):
+ 1. ReportStoreHero           → BLACK (search bar, category links)
+ 2. QuickAccessBar            → SUBTLE (#fafafa)
+ 3. FeaturedResearch           → WHITE (HorizontalScroll + ReportCard)
+ 4. KeyMarketIndicators        → WARM (StatsRow → 4 StatCards)
+ 5. RecommendedForYou          → WHITE (BrowseGrid → ViewToggle + ReportCards)
+ 6. DailyDataHighlights        → WHITE + border (4 DataHighlightCards)
+ 7. AnalystPicks               → WARM (3 AnalystPickCardBs)
+ 8. IndustrySectorsGrid        → WHITE (14 industries, 7+7 split)
+ 9. ResearchMethodology        → WARM (5-step process)
+10. CustomResearchCTA          → BLACK (CTABanner wrapper)
 
-### Report Store Card System (v4.1)
-```
-ReportCard.tsx (canonical — grid + list layouts)
-  ├── Card.tsx (v4.0 base container)
-  ├── Button.tsx (list layout CTA)
-  ├── ImageWithFallback (figma/ shim)
-  ├── IndustryBadge.tsx (subcategory label)
-  ├── CardMetaRow.tsx (A/B meta variants)
-  ├── CardFooterRow.tsx (date row)
-  └── iconColors.ts (lucide icon colors)
-
-ReportGridCard.tsx ── @deprecated wrapper → ReportCard layout="grid"
-
-ViewToggle.tsx ──── controls layout prop on ReportCard
-SkeletonCard.tsx ─── mirrors grid + list loading states
+Listing Mode:
+ IndustryFocusBanner → ListingToolbar → FiltersPanel + CardListing
 ```
 
 ---
 
-## `src/app/components/` — Core Components
+## Filter System (v4.3 — 6 atoms + 4 molecules)
 
-### Report Store Atoms (v4.2 — 6 files)
+```
+Atoms:
+  FilterSearchInput.tsx ── lucide: Search, X
+  FilterCheckbox.tsx ── standalone (label + count)
+  FilterChip.tsx ── lucide: X (dismissible pill)
+  FilterSectionHeader.tsx ── ChevronRight toggle, Badge count
+  FilterCheckboxItem.tsx ── custom checkbox UI + label + count
+  FilterIndustryItem.tsx ── expandable row with sub-items
+
+Molecules:
+  molecules/FilterAccordion.tsx ── FilterCheckbox, ChevronDown
+  molecules/SidebarPanel.tsx ── standalone container
+  molecules/ActiveFilterChip.tsx ── FilterChip bar + "Clear all"
+  molecules/MobileFilterSheet.tsx ── full-screen mobile overlay
+```
+
+---
+
+## `src/app/hooks/` (15 files)
 
 | File | Purpose |
 |------|--------|
-| `Tooltip.tsx` | Portal-based tooltip (document.body level, never clipped by overflow:hidden) |
-| `ViewToggle.tsx` | List/grid view toggle with warm pill container, 44px mobile touch targets |
-| `FadeInSection.tsx` | IntersectionObserver wrapper for scroll-triggered fade-in |
-| **`FilterCheckbox.tsx`** | **Custom checkbox with 6 interaction states, ARIA, keyboard. Used in filter panels, TOC, settings.** |
-| **`FilterChip.tsx`** | **Toggle chip with active/inactive states, 40px touch target. Used in mobile filter sheets.** |
-| **`FilterSearchInput.tsx`** | **Compact search input for filtering within panels. Border darkens on content.** |
-
-### `molecules/` — Report Store Molecules (v4.2 — 19 files)
-
-| File | Atomic Level | Purpose |
-|------|-------------|--------|
-| `index.ts` | Barrel | Re-exports all molecules + types |
-| `IndustryBadge.tsx` | Atom | Text-only industry/subcategory eyebrow label |
-| `CardMetaRow.tsx` | Molecule | Inline meta row with A/B variants |
-| `CardFooterRow.tsx` | Molecule | Date footer with Calendar icon |
-| `CardReveal.tsx` | Molecule | IO-based card entrance animation with stagger delay |
-| `RevealImage.tsx` | Molecule | Smooth blur-to-sharp image reveal on load |
-| `EmptyState.tsx` | Molecule | No-results state with icon, message, optional action |
-| `BackToTop.tsx` | Molecule | Floating scroll-to-top button |
-| `SkeletonCard.tsx` | Molecule | Shimmer loading placeholders (grid + list variants) |
-| `HorizontalScroll.tsx` | Molecule | Transform-based carousel |
-| `ScrollFade.tsx` | Molecule | Native scroll wrapper with edge fade masks |
-| **`ReportCard.tsx`** | **Organism** | **Canonical report card: `layout="grid"` or `layout="list"`** |
-| `ReportGridCard.tsx` | Wrapper | **@deprecated** — thin wrapper → `ReportCard layout="grid"` |
-| `StatCard.tsx` | Molecule | Market indicator card |
-| `DataHighlightCard.tsx` | Molecule | Daily data card |
-| `AnalystPickCardB.tsx` | Molecule | Expert pick card |
-| **`FilterAccordion.tsx`** | **Molecule** | **Unified collapsible section (sidebar + sheet variants). Replaces two duplicated FilterSection implementations.** |
-| **`SidebarPanel.tsx`** | **Molecule** | **Reusable sticky sidebar container. Handles positioning, elevation, header/footer/scroll zones. For filters, TOC, side nav, settings.** |
-| **`ActiveFilterChip.tsx`** | **Molecule** | **Removable color-coded filter chip. 6 type colors (gray, purple, green, blue, amber).** |
+| `index.ts` | Barrel export for all hooks |
+| `useActiveSection.ts` | Track which section is currently visible |
+| `useCounter.ts` | Animated counter for impact metrics |
+| `useHeroVisibility.ts` | Detect if hero section is in viewport |
+| `useMagneticEffect.ts` | Magnetic cursor effect for buttons |
+| `useReadingProgress.ts` | Page reading progress percentage |
+| `useResponsiveGutter.ts` | Responsive pixel-based gutter (24/32px) |
+| `useScrollAnimation.ts` | Scroll-triggered animations |
+| `useScrollDirection.ts` | Detect scroll up/down direction |
+| `useSectionProgress.ts` | Section scroll progress tracking |
+| `useShimmer.ts` | **DO NOT DELETE** — Used by CTALink.tsx & InlineLink.tsx |
+| `useReportFilters.ts` | **v4.3** — Report Store filter state |
+| `useProgressiveLoad.ts` | **v4.3** — IntersectionObserver-based infinite scroll |
+| `useCrossfade.ts` | **v4.3** — Crossfade transition between content swaps |
+| `useMountTransition.ts` | **v4.3** — Mount/unmount lifecycle with CSS transition support |
 
 ---
 
-## Cleanup Changelog
+## Key Intentional Exceptions (DO NOT "FIX")
 
-| Date | Action | Files Affected |
-|------|--------|----------------|
-| Mar 11, 2026 | **v4.2 Filter System Extraction** — Extracted 3 atoms (FilterCheckbox, FilterChip, FilterSearchInput) and 3 molecules (FilterAccordion, SidebarPanel, ActiveFilterChip) from monolithic IndustrySidebar/MobileFilterSheet. Full 4W+H documentation with interaction state matrix, filter architecture diagram, and decision flowchart. | FilterCheckbox.tsx, FilterChip.tsx, FilterSearchInput.tsx, molecules/FilterAccordion.tsx, molecules/SidebarPanel.tsx, molecules/ActiveFilterChip.tsx, molecules/index.ts, REPORT_STORE_COMPONENTS_4WH.md (v4.2), GITHUB_REPO_MANIFEST.md |
-| Mar 11, 2026 | **ReportCard grid+list** — Unified card with `layout` prop; ReportGridCard → deprecated wrapper | ReportCard.tsx (new), ReportGridCard.tsx (refactored), molecules/index.ts |
-| Mar 11, 2026 | **v4.1 Molecule Push** — 3 atoms, 14 molecules, 1 shim, barrel exports updated | Tooltip.tsx, ViewToggle.tsx, FadeInSection.tsx, molecules/*.tsx (14), figma/ImageWithFallback.tsx, molecules/index.ts, components/index.ts |
-| Mar 10, 2026 | **v4.0 Report Store sync** — 3 docs, 3 evolved components, 1 CSS additions file | REPORT_STORE_COMPONENTS_4WH.md, DESIGN_SYSTEM_UPDATES.md, ai-context/CORE.md, Button.tsx, SectionHeading.tsx, Card.tsx, report-store-additions.css |
-| Mar 6, 2026 | **v3.4.0 FoundationsContent Modular Split** | FoundationsContent.tsx, foundations/*.tsx (6 files) |
-| Mar 1, 2026 | **v3.3.2 AI Context Modularization + Badge CSS Migration** | 7 files deleted, ai-context/*.md, theme.css, Badge.tsx |
+1. **AllTypographyTokensContent.tsx** — Hardcoded values are intentional (demo)
+2. **ChallengesSection.tsx** — `1000px` is JS card-width calc, not container
+3. **ContactModal.tsx** — `max-w-[500px]` is intentional modal width
+4. **PatternsContent.tsx** — `max-w-[1200px]` inside demo code string
+5. **useShimmer.ts** — Actively used by CTALink + InlineLink, DO NOT DELETE
+6. **FigmaButtonComparison.tsx line 76** — Static `<ArrowUpRight>` in raw `<a>` tag is intentional gap documentation
 
 ---
 
 ## Version History
 
 | Date | Changes |
-|------|---------||
-| Mar 11, 2026 | **v4.2 Filter & Search System:** Extracted & documented 6 new components from monolithic filter code (FilterCheckbox, FilterChip, FilterSearchInput atoms; FilterAccordion, SidebarPanel, ActiveFilterChip molecules). Full 4W+H with interaction state matrix (11 controls × 6 states), filter architecture diagram, component composition tree, cross-platform parity table, and "Which Filter Component?" decision flowchart. Refactored IndustrySidebar and MobileFilterSheet to compose from extracted atoms/molecules. |
-| Mar 11, 2026 | **v4.1 ReportCard grid+list:** Unified `ReportCard.tsx` with `layout` prop; `ReportGridCard` deprecated |
-| Mar 11, 2026 | **v4.1 Molecule Push:** 3 atoms, 14 molecules, 1 shim, barrel exports |
-| Mar 10, 2026 | **v4.0 Report Store Components:** 4WH doc, CSS additions, evolved Button/SectionHeading/Card |
+|------|---------|
+| Mar 17, 2026 | **v4.3 DS Audit:** 5 code fixes (arrow prop, hex→rgba, hex→var), documentation v4.3 (CORE.md, COMPONENTS.md, AI_CONTEXT, MANIFEST), FiltersDocumentation enhanced |
+| Mar 13, 2026 | **v4.3 Report Store Architecture:** Monolithic → organism architecture. 4 hooks, 9 organisms, `ReportStorePage.tsx` template |
+| Mar 11, 2026 | **v4.2 Filter System:** 3 atoms + 3 molecules extracted from monolithic code |
+| Mar 11, 2026 | **v4.1 ReportCard grid+list:** Unified card with `layout` prop |
+| Mar 11, 2026 | **v4.1 Molecule Push:** 3 atoms, 14 molecules, 1 shim |
+| Mar 10, 2026 | **v4.0 Report Store Components:** 4WH doc, evolved Button/SectionHeading/Card |
 | Mar 6, 2026 | **v3.4.0 FoundationsContent Modular Split** |
 | Mar 1, 2026 | **v3.3.2 AI Context Modularization + Badge CSS Migration** |
 
 ---
 
-**Total Files on GitHub:** ~148 files across 8 directories
+**Total Files on GitHub:** ~152 files across 8 directories
