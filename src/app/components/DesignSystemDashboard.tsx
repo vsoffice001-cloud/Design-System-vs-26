@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   ChevronRight, 
   Search, 
@@ -16,7 +16,9 @@ import {
   Space,
   Layout,
   Lightbulb,
-  Circle
+  Circle,
+  Menu,
+  X
 } from 'lucide-react';
 import { Button } from '@/app/components/Button';
 import {
@@ -41,13 +43,21 @@ import {
   CardsContent,
   NavigationContent,
   FeedbackContent,
-  IconsContent
+  IconsContent,
+  FiltersContent
 } from '@/app/components/ComponentsContent';
 import {
   PageLayoutsContent,
+  ReportStorePagesContent,
+  SurveysPagesContent,
   ContentPatternsContent,
   BackgroundsContent
 } from '@/app/components/PatternsContent';
+import { ReportStorePage } from '@/app/components/ReportStorePage';
+import { ReportStoreOrganismsShowcase } from '@/app/components/ReportStoreOrganismsShowcase';
+import { SurveysDemoContent } from '@/app/components/SurveysDemoContent';
+import { SurveysListingDemoContent } from '@/app/components/SurveysListingDemoContent';
+import { TemplateDemoContent } from '@/app/components/TemplateDemoContent';
 import {
   MotionPrinciplesContent,
   DurationScaleContent,
@@ -66,9 +76,9 @@ import {
 } from '@/app/components/ResourcesContent';
 
 /**
- * ELITE DESIGN SYSTEM DASHBOARD
- * ==============================
- * Professional Stripe-style design system showcase
+ * PROJECT K — DESIGN SYSTEM DASHBOARD
+ * ====================================
+ * Professional design system dashboard by Vishal Singh Chauhan
  * Version: 4.3 (March 2026)
  * 
  * Structure:
@@ -102,8 +112,24 @@ interface NavigationItem {
 export function DesignSystemDashboard() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [activeSubTab, setActiveSubTab] = useState<SubTabId>('welcome');
-  const [expandedSections, setExpandedSections] = useState<TabId[]>(['overview', 'foundations']);
+  const [expandedSections, setExpandedSections] = useState<TabId[]>(() => {
+    const defaults: TabId[] = ['overview', 'foundations'];
+    return defaults;
+  });
   const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  // Scroll main content to top whenever the active page changes
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    }
+    // Auto-expand the active tab's section in sidebar
+    if (activeTab && !expandedSections.includes(activeTab)) {
+      setExpandedSections(prev => [...prev, activeTab]);
+    }
+  }, [activeTab, activeSubTab]);
 
   // Navigation structure
   const navigation: NavigationItem[] = [
@@ -113,6 +139,7 @@ export function DesignSystemDashboard() {
       icon: <Home size={18} />,
       subItems: [
         { id: 'welcome', label: 'Welcome' },
+        { id: 'architecture', label: 'Architecture' },
         { id: 'principles', label: 'Design Principles' },
         { id: 'quickstart', label: 'Quick Start' },
         { id: 'whats-new', label: "What's New" },
@@ -150,6 +177,7 @@ export function DesignSystemDashboard() {
         { id: 'navigation', label: 'Navigation' },
         { id: 'feedback', label: 'Feedback' },
         { id: 'icons', label: 'Icons' },
+        { id: 'filters', label: 'Filters' },
       ]
     },
     {
@@ -157,7 +185,15 @@ export function DesignSystemDashboard() {
       label: 'Patterns',
       icon: <Grid size={18} />,
       subItems: [
-        { id: 'page-layouts', label: 'Page Layouts' },
+        { id: 'page-layouts', label: 'Consulting Pages' },
+        { id: 'report-store-pages', label: 'Report Store Pages' },
+        { id: 'report-store-organisms', label: 'RS Organisms' },
+        { id: 'report-store-demo', label: 'Report Store Demo' },
+        { id: 'report-store-listing', label: 'RS Listing' },
+        { id: 'surveys-pages', label: 'Surveys Pages' },
+        { id: 'surveys-demo', label: 'Surveys Demo' },
+        { id: 'surveys-listing', label: 'Surveys Listing' },
+        { id: 'template-demo', label: 'Template Demo' },
         { id: 'content-patterns', label: 'Content Patterns' },
         { id: 'backgrounds', label: 'Backgrounds' },
       ]
@@ -216,39 +252,68 @@ export function DesignSystemDashboard() {
         setActiveSubTab(firstSubItem.id);
       }
     }
+    // Close sidebar on mobile after navigation
+    setSidebarOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-dvh bg-white flex">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/30 z-40 lg:hidden" 
+          onClick={() => setSidebarOpen(false)} 
+        />
+      )}
+
       {/* SIDEBAR NAVIGATION */}
-      <aside className="w-64 border-r border-black/8 bg-white sticky top-0 h-screen overflow-y-auto flex-shrink-0">
+      <aside className={`w-64 border-r border-black/8 bg-white top-0 h-dvh flex flex-col flex-shrink-0 z-50 transition-transform duration-200 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:sticky`}>
         {/* Logo / Header */}
-        <div className="px-6 py-6 border-b border-black/8">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
-              <Palette size={18} className="text-white" />
+        <div className="px-6 py-6 border-b border-black/8 flex-shrink-0">
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-black rounded-[5px] flex items-center justify-center">
+                <span className="text-white font-semibold" style={{ fontSize: '14px', fontFamily: 'var(--font-serif)' }}>K</span>
+              </div>
+              <h1 style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-weight-normal, 400)' }}>Project K</h1>
             </div>
-            <h1 className="font-normal text-lg">Design System</h1>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-1 rounded-[5px] hover:bg-black/5 transition-colors"
+              aria-label="Close navigation"
+            >
+              <X size={18} />
+            </button>
           </div>
-          <p className="text-xs text-black/40 mt-1">YASH Case Study</p>
+          <p className="text-xs text-black/40 mt-1">Design System by Vishal Singh Chauhan</p>
         </div>
 
         {/* Search */}
-        <div className="px-4 py-4 border-b border-black/8">
+        <div className="px-4 py-4 border-b border-black/8 flex-shrink-0">
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search components, tokens..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20"
+              onKeyDown={(e) => { if (e.key === 'Escape') { setSearchQuery(''); (e.target as HTMLInputElement).blur(); } }}
+              className="w-full pl-9 pr-8 py-2 border border-black/10 rounded-[5px] bg-white text-black/90 placeholder:text-black/30 hover:border-black/25 focus:border-black/90 focus:outline-none transition-colors duration-150"
+              style={{ fontSize: 'var(--text-xs)' }}
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-black/30 hover:text-black/60 transition-colors"
+              >
+                <span style={{ fontSize: '14px', lineHeight: 1 }}>&times;</span>
+              </button>
+            )}
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="py-4">
+        <nav className="py-4 flex-1 overflow-y-auto">
           {navigation.map((item) => (
             <div key={item.id} className="mb-1">
               <button
@@ -257,10 +322,11 @@ export function DesignSystemDashboard() {
                   handleNavClick(item.id);
                 }}
                 className={`
-                  w-full px-4 py-2 flex items-center justify-between text-sm
+                  w-full px-4 py-2 flex items-center justify-between
                   transition-colors hover:bg-black/5
                   ${activeTab === item.id && !item.subItems ? 'bg-black/5 font-medium' : ''}
                 `}
+                style={{ fontSize: 'var(--text-nav)' }}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-black/60">{item.icon}</span>
@@ -283,13 +349,14 @@ export function DesignSystemDashboard() {
                       key={subItem.id}
                       onClick={() => handleNavClick(item.id, subItem.id)}
                       className={`
-                        w-full px-3 py-1.5 text-sm text-left rounded-md
+                        w-full px-3 py-1.5 text-left rounded-[5px]
                         transition-colors hover:bg-black/5
                         ${activeTab === item.id && activeSubTab === subItem.id 
                           ? 'bg-black/8 font-medium text-black' 
                           : 'text-black/60'
                         }
                       `}
+                      style={{ fontSize: 'var(--text-nav)' }}
                     >
                       {subItem.label}
                     </button>
@@ -301,38 +368,59 @@ export function DesignSystemDashboard() {
         </nav>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-black/8 mt-8">
-          <p className="text-xs text-black/40">Version 4.3</p>
+        <div className="px-4 py-4 border-t border-black/8 flex-shrink-0">
+          <p className="text-xs text-black/40">Project K &middot; v4.3</p>
           <p className="text-xs text-black/40 mt-1">Last updated: Mar 2026</p>
         </div>
       </aside>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 overflow-y-auto">
+      <main ref={mainRef} className="flex-1 overflow-y-auto">
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-black/8">
-          <div className="max-w-[var(--container-page)] mx-auto px-8 py-4">
+          <div className="max-w-[var(--container-page)] mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-normal">
-                  {navigation.find(n => n.id === activeTab)?.label}
-                </h1>
-                <p className="text-sm text-black/60 mt-0.5">
-                  {navigation.find(n => n.id === activeTab)?.subItems?.find(s => s.id === activeSubTab)?.label}
-                </p>
+              <div className="flex items-center gap-3 min-w-0">
+                {/* Mobile hamburger */}
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="lg:hidden p-1.5 -ml-1.5 rounded-[5px] hover:bg-black/5 transition-colors flex-shrink-0"
+                  aria-label="Open navigation"
+                >
+                  <Menu size={20} />
+                </button>
+                <div className="min-w-0">
+                  <h1 className="font-normal truncate" style={{ fontSize: 'var(--text-xl)' }}>
+                    {navigation.find(n => n.id === activeTab)?.label}
+                  </h1>
+                  <p className="text-black/60 mt-0.5 truncate" style={{ fontSize: 'var(--text-nav)' }}>
+                    {navigation.find(n => n.id === activeTab)?.subItems?.find(s => s.id === activeSubTab)?.label}
+                  </p>
+                </div>
               </div>
-              <div className="flex gap-3">
-                <Button variant="secondary" size="sm" icon={<Download size={16} />}>
-                  Export
+              <div className="flex gap-2 sm:gap-3 flex-shrink-0">
+                <Button variant="secondary" size="sm" icon={<Download size={16} />} onClick={() => {
+                  const content = document.querySelector('main')?.innerText || '';
+                  const blob = new Blob([`Project K Design System v4.3\n${navigation.find(n => n.id === activeTab)?.label} > ${navigation.find(n => n.id === activeTab)?.subItems?.find(s => s.id === activeSubTab)?.label}\nExported: ${new Date().toLocaleDateString()}\n\n${content}`], { type: 'text/plain' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `projectk-ds-${activeTab}-${activeSubTab}.txt`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}>
+                  <span className="hidden sm:inline">Export</span>
+                  <span className="sm:hidden sr-only">Export</span>
                 </Button>
-                <Button variant="primary" size="sm">
-                  View in Figma
+                <Button variant="primary" size="sm" onClick={() => window.open('https://github.com/vsoffice001-cloud/Design-System-vs-26', '_blank')}>
+                  <span className="hidden sm:inline">View on GitHub</span>
+                  <span className="sm:hidden">GitHub</span>
                 </Button>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="max-w-[var(--container-page)] mx-auto px-8 py-8">
+        <div className="max-w-[var(--container-page)] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
           {renderContent(activeTab, activeSubTab, handleNavClick)}
         </div>
       </main>
@@ -342,12 +430,15 @@ export function DesignSystemDashboard() {
 
 // Content rendering function
 function renderContent(tab: TabId, subTab: SubTabId, handleNavClick: (tabId: TabId, subTabId?: SubTabId) => void) {
+  // TAB 1: OVERVIEW
   if (tab === 'overview') {
     if (subTab === 'welcome') return <WelcomeContent onNavigate={handleNavClick} />;
+    if (subTab === 'architecture') return <ArchitectureContent />;
     if (subTab === 'principles') return <PrinciplesContent />;
     if (subTab === 'quickstart') return <QuickStartContent onNavigate={handleNavClick} />;
     if (subTab === 'whats-new') return <WhatsNewContent />;
   }
+  // TAB 2: FOUNDATIONS
   if (tab === 'foundations') {
     if (subTab === 'colors') return <ColorsContent />;
     if (subTab === 'all-colors-palette') return <AllColorsPaletteContent />;
@@ -362,6 +453,7 @@ function renderContent(tab: TabId, subTab: SubTabId, handleNavClick: (tabId: Tab
     if (subTab === 'radius') return <BorderRadiusContent />;
     if (subTab === 'all-radius-tokens') return <AllBorderRadiusTokensContent />;
   }
+  // TAB 3: COMPONENTS
   if (tab === 'components') {
     if (subTab === 'buttons') return <ButtonDocumentation />;
     if (subTab === 'links-ctas') return <LinksDocumentation />;
@@ -371,28 +463,42 @@ function renderContent(tab: TabId, subTab: SubTabId, handleNavClick: (tabId: Tab
     if (subTab === 'navigation') return <NavigationContent />;
     if (subTab === 'feedback') return <FeedbackContent />;
     if (subTab === 'icons') return <IconsContent />;
+    if (subTab === 'filters') return <FiltersContent />;
   }
+  // TAB 4: PATTERNS
   if (tab === 'patterns') {
     if (subTab === 'page-layouts') return <PageLayoutsContent />;
+    if (subTab === 'report-store-pages') return <ReportStorePagesContent />;
+    if (subTab === 'report-store-organisms') return <ReportStoreOrganismsShowcase />;
+    if (subTab === 'report-store-demo') return <ReportStorePage initialMode="home" />;
+    if (subTab === 'report-store-listing') return <ReportStorePage initialMode="listing" />;
+    if (subTab === 'surveys-pages') return <SurveysPagesContent />;
+    if (subTab === 'surveys-demo') return <SurveysDemoContent />;
+    if (subTab === 'surveys-listing') return <SurveysListingDemoContent />;
+    if (subTab === 'template-demo') return <TemplateDemoContent />;
     if (subTab === 'content-patterns') return <ContentPatternsContent />;
     if (subTab === 'backgrounds') return <BackgroundsContent />;
   }
+  // TAB 5: MOTION
   if (tab === 'motion') {
     if (subTab === 'motion-principles') return <MotionPrinciplesContent />;
     if (subTab === 'duration-scale') return <DurationScaleContent />;
     if (subTab === 'transitions') return <TransitionsContent />;
     if (subTab === 'micro-interactions') return <MicroInteractionsContent />;
   }
+  // TAB 6: GUIDELINES
   if (tab === 'guidelines') {
     if (subTab === 'accessibility') return <AccessibilityContent />;
     if (subTab === 'responsive') return <ResponsiveDesignContent />;
     if (subTab === 'best-practices') return <BestPracticesContent />;
   }
+  // TAB 7: RESOURCES
   if (tab === 'resources') {
     if (subTab === 'downloads') return <DownloadsContent />;
     if (subTab === 'code-snippets') return <CodeSnippetsContent />;
     if (subTab === 'tokens-export') return <DesignTokensContent />;
   }
+  // Placeholder
   return (
     <div className="py-12 text-center">
       <Lightbulb size={48} className="mx-auto text-black/20 mb-4" />
@@ -409,55 +515,102 @@ function renderContent(tab: TabId, subTab: SubTabId, handleNavClick: (tabId: Tab
 function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: SubTabId) => void }) {
   return (
     <div className="space-y-12">
-      {/* WHY/WHAT/WHEN Framework */}
-      <section className="bg-blue-50 border border-blue-200 rounded-lg p-8">
-        <h2 className="text-2xl font-normal mb-6">The 4W+H Framework</h2>
+      {/* 4W+H Framework — Project K */}
+      <section className="border border-black/10 rounded-[10px] p-8 bg-[#fafaf9]">
+        <h2 className="text-2xl font-normal mb-6">Project K at a Glance</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-blue-600 text-blue-600" /> WHY
+              <Circle size={8} className="fill-black text-black" /> WHY
             </h3>
             <p className="text-sm text-black/70">
-              To establish a consistent, accessible, and scalable design language that accelerates development 
-              while maintaining brand identity across all touchpoints.
+              Creates consistency across three business pillars — Research, Consulting, and Surveys.
+              A single source of truth that speeds development, ensures quality, and enables team scalability.
             </p>
           </div>
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-blue-600 text-blue-600" /> WHAT
+              <Circle size={8} className="fill-black text-black" /> WHAT
             </h3>
             <p className="text-sm text-black/70">
-              A comprehensive design system featuring 100+ components (35 atoms, 26 molecules, 40 organisms), 
-              design tokens, motion principles, accessibility guidelines, and code snippets—all documented with the 4W+H framework.
+              Minimalist editorial design system: black/white alternating sections, Major Third typography 
+              (1.25 ratio), Ken Bold Red (#b01f24) for CTAs only, 92-5-3 color hierarchy, and 
+              two-font pairing (Noto Serif headings + DM Sans body/UI).
             </p>
           </div>
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-green-600 text-green-600" /> WHEN
+              <Circle size={8} className="fill-black text-black" /> WHEN
             </h3>
             <p className="text-sm text-black/70">
-              Use this system for all digital products requiring consistent brand expression, from marketing 
-              sites to complex web applications. Start projects with foundations, build with components.
+              Use for ALL pages across all three pillars. Display pages (Case Studies) use bespoke 
+              editorial organisms. Product pages (Report Store, Surveys) use systematic 
+              SectionHeading + molecule compositions.
             </p>
           </div>
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-red-600 text-red-600" /> WHEN NOT
+              <Circle size={8} className="fill-[var(--brand-red)] text-[var(--brand-red)]" /> WHEN NOT
             </h3>
             <p className="text-sm text-black/70">
-              Don't use for rapid prototyping that requires visual exploration outside brand guidelines, 
-              or for projects requiring drastically different aesthetics (e.g., playful, colorful designs).
+              Never deviate unless explicitly requested. Don't use brand red for decorative purposes. 
+              Don't use Serif for body text or Sans for headings. Don't mix Display and Product page patterns.
             </p>
           </div>
           <div className="md:col-span-2">
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-purple-600 text-purple-600" /> HOW
+              <Circle size={8} className="fill-black text-black" /> HOW
             </h3>
             <p className="text-sm text-black/70">
-              Start with design tokens (colors, typography, spacing), compose components following atomic design, 
-              apply motion principles, and validate against accessibility guidelines. Export tokens, import components, 
-              reference documentation—all designed for seamless integration.
+              Atoms from /components/ (flat), molecules from /components/molecules/, 
+              organisms from /components/organisms/ (30 total), tokens from theme.css. 
+              Report Store pages compose entirely from self-contained organisms.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Three Pillars Overview */}
+      <section className="border border-black/10 rounded-[10px] p-8">
+        <h2 className="text-2xl font-normal mb-2">Three-Pillar Architecture</h2>
+        <p className="text-sm text-black/60 mb-6">One design system, three business verticals, two page types.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-5 border border-black/8 rounded-[5px]">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-black" />
+              <span className="text-xs font-mono text-black/50">PILLAR 1</span>
+            </div>
+            <h4 className="font-medium text-sm mb-1">Research</h4>
+            <p className="text-xs text-black/60 mb-3">Report Store, market intelligence, data products</p>
+            <div className="flex flex-wrap gap-1.5">
+              <span className="text-[10px] px-2 py-0.5 bg-black/5 rounded-[5px]">Product Pages</span>
+              <span className="text-[10px] px-2 py-0.5 bg-black/5 rounded-[5px]">30 RS Organisms</span>
+              <span className="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-[5px]">v4.3 Complete</span>
+            </div>
+          </div>
+          <div className="p-5 border border-black/8 rounded-[5px]">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-black" />
+              <span className="text-xs font-mono text-black/50">PILLAR 2</span>
+            </div>
+            <h4 className="font-medium text-sm mb-1">Consulting</h4>
+            <p className="text-xs text-black/60 mb-3">Case studies, client showcases, editorial content</p>
+            <div className="flex flex-wrap gap-1.5">
+              <span className="text-[10px] px-2 py-0.5 bg-black/5 rounded-[5px]">Display Pages</span>
+              <span className="text-[10px] px-2 py-0.5 bg-black/5 rounded-[5px]">10-Section</span>
+            </div>
+          </div>
+          <div className="p-5 border border-black/8 rounded-[5px]">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-amber-500" />
+              <span className="text-xs font-mono text-black/50">PILLAR 3</span>
+            </div>
+            <h4 className="font-medium text-sm mb-1">Surveys</h4>
+            <p className="text-xs text-black/60 mb-3">Survey catalog, response dashboards, data collection</p>
+            <div className="flex flex-wrap gap-1.5">
+              <span className="text-[10px] px-2 py-0.5 bg-black/5 rounded-[5px]">Product Pages</span>
+              <span className="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-[5px]">Molecules Built</span>
+            </div>
           </div>
         </div>
       </section>
@@ -471,15 +624,16 @@ function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: 
             </span>
             <span className="text-xs text-black/40">March 2026</span>
           </div>
-          <h1 className="text-5xl font-normal mb-6">
-            Welcome to the<br />Design System
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-6">
+            Welcome to<br />Project K Design System
           </h1>
-          <p className="text-xl text-black/70 leading-relaxed mb-8">
-            A comprehensive, production-ready design system built with minimalist editorial aesthetics, 
-            featuring a pure black/white/warm palette with Ken Bold Red (#b01f24) accents. Serves three pillars:
-            Case Study, Report Store, and Surveys. Every component documented with WHY, WHAT, WHEN, WHEN NOT, and HOW.
+          <p className="text-base sm:text-lg md:text-xl text-black/70 leading-relaxed mb-8">
+            A unified design system powering three business pillars — Research, Consulting, and Surveys.
+            Built on a pure black/white/warm palette with Ken Bold Red (#b01f24) for CTAs, 
+            Noto Serif for editorial headings, DM Sans for functional UI. 70+ components, 
+            26 molecules, 30 organisms, 1 page template, two page types, one consistent identity.
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <Button 
               variant="primary" 
               size="lg" 
@@ -500,34 +654,125 @@ function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: 
       </section>
 
       {/* Stats Grid */}
-      <section className="grid grid-cols-4 gap-6 py-8 border-y border-black/8">
-        <StatCard number="100+" label="Components" />
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-6 py-8 border-y border-black/8">
+        <StatCard number="70+" label="Components" />
+        <StatCard number="26" label="Molecules" />
+        <StatCard number="30" label="Organisms" />
         <StatCard number="3" label="Pillars" />
-        <StatCard number="15,000+" label="Lines of Code" />
-        <StatCard number="WCAG AA" label="Accessible" />
       </section>
 
       {/* Key Features */}
       <section>
-        <h2 className="text-2xl font-normal mb-6">Key Features</h2>
-        <div className="grid grid-cols-2 gap-6">
-          <FeatureCard icon={<Palette size={24} />} title="Minimalist Aesthetic" description="Pure black/white palette with Ken Bold Red (#b01f24) for strategic CTAs" />
-          <FeatureCard icon={<Type size={24} />} title="Major Third Scale" description="Typography system built on 1.25 ratio for perfect vertical rhythm" />
-          <FeatureCard icon={<Layers size={24} />} title="Atomic Design" description="35 atoms, 26 molecules, 40 organisms organized for maximum scalability" />
-          <FeatureCard icon={<Sparkles size={24} />} title="4W+H Framework" description="Every component documented with WHY, WHAT, WHEN, WHEN NOT, and HOW" />
+        <h2 className="text-2xl font-normal mb-6">System Identity</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FeatureCard icon={<Palette size={24} />} title="92-5-3 Color Hierarchy" description="92% foundation (black/white/warm), 5% brand red (CTAs only), 3% accent (purple, periwinkle, coral)" />
+          <FeatureCard icon={<Type size={24} />} title="Two-Font Strategy" description="Noto Serif for editorial headings (h1-h3), DM Sans for body text and all UI elements" />
+          <FeatureCard icon={<Sparkles size={24} />} title="Brand Signatures" description="Always-active shimmer on buttons, ArrowUpRight for urgency CTAs, secondary two-state hover" />
+          <FeatureCard icon={<Layers size={24} />} title="Three-Pillar Architecture" description="Research, Consulting, Surveys — shared foundations with Display and Product page patterns" />
         </div>
       </section>
 
       {/* Quick Links */}
       <section>
         <h2 className="text-2xl font-normal mb-6">Quick Links</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <QuickLinkCardButton title="Architecture" description="Three pillars & page types" onClick={() => onNavigate('overview', 'architecture')} />
           <QuickLinkCardButton title="Colors" description="Palette & semantic colors" onClick={() => onNavigate('foundations', 'colors')} />
           <QuickLinkCardButton title="Typography" description="Type scale & hierarchy" onClick={() => onNavigate('foundations', 'typography')} />
           <QuickLinkCardButton title="Components" description="UI component library" onClick={() => onNavigate('components', 'buttons')} />
           <QuickLinkCardButton title="Spacing" description="10-step spacing scale" onClick={() => onNavigate('foundations', 'spacing')} />
           <QuickLinkCardButton title="Motion" description="Animation guidelines" onClick={() => onNavigate('motion', 'motion-principles')} />
-          <QuickLinkCardButton title="Patterns" description="Common design patterns" onClick={() => onNavigate('patterns', 'page-layouts')} />
+          <QuickLinkCardButton title="Consulting Pages" description="Display page patterns" onClick={() => onNavigate('patterns', 'page-layouts')} />
+          <QuickLinkCardButton title="Report Store" description="Product page patterns" onClick={() => onNavigate('patterns', 'report-store-pages')} />
+          <QuickLinkCardButton title="RS Organisms" description="Interactive showcase (30)" onClick={() => onNavigate('patterns', 'report-store-organisms')} />
+          <QuickLinkCardButton title="Surveys" description="Molecules & demo" onClick={() => onNavigate('patterns', 'surveys-pages')} />
+          <QuickLinkCardButton title="Template Demo" description="Declarative page assembly" onClick={() => onNavigate('patterns', 'template-demo')} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ArchitectureContent() {
+  return (
+    <div className="space-y-12">
+      <div className="max-w-3xl">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4">Architecture</h1>
+        <p className="text-lg text-black/70">
+          One design system, three business pillars, two page types. This is the "read this first" 
+          for anyone building a new page.
+        </p>
+      </div>
+
+      {/* Composition Layer Map */}
+      <section>
+        <h2 className="text-2xl font-normal mb-6">Composition Layer Map</h2>
+        <div className="space-y-2 mb-6">
+          {[
+            { layer: 'TEMPLATES', count: '1', items: 'ProductPageTemplate (declarative page assembly)', bg: 'bg-black', text: 'text-white' },
+            { layer: 'ORGANISMS', count: '30', items: '6 cross-pillar + 24 RS-specific', bg: 'bg-black/80', text: 'text-white' },
+            { layer: 'MOLECULES', count: '26', items: '19 Report Store + 2 RS additions + 5 Surveys', bg: 'bg-[#806ce0]/15', text: 'text-black' },
+            { layer: 'ATOMS', count: '72+', items: 'Button, Badge, CTALink, Label, ViewToggle, SectionHeading...', bg: 'bg-black/5', text: 'text-black' },
+            { layer: 'TOKENS', count: '6 files', items: 'Colors, Typography, Spacing, Layout, Elevation, Radius', bg: 'bg-white border border-black/8', text: 'text-black' },
+          ].map((l) => (
+            <div key={l.layer} className={`rounded-[5px] p-4 ${l.bg} ${l.text} flex items-center gap-4`}>
+              <div className="w-24 flex-shrink-0">
+                <span className="text-[10px] font-mono opacity-60">{l.layer}</span>
+                <p className="text-sm font-medium">{l.count}</p>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs opacity-70 truncate">{l.items}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Display vs Product Pages */}
+      <section>
+        <h2 className="text-2xl font-normal mb-6">Display vs Product Pages</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-5 border-l-2 border-black pl-5">
+            <h4 className="font-medium text-sm mb-2">Display Pages</h4>
+            <p className="text-xs text-black/60 mb-2">Editorial storytelling — bespoke per section</p>
+            <ul className="space-y-1">
+              <li className="text-xs text-black/50 flex items-center gap-2"><Circle size={4} className="fill-black/40" /> Consulting (Case Studies)</li>
+              <li className="text-xs text-black/50 flex items-center gap-2"><Circle size={4} className="fill-black/40" /> Hand-authored, scroll-driven</li>
+              <li className="text-xs text-black/50 flex items-center gap-2"><Circle size={4} className="fill-black/40" /> 10-section B/W/Warm sequence</li>
+            </ul>
+          </div>
+          <div className="p-5 border-l-2 border-[#806ce0] pl-5">
+            <h4 className="font-medium text-sm mb-2">Product Pages</h4>
+            <p className="text-xs text-black/60 mb-2">Data-driven — systematic, composable sections</p>
+            <ul className="space-y-1">
+              <li className="text-xs text-black/50 flex items-center gap-2"><Circle size={4} className="fill-[#806ce0]/40" /> Research (Report Store), Surveys</li>
+              <li className="text-xs text-black/50 flex items-center gap-2"><Circle size={4} className="fill-[#806ce0]/40" /> 30 organisms (6 cross-pillar + 24 RS)</li>
+              <li className="text-xs text-black/50 flex items-center gap-2"><Circle size={4} className="fill-[#806ce0]/40" /> Dual-mode (home / listing)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Import Conventions */}
+      <section>
+        <h2 className="text-2xl font-normal mb-6">Import Conventions</h2>
+        <div className="border border-black/8 rounded-[10px] overflow-hidden">
+          <div className="bg-black/5 px-4 py-2 border-b border-black/8">
+            <span className="text-xs font-mono text-black/60">tsx</span>
+          </div>
+          <pre className="p-4 overflow-x-auto bg-black/2">
+            <code className="text-sm font-mono">{`// Shared atoms — flat imports
+import { Button } from '@/app/components/Button';
+import { Badge } from '@/app/components/Badge';
+
+// Layout components — flat imports
+import { SectionHeading } from '@/app/components/SectionHeading';
+
+// Report Store molecules — from barrel
+import { 
+  ReportCard, StatCard, SkeletonCard, EmptyState
+} from '@/app/components/molecules';`}</code>
+          </pre>
         </div>
       </section>
     </div>
@@ -538,19 +783,19 @@ function PrinciplesContent() {
   return (
     <div className="space-y-12">
       <div className="max-w-3xl">
-        <h1 className="text-4xl font-normal mb-4">Design Principles</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4">Design Principles</h1>
         <p className="text-lg text-black/70">
-          Core principles that guide every design decision in this system.
+          Seven non-negotiable rules that govern every design decision.
         </p>
       </div>
       <div className="space-y-8">
-        <PrincipleCard number="01" title="Minimalist Editorial" description="Clean, sophisticated, and content-focused design that prioritizes readability." principles={['Black/white foundation with strategic Ken Bold Red (#b01f24) accent (5% usage - CTAs only)', 'Generous white space and warm off-white (#f5f2f1) sections', 'Typography-first approach with Noto Serif for headlines, DM Sans for body', 'Content-focused layouts that let the work speak for itself']} />
-        <PrincipleCard number="02" title="Hierarchy Through Scale" description="Major Third typography scale (1.25 ratio) creates clear, mathematical visual hierarchy." principles={['Base size: 16px with systematic scaling (xs \u2192 5xl)', 'Responsive type sizing with clamp() for fluid scaling', 'Massive hero headings (48-76px) for editorial impact', '--text-card-micro (10px) reserved for side numbers/counts only']} />
-        <PrincipleCard number="03" title="Sophisticated Interactions" description="Purposeful motion serves clear functions without distraction." principles={['Four-tier duration: Instant (100ms), Fast (200ms), Base (300ms), Slow (500ms)', 'Ease-out (cubic-bezier(0.22, 1, 0.36, 1)) for natural deceleration', 'ArrowUpRight (45\u00B0) only \u2014 never ArrowRight or ChevronRight on buttons', 'Respects prefers-reduced-motion for accessibility']} />
-        <PrincipleCard number="04" title="Atomic Design Methodology" description="Systematic component organization ensures scalability and reusability." principles={['35 Atoms: Buttons, inputs, icons, filter controls', '26 Molecules: Cards, form groups, filter accordions', '40 Organisms: Page sections, sidebars, complete page compositions', 'Design tokens for all visual properties (470+ CSS custom properties)']} />
-        <PrincipleCard number="05" title="Accessible by Default" description="Every component meets WCAG 2.1 AA standards minimum." principles={['Minimum 4.5:1 contrast ratios for normal text', 'Semantic HTML with proper heading hierarchy', 'Full keyboard navigation with visible focus states', 'Touch targets minimum 40px \u00d7 40px for mobile']} />
-        <PrincipleCard number="06" title="Inline Style Rules" description="Strict rules for all inline styles to ensure consistency." principles={['All colors must use rgba() format \u2014 never hex (#fff) in inline styles', 'No CSS shorthand for border/background in inline styles', 'Tailwind classes reserved for layout/spacing/transitions only', 'CSS custom properties (var(--brand-red)) for token references']} />
-        <PrincipleCard number="07" title="Scalability & Flexibility" description="Components adapt across device sizes from 375px to 1920px+." principles={['Mobile-first responsive with breakpoints: sm, md, lg, xl, 2xl', 'Grid systems that adapt: 1 col mobile \u2192 4 col desktop', 'Flexible components with max-width constraints for readability', 'Components handle empty, loading, and error states gracefully']} />
+        <PrincipleCard number="01" title="92-5-3 Color Hierarchy" description="The single most important color rule. 92% foundation colors, 5% brand red, 3% accent." principles={['Foundation (92%): Black #000, White #fff, Warm #f5f2f1', 'Brand (5%): Ken Bold Red #b01f24 — CTA buttons ONLY', 'Accent (3%): Purple #806ce0, Periwinkle #c3c6f9, Coral #ea7a5f', 'NEVER use brand red for decorative borders, icons, or general accents']} />
+        <PrincipleCard number="02" title="Two-Font Strategy" description="Serif headings for editorial authority, Sans body for functional clarity." principles={['Noto Serif → Headings (h1-h3), hero titles, testimonial quotes', 'DM Sans → Body text, buttons, badges, labels, navigation, forms', 'NEVER use Serif for body text, buttons, or navigation', 'NEVER use Sans for hero headings or section titles']} />
+        <PrincipleCard number="03" title="Major Third Typography Scale (1.25\u00d7)" description="Mathematical 1.25 ratio creates harmonious visual hierarchy." principles={['--text-xs (12.8px): Labels, metadata, eyebrows', '--text-sm (16px): ALL body text — 90% of text on every page', '--text-2xl (39px): ALL section headings (h2)', '--text-3xl (48.8px): Hero h1 ONLY']} />
+        <PrincipleCard number="04" title="Brand Identity Signatures" description="Three visual signatures: shimmer, arrow animation, secondary two-state." principles={['Shimmer Effect: Always-active 700ms sweep on ALL buttons', 'ArrowUpRight (45\u00b0) ONLY for urgency CTAs — NEVER ArrowRight/ChevronRight on buttons', 'Secondary Two-State: Neutral rest → Brand-red hover']} />
+        <PrincipleCard number="05" title="Section Patterns & Page Assembly" description="Display pages use fixed 10-section editorial sequence. Product pages use composable organisms." principles={['Display: HeroSection → ClientContext → Challenges → ... → FinalCTA', 'Product: ProductHero → FeaturedCarousel → StatsRow → BrowseGrid → CTABanner', 'Use ProductPageTemplate for declarative assembly']} />
+        <PrincipleCard number="06" title="Inline Style Rules" description="Strict rules for all inline styles to ensure consistency." principles={['All colors must use rgba() format — never hex in inline styles', 'No CSS shorthand for border/background in inline styles', 'Tailwind classes for layout/spacing/transitions only', 'CSS custom properties (var(--brand-red)) for token references']} />
+        <PrincipleCard number="07" title="Accessible by Default" description="Every component meets WCAG 2.1 AA minimum." principles={['Minimum 4.5:1 contrast ratios for normal text', 'Semantic HTML with proper heading hierarchy', 'Full keyboard navigation with 2px black outline focus states', 'Touch targets minimum 44px for mobile accessibility']} />
       </div>
     </div>
   );
@@ -560,7 +805,7 @@ function QuickStartContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId
   return (
     <div className="space-y-12">
       <div className="max-w-3xl">
-        <h1 className="text-4xl font-normal mb-4">Quick Start Guide</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4">Quick Start Guide</h1>
         <p className="text-lg text-black/70">Get up and running with the design system in minutes.</p>
       </div>
       <div className="space-y-6">
@@ -570,8 +815,8 @@ function QuickStartContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId
         <StepCardButton step="4" title="Download Resources" description="Export design tokens, download Figma files, and access code snippets." action="Get Resources" onClick={() => onNavigate('resources', 'downloads')} />
       </div>
       <section>
-        <h2 className="text-2xl font-normal mb-6">Import Design Tokens</h2>
-        <CodeBlock language="css" code={`/* Import design tokens */\n@import '@/styles/theme.css';\n\n/* Use CSS variables */\n.my-component {\n  color: var(--text-primary);\n  font-size: var(--text-base);\n  padding: var(--space-md);\n  background: var(--bg-primary);\n}`} />
+        <h2 className="text-2xl font-normal mb-6">Import & Use Design Tokens</h2>
+        <CodeBlock language="css" code={`/* All tokens live in theme.css */\n@import '@/styles/theme.css';\n\n/* Typography — Major Third 1.25\u00d7 scale */\n.section-heading { font-size: var(--text-2xl); }  /* 39px */\n.body-text       { font-size: var(--text-sm); }   /* 16px */\n.hero-title      { font-size: var(--text-3xl); }  /* 48.8px */\n\n/* Colors — 92-5-3 hierarchy */\n.bg-warm  { background: var(--warm-300); }    /* #f5f2f1 */\n.cta-btn  { background: var(--brand-red); }   /* #b01f24 */`} />
       </section>
     </div>
   );
@@ -581,45 +826,88 @@ function WhatsNewContent() {
   return (
     <div className="space-y-12">
       <div className="max-w-3xl">
-        <h1 className="text-4xl font-normal mb-4">What's New</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4">What's New</h1>
         <p className="text-lg text-black/70">Latest updates and improvements to the design system.</p>
       </div>
       <div className="space-y-8">
         <ChangelogSection
           version="4.3"
           date="March 2026"
-          type="minor"
+          type="major"
           changes={[{
-            category: 'DS Audit & Code Fixes',
+            category: 'Report Store Clean Rebuild (6 phases)',
             items: [
-              '7-phase DS audit completed: 5 code fixes (arrow prop, hex\u2192rgba, hex\u2192var)',
-              'NewsletterSignup: ArrowRight icon \u2192 showArrow prop on Button',
-              'Card.tsx: #fff \u2192 rgba(255,255,255,1) in BG_MAP',
-              'MethodologySection: #000 \u2192 rgba(0,0,0,1) timeline fill',
-              'AnimatedArrowDemo + ButtonControlsGuide: #b01f24 \u2192 var(--brand-red)',
+              'Full clean rebuild: deleted 2 monolithic files, created 34 new files',
+              'Self-contained organism architecture: every RS organism encapsulates own data, layout, interactions',
+              'ReportStorePage.tsx: single file composing all organisms with mode switching (home/listing)',
+              '30 organisms total (6 cross-pillar + 24 RS-specific)',
+              'New atoms: IconBadge, CategoryListItem',
+              'New molecules: CategoryListCard, LoadMoreSentinel',
+              'New hooks: useReportFilters, useProgressiveLoad, useCrossfade, useMountTransition',
             ]
           }, {
-            category: 'Documentation',
+            category: 'Project K Branding & Mobile Responsive',
             items: [
-              'ai-context/CORE.md + COMPONENTS.md updated to v4.3',
-              'GITHUB_REPO_MANIFEST.md: full rewrite with organisms, filter system, hooks',
-              'PROJECT_STRUCTURE.md: new comprehensive file inventory',
+              'Full rebrand from "YASH Case Study" to "Project K / Vishal Singh Chauhan"',
+              'Mobile-responsive sidebar: fixed lg:sticky with hamburger menu + overlay',
+              'Sidebar header: serif "K" monogram with Project K title',
+              'Export button generates projectk-ds-*.txt files',
+              'View on GitHub button links to repo',
+            ]
+          }, {
+            category: 'DS Audit & Code Fixes',
+            items: [
+              '7-phase DS audit: 5 code fixes (arrow prop, hex\u2192rgba, hex\u2192var)',
+              'NewsletterSignup: ArrowRight \u2192 showArrow prop',
+              'Card.tsx: #fff \u2192 rgba(255,255,255,1)',
               'FiltersDocumentation.tsx: full 2100-line interactive filter system docs',
-              'All 7 documentation files updated with accurate counts',
             ]
           }]}
         />
         <ChangelogSection
           version="4.2"
           date="March 2026"
-          type="minor"
+          type="major"
           changes={[{
-            category: 'Filter System Extraction',
+            category: 'Report Store Pages & Surveys Framework',
             items: [
-              '6 atoms extracted: FilterSearchInput, FilterCheckbox, FilterCheckboxItem, FilterSectionHeader, FilterIndustryItem, FilterChip',
-              '4 molecules extracted: FilterAccordion, SidebarPanel, ActiveFilterChipBar, MobileFilterSheet',
-              'Full 4W+H documentation with interaction state matrix',
-              'Filter architecture diagram and decision flowchart',
+              'Report Store Pages sub-tab with 8-section home sequence',
+              'Surveys elevated to "framework defined" with 5 molecules built',
+              'Component Triad formal pattern doc',
+              'Patterns tab expanded to 11 sub-tabs',
+            ]
+          }, {
+            category: 'Demos & Organisms',
+            items: [
+              'Report Store Home Demo: 8-section interactive page',
+              'Surveys Home Demo: 6-section interactive page',
+              'Surveys Listing Demo: filters + search + ViewToggle + pagination',
+              'Report Store Listing Demo: filters + sort + SkeletonCard loading',
+              '5 Product Page Organisms: ProductHero, FeaturedCarousel, StatsRow, BrowseGrid, CTABanner',
+              'ProductPageTemplate: declarative page assembly with bespoke slots',
+              'Template Demo: hypothetical Training pillar via ProductPageTemplate',
+            ]
+          }, {
+            category: 'Routing & Navigation',
+            items: [
+              'GitHub version uses useState-based tab routing',
+              'Figma Make version uses react-router URL params (/:tab/:subTab)',
+              'handleNavClick uses setActiveTab/setActiveSubTab for tab switching',
+              'Auto-expand: active section auto-expands in sidebar on tab change',
+            ]
+          }]}
+        />
+        <ChangelogSection
+          version="4.1"
+          date="March 2026"
+          type="major"
+          changes={[{
+            category: 'Component Triad & Three-Pillar Architecture',
+            items: [
+              'ReportCard unified with layout="grid"|"list" prop',
+              'ViewToggle \u2194 ReportCard \u2194 SkeletonCard share single viewMode state',
+              'Dashboard Welcome rewritten for Research, Consulting, Surveys framing',
+              'Architecture sub-tab with three-pillar diagram',
             ]
           }]}
         />
@@ -628,26 +916,12 @@ function WhatsNewContent() {
           date="March 2026"
           type="major"
           changes={[{
-            category: 'Report Store Architecture',
+            category: 'Report Store Molecules (15 components)',
             items: [
-              '30 organism components (6 cross-pillar + 24 RS-specific)',
-              'ProductPageTemplate declarative page assembly',
-              '4 new hooks: useReportFilters, useProgressiveLoad, useCrossfade, useMountTransition',
-              'ReportCard unified with layout prop (grid + list)',
-              'Home mode (10 organisms) + Listing mode (sidebar + card grid)',
-            ]
-          }]}
-        />
-        <ChangelogSection
-          version="3.2.0"
-          date="February 2026"
-          type="minor"
-          changes={[{
-            category: 'New',
-            items: [
-              'Badge convenience wrappers documentation added to all 3 AI context files',
-              'Full 10-wrapper inventory table',
-              'Fixed 6 broken barrel exports in index.ts',
+              'ReportCard, StatCard, DataHighlightCard, AnalystPickCardB',
+              'SkeletonCard, EmptyState, HorizontalScroll, ScrollFade',
+              'CardReveal, RevealImage, IndustryBadge, BackToTop',
+              'Tooltip, ViewToggle, FadeInSection, SectionHeading',
             ]
           }]}
         />
@@ -658,9 +932,9 @@ function WhatsNewContent() {
           changes={[{
             category: 'New',
             items: [
-              'Badge.tsx unified component \u2014 132 combinations (3 variants \u00d7 4 sizes \u00d7 11 themes)',
-              '10 pre-configured convenience wrappers',
-              'Layout Container system with 5 semantic width tokens',
+              'Badge.tsx unified — 132 combinations (3 variants \u00d7 4 sizes \u00d7 11 themes)',
+              '10 convenience wrappers, Layout Container system',
+              'Color palette expanded: coral, purple, periwinkle, perano (50-900)',
             ]
           }]}
         />
@@ -672,9 +946,8 @@ function WhatsNewContent() {
             category: 'Initial Release',
             items: [
               'Complete design system with 7 categories',
-              'Atomic design methodology implementation',
-              '50+ documented components',
-              'Comprehensive WHY/WHAT/WHERE/WHEN/HOW framework'
+              'Atomic design methodology, 50+ components',
+              'Comprehensive WHY/WHAT/WHERE/WHEN/HOW framework',
             ]
           }]}
         />
@@ -698,7 +971,7 @@ function StatCard({ number, label }: { number: string; label: string }) {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="p-6 border border-black/8 rounded-lg hover:border-black/20 transition-colors">
+    <div className="p-6 border border-black/8 rounded-[5px] hover:border-black/20 transition-colors">
       <div className="text-black/80 mb-3">{icon}</div>
       <h3 className="font-medium mb-2">{title}</h3>
       <p className="text-sm text-black/60">{description}</p>
@@ -708,7 +981,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
 
 function QuickLinkCardButton({ title, description, onClick }: { title: string; description: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="p-4 border border-black/8 rounded-lg hover:border-black/20 hover:bg-black/2 transition-all group">
+    <button onClick={onClick} className="p-4 border border-black/8 rounded-[5px] hover:border-black/20 hover:bg-black/2 transition-all group">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="font-medium mb-1 group-hover:text-[var(--brand-red)] transition-colors">{title}</h3>
@@ -740,7 +1013,7 @@ function PrincipleCard({ number, title, description, principles }: { number: str
 
 function StepCardButton({ step, title, description, action, onClick }: { step: string; title: string; description: string; action: string; onClick: () => void }) {
   return (
-    <div className="flex gap-6 p-6 border border-black/8 rounded-lg hover:border-black/15 transition-colors">
+    <div className="flex gap-6 p-6 border border-black/8 rounded-[5px] hover:border-black/15 transition-colors">
       <div className="flex-shrink-0 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-mono text-lg">{step}</div>
       <div className="flex-1">
         <h3 className="text-xl font-normal mb-2">{title}</h3>
@@ -754,11 +1027,20 @@ function StepCardButton({ step, title, description, action, onClick }: { step: s
 }
 
 function CodeBlock({ language, code }: { language: string; code: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
   return (
-    <div className="border border-black/8 rounded-lg overflow-hidden">
+    <div className="border border-black/8 rounded-[10px] overflow-hidden">
       <div className="bg-black/5 px-4 py-2 border-b border-black/8 flex items-center justify-between">
         <span className="text-xs font-mono text-black/60">{language}</span>
-        <button className="text-xs font-medium hover:text-[var(--brand-red)] transition-colors">Copy</button>
+        <button onClick={handleCopy} className="text-xs font-medium hover:text-[var(--brand-red)] transition-colors cursor-pointer">
+          {copied ? '\u2713 Copied' : 'Copy'}
+        </button>
       </div>
       <pre className="p-4 overflow-x-auto bg-black/2">
         <code className="text-sm font-mono">{code}</code>
@@ -774,12 +1056,12 @@ function ChangelogSection({ version, date, type, changes }: { version: string; d
     initial: 'bg-black text-white'
   };
   return (
-    <div className="border border-black/8 rounded-lg p-6">
+    <div className="border border-black/8 rounded-[5px] p-6">
       <div className="flex items-start justify-between mb-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h3 className="text-2xl font-normal">Version {version}</h3>
-            <span className={`px-2 py-0.5 rounded text-xs font-medium ${typeColors[type]}`}>
+            <span className={`px-2 py-0.5 rounded-[5px] text-xs font-medium ${typeColors[type]}`}>
               {type === 'major' ? 'Major' : type === 'minor' ? 'Minor' : 'Initial Release'}
             </span>
           </div>
