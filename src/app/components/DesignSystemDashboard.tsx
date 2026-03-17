@@ -69,6 +69,7 @@ import {
  * ELITE DESIGN SYSTEM DASHBOARD
  * ==============================
  * Professional Stripe-style design system showcase
+ * Version: 4.3 (March 2026)
  * 
  * Structure:
  * 1. Overview - Getting Started
@@ -78,6 +79,10 @@ import {
  * 5. Motion - Animations
  * 6. Guidelines - Best Practices
  * 7. Resources - Assets & Tools
+ *
+ * Note: GitHub version uses useState-based tab routing.
+ * Figma Make version uses react-router URL params.
+ * See GITHUB_REPO_MANIFEST.md for divergence docs.
  */
 
 // Types
@@ -202,12 +207,10 @@ export function DesignSystemDashboard() {
     setActiveTab(tabId);
     if (subTabId) {
       setActiveSubTab(subTabId);
-      // Auto-expand section when clicking
       if (!expandedSections.includes(tabId)) {
         setExpandedSections(prev => [...prev, tabId]);
       }
     } else {
-      // If clicking main tab, select first sub-item
       const firstSubItem = navigation.find(item => item.id === tabId)?.subItems?.[0];
       if (firstSubItem) {
         setActiveSubTab(firstSubItem.id);
@@ -248,7 +251,6 @@ export function DesignSystemDashboard() {
         <nav className="py-4">
           {navigation.map((item) => (
             <div key={item.id} className="mb-1">
-              {/* Main nav item */}
               <button
                 onClick={() => {
                   toggleSection(item.id);
@@ -274,7 +276,6 @@ export function DesignSystemDashboard() {
                 )}
               </button>
 
-              {/* Sub-items */}
               {item.subItems && expandedSections.includes(item.id) && (
                 <div className="pl-11 pr-4 py-1 space-y-0.5">
                   {item.subItems.map((subItem) => (
@@ -301,14 +302,13 @@ export function DesignSystemDashboard() {
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-black/8 mt-8">
-          <p className="text-xs text-black/40">Version 3.2.0</p>
-          <p className="text-xs text-black/40 mt-1">Last updated: Feb 2026</p>
+          <p className="text-xs text-black/40">Version 4.3</p>
+          <p className="text-xs text-black/40 mt-1">Last updated: Mar 2026</p>
         </div>
       </aside>
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 overflow-y-auto">
-        {/* Top Header */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-black/8">
           <div className="max-w-[var(--container-page)] mx-auto px-8 py-4">
             <div className="flex items-center justify-between">
@@ -332,7 +332,6 @@ export function DesignSystemDashboard() {
           </div>
         </header>
 
-        {/* Content */}
         <div className="max-w-[var(--container-page)] mx-auto px-8 py-8">
           {renderContent(activeTab, activeSubTab, handleNavClick)}
         </div>
@@ -343,153 +342,62 @@ export function DesignSystemDashboard() {
 
 // Content rendering function
 function renderContent(tab: TabId, subTab: SubTabId, handleNavClick: (tabId: TabId, subTabId?: SubTabId) => void) {
-  // TAB 1: OVERVIEW
   if (tab === 'overview') {
-    if (subTab === 'welcome') {
-      return <WelcomeContent onNavigate={handleNavClick} />;
-    }
-    if (subTab === 'principles') {
-      return <PrinciplesContent />;
-    }
-    if (subTab === 'quickstart') {
-      return <QuickStartContent onNavigate={handleNavClick} />;
-    }
-    if (subTab === 'whats-new') {
-      return <WhatsNewContent />;
-    }
+    if (subTab === 'welcome') return <WelcomeContent onNavigate={handleNavClick} />;
+    if (subTab === 'principles') return <PrinciplesContent />;
+    if (subTab === 'quickstart') return <QuickStartContent onNavigate={handleNavClick} />;
+    if (subTab === 'whats-new') return <WhatsNewContent />;
   }
-
-  // TAB 2: FOUNDATIONS
   if (tab === 'foundations') {
-    if (subTab === 'colors') {
-      return <ColorsContent />;
-    }
-    if (subTab === 'all-colors-palette') {
-      return <AllColorsPaletteContent />;
-    }
-    if (subTab === 'typography') {
-      return <TypographyContent />;
-    }
-    if (subTab === 'all-typography-tokens') {
-      return <AllTypographyTokensContent />;
-    }
-    if (subTab === 'spacing') {
-      return <SpacingContent />;
-    }
-    if (subTab === 'all-spacing-tokens') {
-      return <AllSpacingTokensContent />;
-    }
-    if (subTab === 'layout-grid') {
-      return <LayoutGridContent />;
-    }
-    if (subTab === 'all-layout-grid-tokens') {
-      return <AllLayoutGridTokensContent />;
-    }
-    if (subTab === 'elevation') {
-      return <ElevationContent />;
-    }
-    if (subTab === 'all-elevation-tokens') {
-      return <AllElevationTokensContent />;
-    }
-    if (subTab === 'radius') {
-      return <BorderRadiusContent />;
-    }
-    if (subTab === 'all-radius-tokens') {
-      return <AllBorderRadiusTokensContent />;
-    }
+    if (subTab === 'colors') return <ColorsContent />;
+    if (subTab === 'all-colors-palette') return <AllColorsPaletteContent />;
+    if (subTab === 'typography') return <TypographyContent />;
+    if (subTab === 'all-typography-tokens') return <AllTypographyTokensContent />;
+    if (subTab === 'spacing') return <SpacingContent />;
+    if (subTab === 'all-spacing-tokens') return <AllSpacingTokensContent />;
+    if (subTab === 'layout-grid') return <LayoutGridContent />;
+    if (subTab === 'all-layout-grid-tokens') return <AllLayoutGridTokensContent />;
+    if (subTab === 'elevation') return <ElevationContent />;
+    if (subTab === 'all-elevation-tokens') return <AllElevationTokensContent />;
+    if (subTab === 'radius') return <BorderRadiusContent />;
+    if (subTab === 'all-radius-tokens') return <AllBorderRadiusTokensContent />;
   }
-
-  // TAB 3: COMPONENTS
   if (tab === 'components') {
-    if (subTab === 'buttons') {
-      return <ButtonDocumentation />;
-    }
-    if (subTab === 'links-ctas') {
-      return <LinksDocumentation />;
-    }
-    if (subTab === 'badges-labels') {
-      return <BadgeLabelsDocumentation />;
-    }
-    if (subTab === 'forms') {
-      return <FormInputsContent />;
-    }
-    if (subTab === 'cards') {
-      return <CardsContent />;
-    }
-    if (subTab === 'navigation') {
-      return <NavigationContent />;
-    }
-    if (subTab === 'feedback') {
-      return <FeedbackContent />;
-    }
-    if (subTab === 'icons') {
-      return <IconsContent />;
-    }
+    if (subTab === 'buttons') return <ButtonDocumentation />;
+    if (subTab === 'links-ctas') return <LinksDocumentation />;
+    if (subTab === 'badges-labels') return <BadgeLabelsDocumentation />;
+    if (subTab === 'forms') return <FormInputsContent />;
+    if (subTab === 'cards') return <CardsContent />;
+    if (subTab === 'navigation') return <NavigationContent />;
+    if (subTab === 'feedback') return <FeedbackContent />;
+    if (subTab === 'icons') return <IconsContent />;
   }
-
-  // TAB 4: PATTERNS
   if (tab === 'patterns') {
-    if (subTab === 'page-layouts') {
-      return <PageLayoutsContent />;
-    }
-    if (subTab === 'content-patterns') {
-      return <ContentPatternsContent />;
-    }
-    if (subTab === 'backgrounds') {
-      return <BackgroundsContent />;
-    }
+    if (subTab === 'page-layouts') return <PageLayoutsContent />;
+    if (subTab === 'content-patterns') return <ContentPatternsContent />;
+    if (subTab === 'backgrounds') return <BackgroundsContent />;
   }
-
-  // TAB 5: MOTION
   if (tab === 'motion') {
-    if (subTab === 'motion-principles') {
-      return <MotionPrinciplesContent />;
-    }
-    if (subTab === 'duration-scale') {
-      return <DurationScaleContent />;
-    }
-    if (subTab === 'transitions') {
-      return <TransitionsContent />;
-    }
-    if (subTab === 'micro-interactions') {
-      return <MicroInteractionsContent />;
-    }
+    if (subTab === 'motion-principles') return <MotionPrinciplesContent />;
+    if (subTab === 'duration-scale') return <DurationScaleContent />;
+    if (subTab === 'transitions') return <TransitionsContent />;
+    if (subTab === 'micro-interactions') return <MicroInteractionsContent />;
   }
-
-  // TAB 6: GUIDELINES
   if (tab === 'guidelines') {
-    if (subTab === 'accessibility') {
-      return <AccessibilityContent />;
-    }
-    if (subTab === 'responsive') {
-      return <ResponsiveDesignContent />;
-    }
-    if (subTab === 'best-practices') {
-      return <BestPracticesContent />;
-    }
+    if (subTab === 'accessibility') return <AccessibilityContent />;
+    if (subTab === 'responsive') return <ResponsiveDesignContent />;
+    if (subTab === 'best-practices') return <BestPracticesContent />;
   }
-
-  // TAB 7: RESOURCES
   if (tab === 'resources') {
-    if (subTab === 'downloads') {
-      return <DownloadsContent />;
-    }
-    if (subTab === 'code-snippets') {
-      return <CodeSnippetsContent />;
-    }
-    if (subTab === 'tokens-export') {
-      return <DesignTokensContent />;
-    }
+    if (subTab === 'downloads') return <DownloadsContent />;
+    if (subTab === 'code-snippets') return <CodeSnippetsContent />;
+    if (subTab === 'tokens-export') return <DesignTokensContent />;
   }
-
-  // Placeholder for other tabs
   return (
     <div className="py-12 text-center">
       <Lightbulb size={48} className="mx-auto text-black/20 mb-4" />
       <h2 className="text-xl font-normal mb-2">Content Coming Soon</h2>
-      <p className="text-black/60">
-        This section is being built. Check back soon!
-      </p>
+      <p className="text-black/60">This section is being built. Check back soon!</p>
     </div>
   );
 }
@@ -507,52 +415,43 @@ function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-blue-600 text-blue-600" />
-              WHY
+              <Circle size={8} className="fill-blue-600 text-blue-600" /> WHY
             </h3>
             <p className="text-sm text-black/70">
               To establish a consistent, accessible, and scalable design language that accelerates development 
               while maintaining brand identity across all touchpoints.
             </p>
           </div>
-          
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-blue-600 text-blue-600" />
-              WHAT
+              <Circle size={8} className="fill-blue-600 text-blue-600" /> WHAT
             </h3>
             <p className="text-sm text-black/70">
-              A comprehensive design system featuring 50+ components, design tokens, motion principles, 
-              accessibility guidelines, and code snippets—all documented with the 4W+H framework.
+              A comprehensive design system featuring 100+ components (35 atoms, 26 molecules, 40 organisms), 
+              design tokens, motion principles, accessibility guidelines, and code snippets—all documented with the 4W+H framework.
             </p>
           </div>
-          
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-green-600 text-green-600" />
-              WHEN
+              <Circle size={8} className="fill-green-600 text-green-600" /> WHEN
             </h3>
             <p className="text-sm text-black/70">
               Use this system for all digital products requiring consistent brand expression, from marketing 
               sites to complex web applications. Start projects with foundations, build with components.
             </p>
           </div>
-          
           <div>
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-red-600 text-red-600" />
-              WHEN NOT
+              <Circle size={8} className="fill-red-600 text-red-600" /> WHEN NOT
             </h3>
             <p className="text-sm text-black/70">
               Don't use for rapid prototyping that requires visual exploration outside brand guidelines, 
               or for projects requiring drastically different aesthetics (e.g., playful, colorful designs).
             </p>
           </div>
-          
           <div className="md:col-span-2">
             <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <Circle size={8} className="fill-purple-600 text-purple-600" />
-              HOW
+              <Circle size={8} className="fill-purple-600 text-purple-600" /> HOW
             </h3>
             <p className="text-sm text-black/70">
               Start with design tokens (colors, typography, spacing), compose components following atomic design, 
@@ -568,17 +467,17 @@ function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: 
         <div className="max-w-3xl">
           <div className="mb-4 flex items-center gap-3">
             <span className="px-3 py-1 bg-[var(--brand-red)] text-white text-xs font-medium rounded-full">
-              v3.2.0
+              v4.3
             </span>
-            <span className="text-xs text-black/40">February 2026</span>
+            <span className="text-xs text-black/40">March 2026</span>
           </div>
           <h1 className="text-5xl font-normal mb-6">
             Welcome to the<br />Design System
           </h1>
           <p className="text-xl text-black/70 leading-relaxed mb-8">
             A comprehensive, production-ready design system built with minimalist editorial aesthetics, 
-            featuring a pure black/white/warm palette with Ken Bold Red (#b01f24) accents. Every component 
-            documented with WHY, WHAT, WHEN, WHEN NOT, and HOW.
+            featuring a pure black/white/warm palette with Ken Bold Red (#b01f24) accents. Serves three pillars:
+            Case Study, Report Store, and Surveys. Every component documented with WHY, WHAT, WHEN, WHEN NOT, and HOW.
           </p>
           <div className="flex gap-4">
             <Button 
@@ -602,9 +501,9 @@ function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: 
 
       {/* Stats Grid */}
       <section className="grid grid-cols-4 gap-6 py-8 border-y border-black/8">
-        <StatCard number="50+" label="Components" />
-        <StatCard number="7" label="Categories" />
-        <StatCard number="7,000+" label="Lines of Code" />
+        <StatCard number="100+" label="Components" />
+        <StatCard number="3" label="Pillars" />
+        <StatCard number="15,000+" label="Lines of Code" />
         <StatCard number="WCAG AA" label="Accessible" />
       </section>
 
@@ -612,26 +511,10 @@ function WelcomeContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId?: 
       <section>
         <h2 className="text-2xl font-normal mb-6">Key Features</h2>
         <div className="grid grid-cols-2 gap-6">
-          <FeatureCard
-            icon={<Palette size={24} />}
-            title="Minimalist Aesthetic"
-            description="Pure black/white palette with Ken Bold Red (#b01f24) for strategic CTAs"
-          />
-          <FeatureCard
-            icon={<Type size={24} />}
-            title="Major Third Scale"
-            description="Typography system built on 1.25 ratio for perfect vertical rhythm"
-          />
-          <FeatureCard
-            icon={<Layers size={24} />}
-            title="Atomic Design"
-            description="Organized using atomic design methodology for maximum scalability"
-          />
-          <FeatureCard
-            icon={<Sparkles size={24} />}
-            title="4W+H Framework"
-            description="Every component documented with WHY, WHAT, WHEN, WHEN NOT, and HOW"
-          />
+          <FeatureCard icon={<Palette size={24} />} title="Minimalist Aesthetic" description="Pure black/white palette with Ken Bold Red (#b01f24) for strategic CTAs" />
+          <FeatureCard icon={<Type size={24} />} title="Major Third Scale" description="Typography system built on 1.25 ratio for perfect vertical rhythm" />
+          <FeatureCard icon={<Layers size={24} />} title="Atomic Design" description="35 atoms, 26 molecules, 40 organisms organized for maximum scalability" />
+          <FeatureCard icon={<Sparkles size={24} />} title="4W+H Framework" description="Every component documented with WHY, WHAT, WHEN, WHEN NOT, and HOW" />
         </div>
       </section>
 
@@ -657,96 +540,17 @@ function PrinciplesContent() {
       <div className="max-w-3xl">
         <h1 className="text-4xl font-normal mb-4">Design Principles</h1>
         <p className="text-lg text-black/70">
-          Core principles that guide every design decision in this system. These principles ensure consistency, 
-          accessibility, and a premium editorial aesthetic across all touchpoints.
+          Core principles that guide every design decision in this system.
         </p>
       </div>
-
       <div className="space-y-8">
-        <PrincipleCard
-          number="01"
-          title="Minimalist Editorial"
-          description="Clean, sophisticated, and content-focused design that prioritizes readability and user comprehension with ample breathing room."
-          principles={[
-            'Black/white foundation with strategic Ken Bold Red (#b01f24) accent (5% usage - CTAs only)',
-            'Generous white space and warm off-white (#f5f2f1) sections for visual hierarchy',
-            'Typography-first approach with Noto Serif for headlines, DM Sans for body',
-            'Content-focused layouts that let the work speak for itself'
-          ]}
-        />
-        
-        <PrincipleCard
-          number="02"
-          title="Hierarchy Through Scale"
-          description="Major Third typography scale (1.25 ratio) creates clear, mathematical visual hierarchy from 12.8px to 76px, ensuring perfect readability at every level."
-          principles={[
-            'Base size: 16px with systematic scaling (xs \u2192 sm \u2192 base \u2192 lg \u2192 xl \u2192 2xl \u2192 3xl \u2192 4xl \u2192 5xl)',
-            'Typography scale ensures proportional relationships between all text sizes',
-            'Massive hero headings (48-76px) for editorial impact',
-            'Responsive type sizing with clamp() for fluid scaling across devices'
-          ]}
-        />
-        
-        <PrincipleCard
-          number="03"
-          title="Sophisticated Interactions"
-          description="Purposeful motion serves clear functions\u2014guiding attention, providing feedback, and enhancing spatial understanding without distraction."
-          principles={[
-            'Four-tier duration system: Instant (100ms), Fast (200ms), Base (300ms), Slow (500ms)',
-            'Ease-out (cubic-bezier(0.22, 1, 0.36, 1)) for natural deceleration',
-            'Subtle micro-interactions for delight: hover states, gradient shifts, scale transforms',
-            'Respects prefers-reduced-motion for accessibility'
-          ]}
-        />
-        
-        <PrincipleCard
-          number="04"
-          title="Atomic Design Methodology"
-          description="Systematic component organization from atoms to organisms ensures scalability, reusability, and predictable patterns that reduce cognitive load."
-          principles={[
-            'Atoms: Buttons, inputs, icons, color swatches',
-            'Molecules: Form groups, card headers, navigation items',
-            'Organisms: Navigation bars, cards, sections with multiple components',
-            'Design tokens for all visual properties (colors, spacing, typography, shadows, border radius)'
-          ]}
-        />
-        
-        <PrincipleCard
-          number="05"
-          title="Accessible by Default"
-          description="Every component meets WCAG 2.1 AA standards minimum, ensuring inclusive experiences for all users regardless of abilities or assistive technology."
-          principles={[
-            'Minimum 4.5:1 contrast ratios for normal text, 3:1 for large text',
-            'Semantic HTML with proper heading hierarchy (h1 \u2192 h2 \u2192 h3)',
-            'Full keyboard navigation support with visible focus states',
-            'Screen reader optimization with ARIA labels and roles',
-            'Touch targets minimum 40px \u00d7 40px for mobile accessibility'
-          ]}
-        />
-        
-        <PrincipleCard
-          number="06"
-          title="Systematic Consistency"
-          description="Predictable patterns and reusable components create familiarity across the system, making it intuitive for both designers and developers."
-          principles={[
-            'All design tokens defined as CSS variables and TypeScript constants',
-            'Spacing scale based on 4px grid (0.25rem base unit)',
-            'Border radius system: small (6px), medium (10px), large (16px), xl (20px)',
-            'Comprehensive documentation with WHY/WHAT/WHEN/WHEN NOT/HOW for every component'
-          ]}
-        />
-        
-        <PrincipleCard
-          number="07"
-          title="Scalability & Flexibility"
-          description="Components handle varying content volumes (2-10+ items) and adapt responsively across all device sizes from mobile (375px) to ultra-wide (1920px+)."
-          principles={[
-            'Mobile-first responsive design with breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px), 2xl (1536px)',
-            'Grid systems that adapt: 1 column mobile \u2192 2-3 columns tablet \u2192 3-4 columns desktop',
-            'Flexible components with content constraints (max-width: 1000px for optimal readability)',
-            'Components gracefully handle empty states, loading states, and error states'
-          ]}
-        />
+        <PrincipleCard number="01" title="Minimalist Editorial" description="Clean, sophisticated, and content-focused design that prioritizes readability." principles={['Black/white foundation with strategic Ken Bold Red (#b01f24) accent (5% usage - CTAs only)', 'Generous white space and warm off-white (#f5f2f1) sections', 'Typography-first approach with Noto Serif for headlines, DM Sans for body', 'Content-focused layouts that let the work speak for itself']} />
+        <PrincipleCard number="02" title="Hierarchy Through Scale" description="Major Third typography scale (1.25 ratio) creates clear, mathematical visual hierarchy." principles={['Base size: 16px with systematic scaling (xs \u2192 5xl)', 'Responsive type sizing with clamp() for fluid scaling', 'Massive hero headings (48-76px) for editorial impact', '--text-card-micro (10px) reserved for side numbers/counts only']} />
+        <PrincipleCard number="03" title="Sophisticated Interactions" description="Purposeful motion serves clear functions without distraction." principles={['Four-tier duration: Instant (100ms), Fast (200ms), Base (300ms), Slow (500ms)', 'Ease-out (cubic-bezier(0.22, 1, 0.36, 1)) for natural deceleration', 'ArrowUpRight (45\u00B0) only \u2014 never ArrowRight or ChevronRight on buttons', 'Respects prefers-reduced-motion for accessibility']} />
+        <PrincipleCard number="04" title="Atomic Design Methodology" description="Systematic component organization ensures scalability and reusability." principles={['35 Atoms: Buttons, inputs, icons, filter controls', '26 Molecules: Cards, form groups, filter accordions', '40 Organisms: Page sections, sidebars, complete page compositions', 'Design tokens for all visual properties (470+ CSS custom properties)']} />
+        <PrincipleCard number="05" title="Accessible by Default" description="Every component meets WCAG 2.1 AA standards minimum." principles={['Minimum 4.5:1 contrast ratios for normal text', 'Semantic HTML with proper heading hierarchy', 'Full keyboard navigation with visible focus states', 'Touch targets minimum 40px \u00d7 40px for mobile']} />
+        <PrincipleCard number="06" title="Inline Style Rules" description="Strict rules for all inline styles to ensure consistency." principles={['All colors must use rgba() format \u2014 never hex (#fff) in inline styles', 'No CSS shorthand for border/background in inline styles', 'Tailwind classes reserved for layout/spacing/transitions only', 'CSS custom properties (var(--brand-red)) for token references']} />
+        <PrincipleCard number="07" title="Scalability & Flexibility" description="Components adapt across device sizes from 375px to 1920px+." principles={['Mobile-first responsive with breakpoints: sm, md, lg, xl, 2xl', 'Grid systems that adapt: 1 col mobile \u2192 4 col desktop', 'Flexible components with max-width constraints for readability', 'Components handle empty, loading, and error states gracefully']} />
       </div>
     </div>
   );
@@ -757,53 +561,17 @@ function QuickStartContent({ onNavigate }: { onNavigate: (tabId: TabId, subTabId
     <div className="space-y-12">
       <div className="max-w-3xl">
         <h1 className="text-4xl font-normal mb-4">Quick Start Guide</h1>
-        <p className="text-lg text-black/70">
-          Get up and running with the design system in minutes.
-        </p>
+        <p className="text-lg text-black/70">Get up and running with the design system in minutes.</p>
       </div>
-
-      {/* Step-by-step guide */}
       <div className="space-y-6">
-        <StepCardButton
-          step="1"
-          title="Understand the Foundations"
-          description="Start by familiarizing yourself with our core design tokens: colors, typography, and spacing."
-          action="View Foundations"
-          onClick={() => onNavigate('foundations', 'colors')}
-        />
-        
-        <StepCardButton
-          step="2"
-          title="Explore Components"
-          description="Browse our comprehensive component library with live examples and code snippets."
-          action="Browse Components"
-          onClick={() => onNavigate('components', 'buttons')}
-        />
-        
-        <StepCardButton
-          step="3"
-          title="Review Patterns"
-          description="Learn common design patterns for layouts, navigation, and content organization."
-          action="See Patterns"
-          onClick={() => onNavigate('patterns', 'page-layouts')}
-        />
-        
-        <StepCardButton
-          step="4"
-          title="Download Resources"
-          description="Export design tokens, download Figma files, and access code snippets."
-          action="Get Resources"
-          onClick={() => onNavigate('resources', 'downloads')}
-        />
+        <StepCardButton step="1" title="Understand the Foundations" description="Start with core design tokens: colors, typography, and spacing." action="View Foundations" onClick={() => onNavigate('foundations', 'colors')} />
+        <StepCardButton step="2" title="Explore Components" description="Browse our comprehensive component library with live examples." action="Browse Components" onClick={() => onNavigate('components', 'buttons')} />
+        <StepCardButton step="3" title="Review Patterns" description="Learn common design patterns for layouts and content organization." action="See Patterns" onClick={() => onNavigate('patterns', 'page-layouts')} />
+        <StepCardButton step="4" title="Download Resources" description="Export design tokens, download Figma files, and access code snippets." action="Get Resources" onClick={() => onNavigate('resources', 'downloads')} />
       </div>
-
-      {/* Code Example */}
       <section>
         <h2 className="text-2xl font-normal mb-6">Import Design Tokens</h2>
-        <CodeBlock
-          language="css"
-          code={`/* Import design tokens */\n@import '@/styles/theme.css';\n\n/* Use CSS variables */\n.my-component {\n  color: var(--text-primary);\n  font-size: var(--text-base);\n  padding: var(--space-md);\n  background: var(--bg-primary);\n}`}
-        />
+        <CodeBlock language="css" code={`/* Import design tokens */\n@import '@/styles/theme.css';\n\n/* Use CSS variables */\n.my-component {\n  color: var(--text-primary);\n  font-size: var(--text-base);\n  padding: var(--space-md);\n  background: var(--bg-primary);\n}`} />
       </section>
     </div>
   );
@@ -814,138 +582,101 @@ function WhatsNewContent() {
     <div className="space-y-12">
       <div className="max-w-3xl">
         <h1 className="text-4xl font-normal mb-4">What's New</h1>
-        <p className="text-lg text-black/70">
-          Latest updates and improvements to the design system.
-        </p>
+        <p className="text-lg text-black/70">Latest updates and improvements to the design system.</p>
       </div>
-
       <div className="space-y-8">
+        <ChangelogSection
+          version="4.3"
+          date="March 2026"
+          type="minor"
+          changes={[{
+            category: 'DS Audit & Code Fixes',
+            items: [
+              '7-phase DS audit completed: 5 code fixes (arrow prop, hex\u2192rgba, hex\u2192var)',
+              'NewsletterSignup: ArrowRight icon \u2192 showArrow prop on Button',
+              'Card.tsx: #fff \u2192 rgba(255,255,255,1) in BG_MAP',
+              'MethodologySection: #000 \u2192 rgba(0,0,0,1) timeline fill',
+              'AnimatedArrowDemo + ButtonControlsGuide: #b01f24 \u2192 var(--brand-red)',
+            ]
+          }, {
+            category: 'Documentation',
+            items: [
+              'ai-context/CORE.md + COMPONENTS.md updated to v4.3',
+              'GITHUB_REPO_MANIFEST.md: full rewrite with organisms, filter system, hooks',
+              'PROJECT_STRUCTURE.md: new comprehensive file inventory',
+              'FiltersDocumentation.tsx: full 2100-line interactive filter system docs',
+              'All 7 documentation files updated with accurate counts',
+            ]
+          }]}
+        />
+        <ChangelogSection
+          version="4.2"
+          date="March 2026"
+          type="minor"
+          changes={[{
+            category: 'Filter System Extraction',
+            items: [
+              '6 atoms extracted: FilterSearchInput, FilterCheckbox, FilterCheckboxItem, FilterSectionHeader, FilterIndustryItem, FilterChip',
+              '4 molecules extracted: FilterAccordion, SidebarPanel, ActiveFilterChipBar, MobileFilterSheet',
+              'Full 4W+H documentation with interaction state matrix',
+              'Filter architecture diagram and decision flowchart',
+            ]
+          }]}
+        />
+        <ChangelogSection
+          version="4.0"
+          date="March 2026"
+          type="major"
+          changes={[{
+            category: 'Report Store Architecture',
+            items: [
+              '30 organism components (6 cross-pillar + 24 RS-specific)',
+              'ProductPageTemplate declarative page assembly',
+              '4 new hooks: useReportFilters, useProgressiveLoad, useCrossfade, useMountTransition',
+              'ReportCard unified with layout prop (grid + list)',
+              'Home mode (10 organisms) + Listing mode (sidebar + card grid)',
+            ]
+          }]}
+        />
         <ChangelogSection
           version="3.2.0"
           date="February 2026"
           type="minor"
-          changes={[
-            {
-              category: 'New',
-              items: [
-                'Badge convenience wrappers documentation added to all 3 AI context files',
-                'Full 10-wrapper inventory table (SectionLabel, StepPill, ObjectivePill, ObjectivePillInteractive, InfoCardLabel, CategoryBadge, StatusBadge, InfoBadge, MutedBadge, ClickableBadge)',
-                'Fixed 6 broken barrel exports in index.ts \u2014 now correctly exports all named content components',
-                'Removed dead ButtonAnimationTest import from Dashboard',
-                'Version numbers updated across all surfaces (sidebar, hero badge, changelog)',
-              ]
-            },
-            {
-              category: 'Documentation',
-              items: [
-                'DESIGN_SYSTEM_AI_CONTEXT.md updated with full wrapper API reference',
-                'AI_DESIGN_SYSTEM_PROMPT.md file structure section expanded with 10 wrapper descriptions',
-                'AI_CONTEXT_DESIGN_SYSTEM.md Badge section expanded with convenience wrapper table',
-              ]
-            }
-          ]}
+          changes={[{
+            category: 'New',
+            items: [
+              'Badge convenience wrappers documentation added to all 3 AI context files',
+              'Full 10-wrapper inventory table',
+              'Fixed 6 broken barrel exports in index.ts',
+            ]
+          }]}
         />
-
-        <ChangelogSection
-          version="3.1.0"
-          date="February 2026"
-          type="minor"
-          changes={[
-            {
-              category: 'Completed',
-              items: [
-                'Massive local-to-GitHub sync gap fully resolved \u2014 all missing files pushed',
-                'GITHUB_REPO_MANIFEST.md created at repo root with comprehensive file inventory',
-                '5-batch token formalization migration complete (49 code edits across 17 files, zero regressions)',
-                'Stale documentation sweep finished \u2014 all docs verified accurate',
-              ]
-            },
-            {
-              category: 'Infrastructure',
-              items: [
-                'GitHub API push workflow validated for non-terminal Figma Make environment',
-                'Migration exceptions documented (AllTypographyTokensContent hardcoded values, ChallengesSection JS card-width calc, ContactModal modal width, PatternsContent demo code string)',
-              ]
-            }
-          ]}
-        />
-
         <ChangelogSection
           version="3.0.0"
           date="February 2026"
           type="major"
-          changes={[
-            {
-              category: 'New',
-              items: [
-                'Badge.tsx unified component \u2014 132 combinations (3 variants \u00d7 4 sizes \u00d7 11 themes)',
-                '10 pre-configured convenience wrappers for common badge patterns',
-                'Form-only Label.tsx separated from Badge system (3 variants: default, secondary, required)',
-                'Layout Container system with 5 semantic width tokens (page/content/narrow/prose/compact)',
-                'Mobile-First Responsive Padding system with 3 breakpoint tokens',
-              ]
-            },
-            {
-              category: 'Enhanced',
-              items: [
-                'Color palette expanded: coral (50-900), purple (50-900), periwinkle (50-900), perano (50-900)',
-                'Muted theme added to Badge \u2014 deliberately subdued, distinct from neutral',
-                'Secondary button style: white base, warm-500 border, coral-50 shimmer sweep',
-                'Font Pairing System formalized: DM Sans (UI) / Noto Serif (editorial) / system mono',
-              ]
-            },
-            {
-              category: 'Documentation',
-              items: [
-                'Three AI context markdown files created at v3.0 (DESIGN_SYSTEM_AI_CONTEXT.md, AI_DESIGN_SYSTEM_PROMPT.md, AI_CONTEXT_DESIGN_SYSTEM.md)',
-                'BadgeLabelsDocumentation.tsx comprehensive showcase page',
-                'BadgeShowcase.tsx with all 132 combinations rendered',
-              ]
-            }
-          ]}
+          changes={[{
+            category: 'New',
+            items: [
+              'Badge.tsx unified component \u2014 132 combinations (3 variants \u00d7 4 sizes \u00d7 11 themes)',
+              '10 pre-configured convenience wrappers',
+              'Layout Container system with 5 semantic width tokens',
+            ]
+          }]}
         />
-
-        <ChangelogSection
-          version="2.0.0"
-          date="January 2026"
-          type="major"
-          changes={[
-            {
-              category: 'New',
-              items: [
-                'Added comprehensive Motion & Animation system with 4-layer duration scale',
-                'New Layout Patterns section with grid systems and z-index strategy',
-                'Stripe-style dashboard with side navigation',
-                'Interactive component playground'
-              ]
-            },
-            {
-              category: 'Enhanced',
-              items: [
-                'Expanded typography section with responsive sizing examples',
-                'Added 6 new spacing helper components',
-                'Improved color accessibility documentation',
-                'Enhanced button component with more variants'
-              ]
-            }
-          ]}
-        />
-        
         <ChangelogSection
           version="1.0.0"
           date="December 2025"
           type="initial"
-          changes={[
-            {
-              category: 'Initial Release',
-              items: [
-                'Complete design system with 7 categories',
-                'Atomic design methodology implementation',
-                '50+ documented components',
-                'Comprehensive WHY/WHAT/WHERE/WHEN/HOW framework'
-              ]
-            }
-          ]}
+          changes={[{
+            category: 'Initial Release',
+            items: [
+              'Complete design system with 7 categories',
+              'Atomic design methodology implementation',
+              '50+ documented components',
+              'Comprehensive WHY/WHAT/WHERE/WHEN/HOW framework'
+            ]
+          }]}
         />
       </div>
     </div>
@@ -965,11 +696,7 @@ function StatCard({ number, label }: { number: string; label: string }) {
   );
 }
 
-function FeatureCard({ icon, title, description }: { 
-  icon: React.ReactNode; 
-  title: string; 
-  description: string;
-}) {
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
     <div className="p-6 border border-black/8 rounded-lg hover:border-black/20 transition-colors">
       <div className="text-black/80 mb-3">{icon}</div>
@@ -979,21 +706,12 @@ function FeatureCard({ icon, title, description }: {
   );
 }
 
-function QuickLinkCardButton({ title, description, onClick }: { 
-  title: string; 
-  description: string; 
-  onClick: () => void;
-}) {
+function QuickLinkCardButton({ title, description, onClick }: { title: string; description: string; onClick: () => void }) {
   return (
-    <button 
-      onClick={onClick}
-      className="p-4 border border-black/8 rounded-lg hover:border-black/20 hover:bg-black/2 transition-all group"
-    >
+    <button onClick={onClick} className="p-4 border border-black/8 rounded-lg hover:border-black/20 hover:bg-black/2 transition-all group">
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="font-medium mb-1 group-hover:text-[var(--brand-red)] transition-colors">
-            {title}
-          </h3>
+          <h3 className="font-medium mb-1 group-hover:text-[var(--brand-red)] transition-colors">{title}</h3>
           <p className="text-sm text-black/60">{description}</p>
         </div>
         <ChevronRight size={18} className="text-black/40 group-hover:translate-x-1 transition-transform" />
@@ -1002,17 +720,7 @@ function QuickLinkCardButton({ title, description, onClick }: {
   );
 }
 
-function PrincipleCard({ 
-  number, 
-  title, 
-  description, 
-  principles 
-}: { 
-  number: string; 
-  title: string; 
-  description: string;
-  principles: string[];
-}) {
+function PrincipleCard({ number, title, description, principles }: { number: string; title: string; description: string; principles: string[] }) {
   return (
     <div className="border-l-2 border-black pl-8">
       <div className="text-sm text-black/40 font-mono mb-2">{number}</div>
@@ -1030,33 +738,15 @@ function PrincipleCard({
   );
 }
 
-function StepCardButton({ 
-  step, 
-  title, 
-  description, 
-  action,
-  onClick
-}: { 
-  step: string; 
-  title: string; 
-  description: string;
-  action: string;
-  onClick: () => void;
-}) {
+function StepCardButton({ step, title, description, action, onClick }: { step: string; title: string; description: string; action: string; onClick: () => void }) {
   return (
     <div className="flex gap-6 p-6 border border-black/8 rounded-lg hover:border-black/15 transition-colors">
-      <div className="flex-shrink-0 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-mono text-lg">
-        {step}
-      </div>
+      <div className="flex-shrink-0 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-mono text-lg">{step}</div>
       <div className="flex-1">
         <h3 className="text-xl font-normal mb-2">{title}</h3>
         <p className="text-black/70 mb-4">{description}</p>
-        <button
-          className="text-sm font-medium hover:text-[var(--brand-red)] transition-colors inline-flex items-center gap-2"
-          onClick={onClick}
-        >
-          {action}
-          <ChevronRight size={16} />
+        <button className="text-sm font-medium hover:text-[var(--brand-red)] transition-colors inline-flex items-center gap-2" onClick={onClick}>
+          {action} <ChevronRight size={16} />
         </button>
       </div>
     </div>
@@ -1068,9 +758,7 @@ function CodeBlock({ language, code }: { language: string; code: string }) {
     <div className="border border-black/8 rounded-lg overflow-hidden">
       <div className="bg-black/5 px-4 py-2 border-b border-black/8 flex items-center justify-between">
         <span className="text-xs font-mono text-black/60">{language}</span>
-        <button className="text-xs font-medium hover:text-[var(--brand-red)] transition-colors">
-          Copy
-        </button>
+        <button className="text-xs font-medium hover:text-[var(--brand-red)] transition-colors">Copy</button>
       </div>
       <pre className="p-4 overflow-x-auto bg-black/2">
         <code className="text-sm font-mono">{code}</code>
@@ -1079,23 +767,12 @@ function CodeBlock({ language, code }: { language: string; code: string }) {
   );
 }
 
-function ChangelogSection({ 
-  version, 
-  date, 
-  type, 
-  changes 
-}: { 
-  version: string; 
-  date: string;
-  type: 'major' | 'minor' | 'initial';
-  changes: { category: string; items: string[] }[];
-}) {
+function ChangelogSection({ version, date, type, changes }: { version: string; date: string; type: 'major' | 'minor' | 'initial'; changes: { category: string; items: string[] }[] }) {
   const typeColors = {
     major: 'bg-[var(--brand-red)] text-white',
     minor: 'bg-black/10 text-black',
     initial: 'bg-black text-white'
   };
-
   return (
     <div className="border border-black/8 rounded-lg p-6">
       <div className="flex items-start justify-between mb-4">
@@ -1109,7 +786,6 @@ function ChangelogSection({
           <p className="text-sm text-black/60">{date}</p>
         </div>
       </div>
-      
       <div className="space-y-4">
         {changes.map((change, idx) => (
           <div key={idx}>
