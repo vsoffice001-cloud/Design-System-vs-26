@@ -17,6 +17,9 @@ export { LinksDocumentation } from '@/app/components/LinksDocumentation';
 // 🎯 BADGES & LABELS DOCUMENTATION (Badge + Label)
 export { BadgeLabelsDocumentation } from '@/app/components/BadgeLabelsDocumentation';
 
+// 🎯 NAVIGATION DOCUMENTATION (ScrollFadeRow, SolidTabs, LineTabs, Breadcrumbs, Pagination)
+export { NavigationContent } from '@/app/components/NavigationDocumentation';
+
 /**
  * COMPONENTS CONTENT
  * ==================
@@ -24,7 +27,7 @@ export { BadgeLabelsDocumentation } from '@/app/components/BadgeLabelsDocumentat
  * - Buttons (unified documentation)
  * - Form Inputs
  * - Cards
- * - Navigation
+ * - Navigation (extracted to NavigationDocumentation.tsx)
  * - Feedback
  * - Icons
  */
@@ -179,32 +182,15 @@ export function FormInputsContent() {
           <div className="space-y-6 max-w-md">
             <div>
               <Label htmlFor="demo-default">Default Label (Standard Form Input)</Label>
-              <input
-                id="demo-default"
-                type="text"
-                placeholder="Enter text..."
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <input id="demo-default" type="text" placeholder="Enter text..." className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
-
             <div>
               <Label htmlFor="demo-secondary" variant="secondary">Secondary Label (Less Emphasis)</Label>
-              <input
-                id="demo-secondary"
-                type="text"
-                placeholder="Optional field..."
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <input id="demo-secondary" type="text" placeholder="Optional field..." className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
-
             <div>
               <Label htmlFor="demo-required" required>Required Label (With Asterisk)</Label>
-              <input
-                id="demo-required"
-                type="text"
-                placeholder="Required field..."
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <input id="demo-required" type="text" placeholder="Required field..." className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
           </div>
         </ComponentPreview>
@@ -240,92 +226,37 @@ export function FormInputsContent() {
         </div>
 
         {/* Labels with Helper Text */}
-        <ComponentPreview
-          title="Helper Text Support"
-          description="Optional descriptive text below the label for additional guidance"
-        >
+        <ComponentPreview title="Helper Text Support" description="Optional descriptive text below the label for additional guidance">
           <div className="space-y-6 max-w-md">
             <div>
-              <Label
-                htmlFor="email-demo"
-                required
-                helperText="We'll never share your email with anyone"
-              >
-                Email Address
-              </Label>
-              <input
-                id="email-demo"
-                type="email"
-                placeholder="you@example.com"
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <Label htmlFor="email-demo" required helperText="We'll never share your email with anyone">Email Address</Label>
+              <input id="email-demo" type="email" placeholder="you@example.com" className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
-
             <div>
-              <Label
-                htmlFor="username-demo"
-                helperText="Choose a unique username (3-20 characters)"
-              >
-                Username
-              </Label>
-              <input
-                id="username-demo"
-                type="text"
-                placeholder="username"
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <Label htmlFor="username-demo" helperText="Choose a unique username (3-20 characters)">Username</Label>
+              <input id="username-demo" type="text" placeholder="username" className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
           </div>
         </ComponentPreview>
 
-        {/* Complete Form Example with Labels */}
-        <ComponentPreview
-          title="Complete Form with Label Component"
-          description="Semantic, accessible form structure using Label"
-        >
+        {/* Complete Form Example */}
+        <ComponentPreview title="Complete Form with Label Component" description="Semantic, accessible form structure using Label">
           <form className="max-w-md space-y-6">
             <div>
               <Label htmlFor="form-name" required>Full Name</Label>
-              <input
-                id="form-name"
-                type="text"
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <input id="form-name" type="text" className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
-
             <div>
-              <Label
-                htmlFor="form-email"
-                required
-                helperText="We'll send a confirmation to this email"
-              >
-                Email Address
-              </Label>
-              <input
-                id="form-email"
-                type="email"
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <Label htmlFor="form-email" required helperText="We'll send a confirmation to this email">Email Address</Label>
+              <input id="form-email" type="email" className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
-
             <div>
-              <Label
-                htmlFor="form-bio"
-                variant="secondary"
-                helperText="Tell us a bit about yourself (optional)"
-              >
-                Bio
-              </Label>
-              <textarea
-                id="form-bio"
-                rows={3}
-                className="w-full px-4 py-2 border border-black/10 rounded"
-              />
+              <Label htmlFor="form-bio" variant="secondary" helperText="Tell us a bit about yourself (optional)">Bio</Label>
+              <textarea id="form-bio" rows={3} className="w-full px-4 py-2 border border-black/10 rounded" />
             </div>
           </form>
         </ComponentPreview>
 
-        {/* Label Code Example */}
         <CodeBlock code={`import { Label } from '@/app/components/Label';
 
 // Default form label
@@ -337,99 +268,58 @@ export function FormInputsContent() {
 <Label htmlFor="password" variant="required">Password</Label>
 
 // With helper text
-<Label 
-  htmlFor="username" 
-  helperText="Choose a unique username (3-20 characters)"
->
-  Username
-</Label>
+<Label htmlFor="username" helperText="Choose a unique username (3-20 characters)">Username</Label>
 <input id="username" type="text" />
 
 // Secondary label (optional field)
 <Label htmlFor="bio" variant="secondary">Bio (Optional)</Label>
-<textarea id="bio" />
-
-// MIGRATION NOTE: If you were using Label variant="section",
-// that has moved to Badge.tsx:
-// import { SectionLabel } from '@/app/components/Badge';
-// <SectionLabel theme="brand">KEY INSIGHTS</SectionLabel>`} />
+<textarea id="bio" />`} />
       </section>
 
       {/* Text Inputs */}
       <section>
         <h3 className="text-xl font-normal mb-6">Text Input</h3>
-        
         <ComponentPreview title="Standard Text Input">
           <div className="space-y-4 max-w-md">
             <div>
               <label className="block text-sm font-medium mb-2">Email Address</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="w-full px-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all"
-              />
+              <input type="email" placeholder="you@example.com" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="w-full px-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all" />
             </div>
           </div>
         </ComponentPreview>
-
         <ComponentPreview title="Input with Icon">
           <div className="space-y-4 max-w-md">
             <div>
               <label className="block text-sm font-medium mb-2">Search</label>
               <div className="relative">
                 <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all"
-                />
+                <input type="text" placeholder="Search..." className="w-full pl-10 pr-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all" />
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Password</label>
               <div className="relative">
                 <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all"
-                />
+                <input type="password" placeholder="••••••••" className="w-full pl-10 pr-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all" />
               </div>
             </div>
           </div>
         </ComponentPreview>
-
         <ComponentPreview title="Input States">
           <div className="space-y-4 max-w-md">
             <div>
               <label className="block text-sm font-medium mb-2">Error State</label>
-              <input
-                type="text"
-                placeholder="Invalid input"
-                className="w-full px-4 py-3 border-2 border-red-500 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500/20"
-              />
+              <input type="text" placeholder="Invalid input" className="w-full px-4 py-3 border-2 border-red-500 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500/20" />
               <p className="text-xs text-red-600 mt-1">This field is required</p>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Success State</label>
-              <input
-                type="text"
-                value="Valid input"
-                readOnly
-                className="w-full px-4 py-3 border-2 border-green-500 rounded-md focus:outline-none"
-              />
+              <input type="text" value="Valid input" readOnly className="w-full px-4 py-3 border-2 border-green-500 rounded-md focus:outline-none" />
               <p className="text-xs text-green-600 mt-1">Looks good!</p>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2 text-black/40">Disabled State</label>
-              <input
-                type="text"
-                placeholder="Disabled input"
-                disabled
-                className="w-full px-4 py-3 border border-black/10 rounded-md bg-black/5 text-black/40 cursor-not-allowed"
-              />
+              <input type="text" placeholder="Disabled input" disabled className="w-full px-4 py-3 border border-black/10 rounded-md bg-black/5 text-black/40 cursor-not-allowed" />
             </div>
           </div>
         </ComponentPreview>
@@ -438,17 +328,10 @@ export function FormInputsContent() {
       {/* Textarea */}
       <section>
         <h3 className="text-xl font-normal mb-6">Textarea</h3>
-        
         <ComponentPreview title="Multi-line Text Input">
           <div className="max-w-md">
             <label className="block text-sm font-medium mb-2">Message</label>
-            <textarea
-              placeholder="Enter your message..."
-              value={textareaValue}
-              onChange={(e) => setTextareaValue(e.target.value)}
-              rows={4}
-              className="w-full px-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all resize-y"
-            />
+            <textarea placeholder="Enter your message..." value={textareaValue} onChange={(e) => setTextareaValue(e.target.value)} rows={4} className="w-full px-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all resize-y" />
             <p className="text-xs text-black/40 mt-1">{textareaValue.length} / 500 characters</p>
           </div>
         </ComponentPreview>
@@ -457,20 +340,10 @@ export function FormInputsContent() {
       {/* Select */}
       <section>
         <h3 className="text-xl font-normal mb-6">Select Dropdown</h3>
-        
         <ComponentPreview title="Dropdown Menu">
           <div className="max-w-md">
             <label className="block text-sm font-medium mb-2">Country</label>
-            <select
-              value={selectedOption}
-              onChange={(e) => setSelectedOption(e.target.value)}
-              className="w-full px-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all bg-white appearance-none cursor-pointer"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 1rem center',
-              }}
-            >
+            <select value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)} className="w-full px-4 py-3 border border-black/10 rounded-md focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black/20 transition-all bg-white appearance-none cursor-pointer" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center' }}>
               <option value="option1">United States</option>
               <option value="option2">United Kingdom</option>
               <option value="option3">Canada</option>
@@ -484,20 +357,12 @@ export function FormInputsContent() {
       {/* Checkboxes */}
       <section>
         <h3 className="text-xl font-normal mb-6">Checkboxes</h3>
-        
         <ComponentPreview title="Checkbox Group">
           <div className="space-y-3">
             {Object.entries(checkboxStates).map(([key, checked]) => (
               <label key={key} className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={(e) => setCheckboxStates({ ...checkboxStates, [key]: e.target.checked })}
-                  className="w-5 h-5 border-2 border-black/20 rounded checked:bg-black checked:border-black cursor-pointer"
-                />
-                <span className="text-sm group-hover:text-black/80 transition-colors">
-                  Option {key.slice(-1)}
-                </span>
+                <input type="checkbox" checked={checked} onChange={(e) => setCheckboxStates({ ...checkboxStates, [key]: e.target.checked })} className="w-5 h-5 border-2 border-black/20 rounded checked:bg-black checked:border-black cursor-pointer" />
+                <span className="text-sm group-hover:text-black/80 transition-colors">Option {key.slice(-1)}</span>
               </label>
             ))}
           </div>
@@ -507,20 +372,12 @@ export function FormInputsContent() {
       {/* Radio Buttons */}
       <section>
         <h3 className="text-xl font-normal mb-6">Radio Buttons</h3>
-        
         <ComponentPreview title="Radio Group">
           <div className="space-y-3">
             {['small', 'medium', 'large'].map((size) => (
               <label key={size} className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="size"
-                  value={size}
-                  className="w-5 h-5 border-2 border-black/20 cursor-pointer"
-                />
-                <span className="text-sm group-hover:text-black/80 transition-colors capitalize">
-                  {size}
-                </span>
+                <input type="radio" name="size" value={size} className="w-5 h-5 border-2 border-black/20 cursor-pointer" />
+                <span className="text-sm group-hover:text-black/80 transition-colors capitalize">{size}</span>
               </label>
             ))}
           </div>
@@ -530,29 +387,7 @@ export function FormInputsContent() {
       {/* Code Example */}
       <section>
         <h3 className="text-xl font-normal mb-6">Usage Example</h3>
-        
-        <CodeBlock code={`// Text input with icon
-<div className="relative">
-  <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
-  <input
-    type="text"
-    placeholder="Search..."
-    className="w-full pl-10 pr-4 py-3 border border-black/10 rounded-md 
-               focus:outline-none focus:ring-2 focus:ring-black/20"
-  />
-</div>
-
-// Checkbox
-<label className="flex items-center gap-3 cursor-pointer">
-  <input
-    type="checkbox"
-    checked={checked}
-    onChange={(e) => setChecked(e.target.checked)}
-    className="w-5 h-5 border-2 border-black/20 rounded 
-               checked:bg-black checked:border-black"
-  />
-  <span className="text-sm">Accept terms</span>
-</label>`} />
+        <CodeBlock code={`// Text input with icon\n<div className="relative">\n  <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />\n  <input type="text" placeholder="Search..."\n    className="w-full pl-10 pr-4 py-3 border border-black/10 rounded-md\n               focus:outline-none focus:ring-2 focus:ring-black/20" />\n</div>\n\n// Checkbox\n<label className="flex items-center gap-3 cursor-pointer">\n  <input type="checkbox" checked={checked}\n    onChange={(e) => setChecked(e.target.checked)}\n    className="w-5 h-5 border-2 border-black/20 rounded\n               checked:bg-black checked:border-black" />\n  <span className="text-sm">Accept terms</span>\n</label>`} />
       </section>
     </div>
   );
@@ -571,33 +406,25 @@ export function CardsContent() {
         what="Flexible card system with various layouts and content patterns"
         when="Use for organizing content, displaying items in grids, feature showcases"
       >
-        <p className="text-black/70">
-          Cards are one of the most versatile components - they adapt to different content types while maintaining consistency.
-        </p>
+        <p className="text-black/70">Cards are one of the most versatile components - they adapt to different content types while maintaining consistency.</p>
       </DocSection>
 
-      {/* Basic Cards */}
       <section>
         <h3 className="text-xl font-normal mb-6">Basic Cards</h3>
-        
         <ComponentPreview title="Simple Card">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <div key={i} className="border border-black/8 rounded-lg p-6 hover:border-black/15 hover:shadow-lg transition-all">
                 <h4 className="font-semibold mb-2">Card Title {i}</h4>
-                <p className="text-sm text-black/60">
-                  This is a simple card with a title and description text.
-                </p>
+                <p className="text-sm text-black/60">This is a simple card with a title and description text.</p>
               </div>
             ))}
           </div>
         </ComponentPreview>
       </section>
 
-      {/* Feature Cards */}
       <section>
         <h3 className="text-xl font-normal mb-6">Feature Cards</h3>
-        
         <ComponentPreview title="Cards with Icons">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -606,9 +433,7 @@ export function CardsContent() {
               { icon: <Bell size={24} />, title: 'Notifications', desc: 'Stay informed' },
             ].map((item, i) => (
               <div key={i} className="border border-black/8 rounded-lg p-6 hover:border-black/15 transition-all">
-                <div className="w-12 h-12 bg-black/5 rounded-lg flex items-center justify-center mb-4">
-                  {item.icon}
-                </div>
+                <div className="w-12 h-12 bg-black/5 rounded-lg flex items-center justify-center mb-4">{item.icon}</div>
                 <h4 className="font-semibold mb-2">{item.title}</h4>
                 <p className="text-sm text-black/60">{item.desc}</p>
               </div>
@@ -617,22 +442,16 @@ export function CardsContent() {
         </ComponentPreview>
       </section>
 
-      {/* Interactive Cards */}
       <section>
         <h3 className="text-xl font-normal mb-6">Interactive Cards</h3>
-        
         <ComponentPreview title="Clickable Cards with Actions">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[1, 2].map((i) => (
               <div key={i} className="border border-black/8 rounded-lg overflow-hidden hover:shadow-xl transition-all group cursor-pointer">
                 <div className="h-48 bg-black/5"></div>
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2 group-hover:text-[var(--brand-red)] transition-colors">
-                    Project Title {i}
-                  </h4>
-                  <p className="text-sm text-black/60 mb-4">
-                    A brief description of the project and its key features.
-                  </p>
+                  <h4 className="font-semibold mb-2 group-hover:text-[var(--brand-red)] transition-colors">Project Title {i}</h4>
+                  <p className="text-sm text-black/60 mb-4">A brief description of the project and its key features.</p>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" iconOnly icon={<Eye size={16} />} ariaLabel="View" />
                     <Button variant="ghost" size="sm" iconOnly icon={<Edit size={16} />} ariaLabel="Edit" />
@@ -645,144 +464,18 @@ export function CardsContent() {
         </ComponentPreview>
       </section>
 
-      {/* Code Example */}
       <section>
         <h3 className="text-xl font-normal mb-6">Usage Example</h3>
-        
-        <CodeBlock code={`// Feature card with icon
-<div className="border border-black/8 rounded-lg p-6 hover:border-black/15 transition-all">
-  <div className="w-12 h-12 bg-black/5 rounded-lg flex items-center justify-center mb-4">
-    <Download size={24} />
-  </div>
-  <h4 className="font-semibold mb-2">Download</h4>
-  <p className="text-sm text-black/60">
-    Export your data anytime
-  </p>
-</div>`} />
+        <CodeBlock code={`// Feature card with icon\n<div className="border border-black/8 rounded-lg p-6 hover:border-black/15 transition-all">\n  <div className="w-12 h-12 bg-black/5 rounded-lg flex items-center justify-center mb-4">\n    <Download size={24} />\n  </div>\n  <h4 className="font-semibold mb-2">Download</h4>\n  <p className="text-sm text-black/60">Export your data anytime</p>\n</div>`} />
       </section>
     </div>
   );
 }
 
 // ============================================
-// NAVIGATION CONTENT
+// NAVIGATION CONTENT — moved to NavigationDocumentation.tsx
+// Re-exported above via: export { NavigationContent } from '@/app/components/NavigationDocumentation';
 // ============================================
-
-export function NavigationContent() {
-  const [activeTab, setActiveTab] = useState(0);
-
-  return (
-    <div className="space-y-12">
-      <DocSection
-        title="Navigation Components"
-        why="Navigation helps users understand where they are and move efficiently through the interface"
-        what="Navigation patterns including navbars, breadcrumbs, tabs, and pagination"
-        when="Use for site navigation, content organization, and wayfinding"
-      >
-        <p className="text-black/70">
-          Clear navigation is essential for usability - it should always be accessible and indicate current location.
-        </p>
-      </DocSection>
-
-      {/* Navbar */}
-      <section>
-        <h3 className="text-xl font-normal mb-6">Navigation Bar</h3>
-        
-        <ComponentPreview title="Horizontal Navbar">
-          <nav className="flex items-center justify-between p-4 border border-black/8 rounded-lg">
-            <div className="flex items-center gap-8">
-              <div className="font-semibold">Brand</div>
-              <div className="flex gap-6">
-                {['Home', 'Products', 'About', 'Contact'].map((item) => (
-                  <a key={item} href="#" className="text-sm hover:text-black/70 transition-colors">
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <Button variant="primary" size="sm">Sign In</Button>
-          </nav>
-        </ComponentPreview>
-      </section>
-
-      {/* Breadcrumbs */}
-      <section>
-        <h3 className="text-xl font-normal mb-6">Breadcrumbs</h3>
-        
-        <ComponentPreview title="Breadcrumb Navigation">
-          <nav className="flex items-center gap-2 text-sm">
-            <a href="#" className="text-black/60 hover:text-black transition-colors">Home</a>
-            <ChevronRight size={16} className="text-black/40" />
-            <a href="#" className="text-black/60 hover:text-black transition-colors">Products</a>
-            <ChevronRight size={16} className="text-black/40" />
-            <span className="text-black font-medium">Category</span>
-          </nav>
-        </ComponentPreview>
-      </section>
-
-      {/* Tabs */}
-      <section>
-        <h3 className="text-xl font-normal mb-6">Tabs</h3>
-        
-        <ComponentPreview title="Tab Navigation">
-          <div>
-            <div className="flex gap-1 border-b border-black/10">
-              {['Overview', 'Details', 'Reviews', 'FAQ'].map((tab, i) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(i)}
-                  className={`px-4 py-3 text-sm font-medium transition-colors relative ${
-                    activeTab === i 
-                      ? 'text-black' 
-                      : 'text-black/60 hover:text-black/80'
-                  }`}
-                >
-                  {tab}
-                  {activeTab === i && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"></div>
-                  )}
-                </button>
-              ))}
-            </div>
-            <div className="p-6 border border-black/8 border-t-0 rounded-b-lg">
-              <p className="text-sm text-black/70">
-                Content for {['Overview', 'Details', 'Reviews', 'FAQ'][activeTab]} tab
-              </p>
-            </div>
-          </div>
-        </ComponentPreview>
-      </section>
-
-      {/* Pagination */}
-      <section>
-        <h3 className="text-xl font-normal mb-6">Pagination</h3>
-        
-        <ComponentPreview title="Page Navigation">
-          <div className="flex items-center justify-center gap-2">
-            <button className="px-3 py-2 border border-black/10 rounded hover:bg-black/5 transition-colors">
-              Previous
-            </button>
-            {[1, 2, 3, 4, 5].map((page) => (
-              <button
-                key={page}
-                className={`w-10 h-10 rounded transition-colors ${
-                  page === 2
-                    ? 'bg-black text-white'
-                    : 'border border-black/10 hover:bg-black/5'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            <button className="px-3 py-2 border border-black/10 rounded hover:bg-black/5 transition-colors">
-              Next
-            </button>
-          </div>
-        </ComponentPreview>
-      </section>
-    </div>
-  );
-}
 
 // ============================================
 // FEEDBACK CONTENT
@@ -797,15 +490,11 @@ export function FeedbackContent() {
         what="Alert boxes, badges, progress indicators, and toast notifications"
         when="Use to communicate system status, validation results, or important information"
       >
-        <p className="text-black/70">
-          Feedback components should be clear, timely, and actionable when possible.
-        </p>
+        <p className="text-black/70">Feedback components should be clear, timely, and actionable when possible.</p>
       </DocSection>
 
-      {/* Alerts */}
       <section>
         <h3 className="text-xl font-normal mb-6">Alert Messages</h3>
-        
         <ComponentPreview title="Alert Variants">
           <div className="space-y-4">
             <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -814,51 +503,38 @@ export function FeedbackContent() {
                 <h4 className="font-semibold text-sm text-green-900 mb-1">Success</h4>
                 <p className="text-sm text-green-800">Your changes have been saved successfully.</p>
               </div>
-              <button className="text-green-600 hover:text-green-800">
-                <X size={18} />
-              </button>
+              <button className="text-green-600 hover:text-green-800"><X size={18} /></button>
             </div>
-
             <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <Info size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <h4 className="font-semibold text-sm text-blue-900 mb-1">Information</h4>
                 <p className="text-sm text-blue-800">Please review the updated terms of service.</p>
               </div>
-              <button className="text-blue-600 hover:text-blue-800">
-                <X size={18} />
-              </button>
+              <button className="text-blue-600 hover:text-blue-800"><X size={18} /></button>
             </div>
-
             <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
               <AlertCircle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <h4 className="font-semibold text-sm text-amber-900 mb-1">Warning</h4>
                 <p className="text-sm text-amber-800">Your session will expire in 5 minutes.</p>
               </div>
-              <button className="text-amber-600 hover:text-amber-800">
-                <X size={18} />
-              </button>
+              <button className="text-amber-600 hover:text-amber-800"><X size={18} /></button>
             </div>
-
             <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
               <XCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <h4 className="font-semibold text-sm text-red-900 mb-1">Error</h4>
                 <p className="text-sm text-red-800">Unable to process your request. Please try again.</p>
               </div>
-              <button className="text-red-600 hover:text-red-800">
-                <X size={18} />
-              </button>
+              <button className="text-red-600 hover:text-red-800"><X size={18} /></button>
             </div>
           </div>
         </ComponentPreview>
       </section>
 
-      {/* Badges */}
       <section>
         <h3 className="text-xl font-normal mb-6">Badges</h3>
-        
         <ComponentPreview title="Status Badges">
           <div className="flex flex-wrap gap-3">
             <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Active</span>
@@ -868,7 +544,6 @@ export function FeedbackContent() {
             <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Archived</span>
           </div>
         </ComponentPreview>
-
         <ComponentPreview title="Notification Badges">
           <div className="flex gap-6">
             <div className="relative">
@@ -883,26 +558,18 @@ export function FeedbackContent() {
         </ComponentPreview>
       </section>
 
-      {/* Progress */}
       <section>
         <h3 className="text-xl font-normal mb-6">Progress Indicators</h3>
-        
         <ComponentPreview title="Progress Bar">
           <div className="space-y-6">
             <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span>Upload Progress</span>
-                <span className="text-black/60">65%</span>
-              </div>
+              <div className="flex justify-between text-sm mb-2"><span>Upload Progress</span><span className="text-black/60">65%</span></div>
               <div className="w-full h-2 bg-black/10 rounded-full overflow-hidden">
                 <div className="h-full bg-black rounded-full transition-all duration-300" style={{ width: '65%' }}></div>
               </div>
             </div>
             <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span>Processing</span>
-                <span className="text-black/60">100%</span>
-              </div>
+              <div className="flex justify-between text-sm mb-2"><span>Processing</span><span className="text-black/60">100%</span></div>
               <div className="w-full h-2 bg-green-100 rounded-full overflow-hidden">
                 <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
               </div>
@@ -911,23 +578,9 @@ export function FeedbackContent() {
         </ComponentPreview>
       </section>
 
-      {/* Code Example */}
       <section>
         <h3 className="text-xl font-normal mb-6">Usage Example</h3>
-        
-        <CodeBlock code={`// Success alert
-<div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-  <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-  <div className="flex-1">
-    <h4 className="font-semibold text-sm text-green-900 mb-1">Success</h4>
-    <p className="text-sm text-green-800">Your changes have been saved.</p>
-  </div>
-</div>
-
-// Badge
-<span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
-  Active
-</span>`} />
+        <CodeBlock code={`// Success alert\n<div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">\n  <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />\n  <div className="flex-1">\n    <h4 className="font-semibold text-sm text-green-900 mb-1">Success</h4>\n    <p className="text-sm text-green-800">Your changes have been saved.</p>\n  </div>\n</div>\n\n// Badge\n<span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Active</span>`} />
       </section>
     </div>
   );
@@ -939,43 +592,10 @@ export function FeedbackContent() {
 
 export function IconsContent() {
   const iconCategories = [
-    {
-      category: 'Actions',
-      icons: [
-        { Icon: Download, name: 'Download' },
-        { Icon: Send, name: 'Send' },
-        { Icon: Edit, name: 'Edit' },
-        { Icon: Trash2, name: 'Trash2' },
-        { Icon: Search, name: 'Search' },
-        { Icon: Settings, name: 'Settings' },
-      ]
-    },
-    {
-      category: 'Status',
-      icons: [
-        { Icon: CheckCircle, name: 'CheckCircle' },
-        { Icon: XCircle, name: 'XCircle' },
-        { Icon: AlertCircle, name: 'AlertCircle' },
-        { Icon: Info, name: 'Info' },
-      ]
-    },
-    {
-      category: 'Navigation',
-      icons: [
-        { Icon: ChevronRight, name: 'ChevronRight' },
-        { Icon: Home, name: 'Home' },
-        { Icon: Menu, name: 'Menu' },
-        { Icon: X, name: 'X' },
-      ]
-    },
-    {
-      category: 'Communication',
-      icons: [
-        { Icon: Mail, name: 'Mail' },
-        { Icon: Bell, name: 'Bell' },
-        { Icon: User, name: 'User' },
-      ]
-    },
+    { category: 'Actions', icons: [{ Icon: Download, name: 'Download' }, { Icon: Send, name: 'Send' }, { Icon: Edit, name: 'Edit' }, { Icon: Trash2, name: 'Trash2' }, { Icon: Search, name: 'Search' }, { Icon: Settings, name: 'Settings' }] },
+    { category: 'Status', icons: [{ Icon: CheckCircle, name: 'CheckCircle' }, { Icon: XCircle, name: 'XCircle' }, { Icon: AlertCircle, name: 'AlertCircle' }, { Icon: Info, name: 'Info' }] },
+    { category: 'Navigation', icons: [{ Icon: ChevronRight, name: 'ChevronRight' }, { Icon: Home, name: 'Home' }, { Icon: Menu, name: 'Menu' }, { Icon: X, name: 'X' }] },
+    { category: 'Communication', icons: [{ Icon: Mail, name: 'Mail' }, { Icon: Bell, name: 'Bell' }, { Icon: User, name: 'User' }] },
   ];
 
   return (
@@ -988,46 +608,27 @@ export function IconsContent() {
         where="Buttons, navigation, form inputs, alerts, cards"
       >
         <p className="text-black/70 mb-4">
-          We use <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="underline hover:text-black">Lucide Icons</a> - 
-          a beautiful, consistent open-source icon library with 1000+ icons.
+          We use <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="underline hover:text-black">Lucide Icons</a> - a beautiful, consistent open-source icon library with 1000+ icons.
         </p>
       </DocSection>
 
-      {/* Icon Sizes */}
       <section>
         <h3 className="text-xl font-normal mb-6">Icon Sizes</h3>
-        
         <ComponentPreview title="Size Variations">
           <div className="flex items-center gap-8">
-            <div className="text-center">
-              <Download size={16} className="mx-auto mb-2" />
-              <p className="text-xs text-black/60">16px</p>
-            </div>
-            <div className="text-center">
-              <Download size={20} className="mx-auto mb-2" />
-              <p className="text-xs text-black/60">20px</p>
-            </div>
-            <div className="text-center">
-              <Download size={24} className="mx-auto mb-2" />
-              <p className="text-xs text-black/60">24px</p>
-            </div>
-            <div className="text-center">
-              <Download size={32} className="mx-auto mb-2" />
-              <p className="text-xs text-black/60">32px</p>
-            </div>
-            <div className="text-center">
-              <Download size={48} className="mx-auto mb-2" />
-              <p className="text-xs text-black/60">48px</p>
-            </div>
+            {[16, 20, 24, 32, 48].map((s) => (
+              <div key={s} className="text-center">
+                <Download size={s} className="mx-auto mb-2" />
+                <p className="text-xs text-black/60">{s}px</p>
+              </div>
+            ))}
           </div>
         </ComponentPreview>
       </section>
 
-      {/* Icon Categories */}
       {iconCategories.map(({ category, icons }) => (
         <section key={category}>
           <h3 className="text-xl font-normal mb-6">{category} Icons</h3>
-          
           <ComponentPreview title={`${category} icon set`}>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
               {icons.map(({ Icon, name }) => (
@@ -1041,37 +642,16 @@ export function IconsContent() {
         </section>
       ))}
 
-      {/* Usage */}
       <section>
         <h3 className="text-xl font-normal mb-6">Usage Example</h3>
-        
-        <CodeBlock code={`import { Download, Send, CheckCircle } from 'lucide-react';
-
-// In a button
-<Button variant="primary" icon={<Download size={20} />}>
-  Download
-</Button>
-
-// Standalone
-<Download size={24} className="text-black/60" />
-
-// In an alert
-<div className="flex items-center gap-2">
-  <CheckCircle size={20} className="text-green-600" />
-  <span>Success message</span>
-</div>`} />
+        <CodeBlock code={`import { Download, Send, CheckCircle } from 'lucide-react';\n\n// In a button\n<Button variant="primary" icon={<Download size={20} />}>Download</Button>\n\n// Standalone\n<Download size={24} className="text-black/60" />\n\n// In an alert\n<div className="flex items-center gap-2">\n  <CheckCircle size={20} className="text-green-600" />\n  <span>Success message</span>\n</div>`} />
       </section>
 
-      {/* Guidelines */}
       <section>
         <h3 className="text-xl font-normal mb-6">Icon Guidelines</h3>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-6 border border-black/8 rounded-lg">
-            <h4 className="font-semibold mb-3 flex items-center gap-2">
-              <CheckCircle size={18} className="text-green-600" />
-              Do
-            </h4>
+            <h4 className="font-semibold mb-3 flex items-center gap-2"><CheckCircle size={18} className="text-green-600" /> Do</h4>
             <ul className="space-y-2 text-sm text-black/70">
               <li>• Use consistent sizes (16, 20, 24px)</li>
               <li>• Match icon color to surrounding text</li>
@@ -1079,12 +659,8 @@ export function IconsContent() {
               <li>• Align icons with text baseline</li>
             </ul>
           </div>
-          
           <div className="p-6 border border-black/8 rounded-lg">
-            <h4 className="font-semibold mb-3 flex items-center gap-2">
-              <XCircle size={18} className="text-red-600" />
-              Don't
-            </h4>
+            <h4 className="font-semibold mb-3 flex items-center gap-2"><XCircle size={18} className="text-red-600" /> Don't</h4>
             <ul className="space-y-2 text-sm text-black/70">
               <li>• Mix different icon libraries</li>
               <li>• Use icons without labels for complex actions</li>
