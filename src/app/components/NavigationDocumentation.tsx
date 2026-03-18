@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState } from 'react';
 import { DocSection } from '@/app/components/FoundationsContent';
 import { Button } from '@/app/components/Button';
 import { ChevronRight, Copy, Check } from 'lucide-react';
+import { ScrollFade } from '@/app/components/molecules/ScrollFade';
 
 // ============================================
 // HELPER — ComponentPreview
@@ -56,60 +57,6 @@ function CodeBlock({ code }: { code: string }) {
 }
 
 // ============================================
-// HELPER — ScrollFadeRow
-// Shared wrapper: right-fade gradient + hover scroll-arrow
-// ============================================
-
-function ScrollFadeRow({
-  children,
-  className = '',
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scrollRight = useCallback(() => {
-    scrollRef.current?.scrollBy({ left: 200, behavior: 'smooth' });
-  }, []);
-
-  return (
-    <div className={`relative group/sf ${className}`}>
-      {/* Right fade gradient */}
-      <div
-        className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none"
-        style={{
-          width: '32px',
-          background: 'linear-gradient(to left, white, transparent)',
-        }}
-      />
-      {/* Scroll-right arrow — appears on hover */}
-      <button
-        onClick={scrollRight}
-        className="absolute right-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full opacity-0 group-hover/sf:opacity-100 transition-all duration-300 hover:bg-white hover:scale-105 cursor-pointer"
-        style={{
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: 'rgba(0,0,0,0.06)',
-        }}
-        aria-label="Scroll right"
-      >
-        <ChevronRight size={14} style={{ color: 'rgba(0,0,0,0.5)' }} />
-      </button>
-      {/* Scrollable content */}
-      <div
-        ref={scrollRef}
-        className="overflow-x-auto"
-        style={{ scrollbarWidth: 'none' }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// ============================================
 // DEMO — Solid Tabs (Pill / Border)
 // ============================================
 
@@ -158,12 +105,15 @@ function SolidTabsDemo() {
     >
       <div className="space-y-4">
         {/* Primary row */}
-        <ScrollFadeRow className="pb-1">
+        <ScrollFade showButtons className="pb-1">
           <div className="flex gap-1.5 min-w-max">
             {primaryTabs.map((tab, i) => (
               <button
                 key={tab.label}
-                onClick={() => { setActivePrimary(i); setActiveSub(0); }}
+                onClick={() => {
+                  setActivePrimary(i);
+                  setActiveSub(0);
+                }}
                 className={`px-3.5 py-2.5 sm:py-1.5 transition-all whitespace-nowrap cursor-pointer ${
                   activePrimary === i
                     ? 'bg-black text-white'
@@ -174,20 +124,24 @@ function SolidTabsDemo() {
                   borderRadius: 'var(--radius-element)',
                   borderWidth: '1px',
                   borderStyle: 'solid',
-                  borderColor: activePrimary === i ? 'rgba(0,0,0,1)' : 'var(--warm-500)',
+                  borderColor:
+                    activePrimary === i ? 'rgba(0,0,0,1)' : 'var(--warm-500)',
                 }}
               >
                 {tab.label}
-                <span className="ml-1.5 opacity-60" style={{ fontSize: 'var(--text-xs)' }}>
+                <span
+                  className="ml-1.5 opacity-60"
+                  style={{ fontSize: 'var(--text-xs)' }}
+                >
                   ({tab.count.toLocaleString()})
                 </span>
               </button>
             ))}
           </div>
-        </ScrollFadeRow>
+        </ScrollFade>
 
         {/* Sub row */}
-        <ScrollFadeRow>
+        <ScrollFade showButtons>
           <div className="flex gap-1.5 min-w-max">
             {subTabs.map((tab, i) => (
               <button
@@ -203,7 +157,8 @@ function SolidTabsDemo() {
                   borderRadius: 'var(--radius-element)',
                   borderWidth: '1px',
                   borderStyle: 'solid',
-                  borderColor: activeSub === i ? 'rgba(0,0,0,1)' : 'var(--warm-500)',
+                  borderColor:
+                    activeSub === i ? 'rgba(0,0,0,1)' : 'var(--warm-500)',
                 }}
               >
                 {tab.label}
@@ -213,7 +168,7 @@ function SolidTabsDemo() {
               </button>
             ))}
           </div>
-        </ScrollFadeRow>
+        </ScrollFade>
       </div>
     </ComponentPreview>
   );
@@ -239,7 +194,7 @@ function LineTabsDemo() {
       description="Underline-style tabs with pill count badges and scroll-fade. Used for Quick Access sections."
     >
       <div>
-        <ScrollFadeRow>
+        <ScrollFade showButtons>
           <div
             className="flex items-center w-full"
             style={{
@@ -255,7 +210,10 @@ function LineTabsDemo() {
                 className="relative flex items-center gap-2 px-4 py-2.5 whitespace-nowrap transition-all cursor-pointer"
                 style={{
                   fontSize: 'var(--text-nav)',
-                  color: activeLineTab === i ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0.4)',
+                  color:
+                    activeLineTab === i
+                      ? 'rgba(0,0,0,1)'
+                      : 'rgba(0,0,0,0.4)',
                 }}
               >
                 {tab.label}
@@ -264,8 +222,14 @@ function LineTabsDemo() {
                   style={{
                     fontSize: 'var(--badge-xs-font, 10px)',
                     borderRadius: '9999px',
-                    backgroundColor: activeLineTab === i ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
-                    color: activeLineTab === i ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.3)',
+                    backgroundColor:
+                      activeLineTab === i
+                        ? 'rgba(0,0,0,0.08)'
+                        : 'rgba(0,0,0,0.04)',
+                    color:
+                      activeLineTab === i
+                        ? 'rgba(0,0,0,0.7)'
+                        : 'rgba(0,0,0,0.3)',
                     minWidth: '20px',
                   }}
                 >
@@ -283,7 +247,7 @@ function LineTabsDemo() {
               </button>
             ))}
           </div>
-        </ScrollFadeRow>
+        </ScrollFade>
 
         <div
           className="p-6"
@@ -329,19 +293,26 @@ export function NavigationContent() {
       {/* Navbar */}
       <section>
         <h3 className="text-xl font-normal mb-6">Navigation Bar</h3>
+
         <ComponentPreview title="Horizontal Navbar">
           <nav className="flex items-center justify-between p-4 border border-black/8 rounded-[5px]">
             <div className="flex items-center gap-8">
               <div className="font-semibold">Brand</div>
               <div className="flex gap-6">
                 {['Home', 'Products', 'About', 'Contact'].map((item) => (
-                  <a key={item} href="#" className="text-sm hover:text-black/70 transition-colors">
+                  <a
+                    key={item}
+                    href="#"
+                    className="text-sm hover:text-black/70 transition-colors"
+                  >
                     {item}
                   </a>
                 ))}
               </div>
             </div>
-            <Button variant="primary" size="sm">Sign In</Button>
+            <Button variant="primary" size="sm">
+              Sign In
+            </Button>
           </nav>
         </ComponentPreview>
       </section>
@@ -349,18 +320,29 @@ export function NavigationContent() {
       {/* Breadcrumbs */}
       <section>
         <h3 className="text-xl font-normal mb-6">Breadcrumbs</h3>
+
         <ComponentPreview title="Breadcrumb Navigation">
           <nav className="flex items-center gap-2 text-sm">
-            <a href="#" className="text-black/60 hover:text-black transition-colors">Home</a>
+            <a
+              href="#"
+              className="text-black/60 hover:text-black transition-colors"
+            >
+              Home
+            </a>
             <ChevronRight size={16} className="text-black/40" />
-            <a href="#" className="text-black/60 hover:text-black transition-colors">Products</a>
+            <a
+              href="#"
+              className="text-black/60 hover:text-black transition-colors"
+            >
+              Products
+            </a>
             <ChevronRight size={16} className="text-black/40" />
             <span className="text-black font-medium">Category</span>
           </nav>
         </ComponentPreview>
       </section>
 
-      {/* Tabs — Two Variants */}
+      {/* ━━ Tabs — Two Variants ━━ */}
       <section>
         <h3 className="text-xl font-normal mb-2">Tabs</h3>
         <p className="text-sm text-black/60 mb-6">
@@ -373,30 +355,165 @@ export function NavigationContent() {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-4">
             <h4 className="font-medium">Variant 1 — Solid Tabs</h4>
-            <span className="text-[10px] px-2 py-0.5 rounded-[5px]" style={{ backgroundColor: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.5)' }}>Pill / Border</span>
+            <span
+              className="text-[10px] px-2 py-0.5 rounded-[5px]"
+              style={{
+                backgroundColor: 'rgba(0,0,0,0.05)',
+                color: 'rgba(0,0,0,0.5)',
+              }}
+            >
+              Pill / Border
+            </span>
           </div>
           <SolidTabsDemo />
-          <CodeBlock code={`// Solid Tabs — Pill/Border variant\n// Active: black bg, white text, black border\n// Inactive: transparent bg, warm-500 border, muted text\n\n<ScrollFadeRow>\n  <div className="flex gap-1.5 min-w-max">\n    {tabs.map((tab, i) => (\n      <button key={tab.label} onClick={() => setActive(i)}\n        style={{ fontSize: 'var(--text-nav)', borderRadius: 'var(--radius-element)' }}>\n        {tab.label} <span>({tab.count})</span>\n      </button>\n    ))}\n  </div>\n</ScrollFadeRow>`} />
+          <CodeBlock
+            code={`// Solid Tabs — Pill/Border variant
+// Active: black bg, white text, black border
+// Inactive: transparent bg, warm-500 border, muted text
+
+<div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+  <div className="flex gap-1.5 min-w-max">
+    {tabs.map((tab, i) => (
+      <button
+        key={tab.label}
+        onClick={() => setActive(i)}
+        className={\`px-3.5 py-1.5 transition-all whitespace-nowrap border \${
+          active === i
+            ? 'bg-black text-white border-black'
+            : 'bg-transparent text-black/50 hover:text-black hover:border-black/30'
+        }\`}
+        style={{
+          fontSize: 'var(--text-nav)',
+          borderRadius: 'var(--radius-element)',
+          borderColor: active !== i ? 'var(--warm-500)' : undefined,
+        }}
+      >
+        {tab.label}
+        <span className="ml-1.5 opacity-60"
+          style={{ fontSize: 'var(--text-xs)' }}>
+          ({tab.count.toLocaleString()})
+        </span>
+      </button>
+    ))}
+  </div>
+</div>`}
+          />
           <div className="border border-black/8 rounded-[10px] overflow-hidden mt-4">
             <div className="bg-black/[0.02] px-6 py-3 border-b border-black/8">
-              <span className="font-semibold text-sm">Solid Tabs — Specs</span>
+              <span className="font-semibold text-sm">
+                Solid Tabs — Specs
+              </span>
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-black/8" style={{ backgroundColor: 'rgba(0,0,0,0.02)' }}>
-                  <th className="text-left p-3 font-medium" style={{ color: 'rgba(0,0,0,0.5)', fontSize: 'var(--text-xs)' }}>Property</th>
-                  <th className="text-left p-3 font-medium" style={{ color: 'rgba(0,0,0,0.5)', fontSize: 'var(--text-xs)' }}>Active</th>
-                  <th className="text-left p-3 font-medium" style={{ color: 'rgba(0,0,0,0.5)', fontSize: 'var(--text-xs)' }}>Inactive</th>
+                <tr
+                  className="border-b border-black/8"
+                  style={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+                >
+                  <th
+                    className="text-left p-3 font-medium"
+                    style={{
+                      color: 'rgba(0,0,0,0.5)',
+                      fontSize: 'var(--text-xs)',
+                    }}
+                  >
+                    Property
+                  </th>
+                  <th
+                    className="text-left p-3 font-medium"
+                    style={{
+                      color: 'rgba(0,0,0,0.5)',
+                      fontSize: 'var(--text-xs)',
+                    }}
+                  >
+                    Active
+                  </th>
+                  <th
+                    className="text-left p-3 font-medium"
+                    style={{
+                      color: 'rgba(0,0,0,0.5)',
+                      fontSize: 'var(--text-xs)',
+                    }}
+                  >
+                    Inactive
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/8">
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>background</td><td className="p-3 text-xs">black</td><td className="p-3 text-xs">transparent</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>text</td><td className="p-3 text-xs">white</td><td className="p-3 text-xs">black/50</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>border</td><td className="p-3 text-xs">black</td><td className="p-3 text-xs">var(--warm-500)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>border-radius</td><td className="p-3 text-xs" colSpan={2}>var(--radius-element)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>font-size</td><td className="p-3 text-xs" colSpan={2}>var(--text-nav) primary / var(--text-2xs) sub-level</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>padding</td><td className="p-3 text-xs" colSpan={2}>px-3.5 py-1.5 (primary) / px-2.5 py-1 (sub)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>hover (inactive)</td><td className="p-3 text-xs" colSpan={2}>text-black, border-black/30</td></tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    background
+                  </td>
+                  <td className="p-3 text-xs">black</td>
+                  <td className="p-3 text-xs">transparent</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    text
+                  </td>
+                  <td className="p-3 text-xs">white</td>
+                  <td className="p-3 text-xs">black/50</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    border
+                  </td>
+                  <td className="p-3 text-xs">black</td>
+                  <td className="p-3 text-xs">var(--warm-500)</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    border-radius
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    var(--radius-element)
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    font-size
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    var(--text-nav) primary / var(--text-2xs) sub-level
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    padding
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    px-3.5 py-1.5 (primary) / px-2.5 py-1 (sub)
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    hover (inactive)
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    text-black, border-black/30
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -406,30 +523,170 @@ export function NavigationContent() {
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
             <h4 className="font-medium">Variant 2 — Line Tabs</h4>
-            <span className="text-[10px] px-2 py-0.5 rounded-[5px]" style={{ backgroundColor: 'rgba(0,0,0,0.05)', color: 'rgba(0,0,0,0.5)' }}>Underline</span>
+            <span
+              className="text-[10px] px-2 py-0.5 rounded-[5px]"
+              style={{
+                backgroundColor: 'rgba(0,0,0,0.05)',
+                color: 'rgba(0,0,0,0.5)',
+              }}
+            >
+              Underline
+            </span>
           </div>
           <LineTabsDemo />
-          <CodeBlock code={`// Line Tabs — Underline variant\n// Active: black text, 2px bottom bar, opaque count badge\n// Inactive: black/40 text, no bar, subtle count badge\n\n<ScrollFadeRow>\n  <div className="flex items-center border-b"\n    style={{ borderColor: 'rgba(0,0,0,0.06)' }}>\n    {tabs.map((tab, i) => (\n      <button key={tab.label} onClick={() => setActive(i)}\n        style={{ fontSize: 'var(--text-nav)' }}>\n        {tab.label} <span>{tab.count}</span>\n        {active === i && <span className="absolute bottom-0 h-[2px] bg-black" />}\n      </button>\n    ))}\n  </div>\n</ScrollFadeRow>`} />
+          <CodeBlock
+            code={`// Line Tabs — Underline variant
+// Active: black text, 2px bottom bar, opaque count badge
+// Inactive: black/40 text, no bar, subtle count badge
+
+<div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+  <div className="flex items-center border-b"
+    style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}>
+    {tabs.map((tab, i) => (
+      <button
+        key={tab.label}
+        onClick={() => setActive(i)}
+        className="relative flex items-center gap-2 px-4 py-2.5
+          whitespace-nowrap transition-all cursor-pointer"
+        style={{
+          fontSize: 'var(--text-nav)',
+          color: active === i ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0.4)',
+        }}
+      >
+        {tab.label}
+        <span style={{
+          fontSize: 'var(--badge-xs-font)',
+          borderRadius: '9999px',
+          background: active === i ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
+          color: active === i ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.3)',
+          minWidth: '20px', padding: '2px 6px',
+        }}>
+          {tab.count}
+        </span>
+        {active === i && (
+          <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-black"
+            style={{ borderRadius: '1px 1px 0 0' }} />
+        )}
+      </button>
+    ))}
+  </div>
+</div>`}
+          />
           <div className="border border-black/8 rounded-[10px] overflow-hidden mt-4">
             <div className="bg-black/[0.02] px-6 py-3 border-b border-black/8">
-              <span className="font-semibold text-sm">Line Tabs — Specs</span>
+              <span className="font-semibold text-sm">
+                Line Tabs — Specs
+              </span>
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-black/8" style={{ backgroundColor: 'rgba(0,0,0,0.02)' }}>
-                  <th className="text-left p-3 font-medium" style={{ color: 'rgba(0,0,0,0.5)', fontSize: 'var(--text-xs)' }}>Property</th>
-                  <th className="text-left p-3 font-medium" style={{ color: 'rgba(0,0,0,0.5)', fontSize: 'var(--text-xs)' }}>Active</th>
-                  <th className="text-left p-3 font-medium" style={{ color: 'rgba(0,0,0,0.5)', fontSize: 'var(--text-xs)' }}>Inactive</th>
+                <tr
+                  className="border-b border-black/8"
+                  style={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+                >
+                  <th
+                    className="text-left p-3 font-medium"
+                    style={{
+                      color: 'rgba(0,0,0,0.5)',
+                      fontSize: 'var(--text-xs)',
+                    }}
+                  >
+                    Property
+                  </th>
+                  <th
+                    className="text-left p-3 font-medium"
+                    style={{
+                      color: 'rgba(0,0,0,0.5)',
+                      fontSize: 'var(--text-xs)',
+                    }}
+                  >
+                    Active
+                  </th>
+                  <th
+                    className="text-left p-3 font-medium"
+                    style={{
+                      color: 'rgba(0,0,0,0.5)',
+                      fontSize: 'var(--text-xs)',
+                    }}
+                  >
+                    Inactive
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/8">
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>text color</td><td className="p-3 text-xs">rgba(0,0,0,1)</td><td className="p-3 text-xs">rgba(0,0,0,0.4)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>indicator</td><td className="p-3 text-xs">2px bottom bar, bg-black</td><td className="p-3 text-xs">none</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>indicator inset</td><td className="p-3 text-xs" colSpan={2}>left-4 right-4 (inset from edges)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>count badge bg</td><td className="p-3 text-xs">rgba(0,0,0,0.08)</td><td className="p-3 text-xs">rgba(0,0,0,0.04)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>count badge text</td><td className="p-3 text-xs">rgba(0,0,0,0.7)</td><td className="p-3 text-xs">rgba(0,0,0,0.3)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>count badge radius</td><td className="p-3 text-xs" colSpan={2}>9999px (full pill)</td></tr>
-                <tr><td className="p-3 font-mono text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>border-bottom</td><td className="p-3 text-xs" colSpan={2}>container: 1px solid rgba(0,0,0,0.06)</td></tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    text color
+                  </td>
+                  <td className="p-3 text-xs">rgba(0,0,0,1)</td>
+                  <td className="p-3 text-xs">rgba(0,0,0,0.4)</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    indicator
+                  </td>
+                  <td className="p-3 text-xs">2px bottom bar, bg-black</td>
+                  <td className="p-3 text-xs">none</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    indicator inset
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    left-4 right-4 (inset from edges)
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    count badge bg
+                  </td>
+                  <td className="p-3 text-xs">rgba(0,0,0,0.08)</td>
+                  <td className="p-3 text-xs">rgba(0,0,0,0.04)</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    count badge text
+                  </td>
+                  <td className="p-3 text-xs">rgba(0,0,0,0.7)</td>
+                  <td className="p-3 text-xs">rgba(0,0,0,0.3)</td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    count badge radius
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    9999px (full pill)
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className="p-3 font-mono text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    border-bottom
+                  </td>
+                  <td className="p-3 text-xs" colSpan={2}>
+                    container: 1px solid rgba(0,0,0,0.06)
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -442,24 +699,80 @@ export function NavigationContent() {
           </div>
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border-l-2 pl-4" style={{ borderColor: 'rgba(0,0,0,1)' }}>
+              <div
+                className="border-l-2 pl-4"
+                style={{ borderColor: 'rgba(0,0,0,1)' }}
+              >
                 <h5 className="font-medium text-sm mb-2">Solid Tabs</h5>
                 <ul className="space-y-1.5">
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Primary category filtering (industries, topics)</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Hierarchical sub-categories (industry → sub-industry)</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>When tabs have count badges showing volume</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Scrollable rows with many options (10+)</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Two size tiers: primary (text-nav) and sub (text-2xs)</li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Primary category filtering (industries, topics)
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Hierarchical sub-categories (industry to sub-industry)
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    When tabs have count badges showing volume
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Scrollable rows with many options (10+)
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Two size tiers: primary (text-nav) and sub (text-2xs)
+                  </li>
                 </ul>
               </div>
-              <div className="border-l-2 pl-4" style={{ borderColor: 'rgba(128,108,224,1)' }}>
+              <div
+                className="border-l-2 pl-4"
+                style={{ borderColor: 'rgba(128,108,224,1)' }}
+              >
                 <h5 className="font-medium text-sm mb-2">Line Tabs</h5>
                 <ul className="space-y-1.5">
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Section-level content switching (Quick Access)</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Fewer options (2–5 tabs)</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>When paired with SectionHeading above</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Pill count badges for result counts</li>
-                  <li className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Lighter visual weight, editorial feel</li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Section-level content switching (Quick Access)
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Fewer options (2 to 5 tabs)
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    When paired with SectionHeading above
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Pill count badges for result counts
+                  </li>
+                  <li
+                    className="text-xs"
+                    style={{ color: 'rgba(0,0,0,0.6)' }}
+                  >
+                    Lighter visual weight, editorial feel
+                  </li>
                 </ul>
               </div>
             </div>
@@ -470,20 +783,27 @@ export function NavigationContent() {
       {/* Pagination */}
       <section>
         <h3 className="text-xl font-normal mb-6">Pagination</h3>
+
         <ComponentPreview title="Page Navigation">
           <div className="flex items-center justify-center gap-2">
-            <button className="px-3 py-2 border border-black/10 rounded hover:bg-black/5 transition-colors">Previous</button>
+            <button className="px-3 py-2 border border-black/10 rounded hover:bg-black/5 transition-colors">
+              Previous
+            </button>
             {[1, 2, 3, 4, 5].map((page) => (
               <button
                 key={page}
                 className={`w-10 h-10 rounded transition-colors ${
-                  page === 2 ? 'bg-black text-white' : 'border border-black/10 hover:bg-black/5'
+                  page === 2
+                    ? 'bg-black text-white'
+                    : 'border border-black/10 hover:bg-black/5'
                 }`}
               >
                 {page}
               </button>
             ))}
-            <button className="px-3 py-2 border border-black/10 rounded hover:bg-black/5 transition-colors">Next</button>
+            <button className="px-3 py-2 border border-black/10 rounded hover:bg-black/5 transition-colors">
+              Next
+            </button>
           </div>
         </ComponentPreview>
       </section>
