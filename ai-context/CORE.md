@@ -2,7 +2,7 @@
 
 **Module:** `ai-context/CORE.md`  
 **Version:** 4.3  
-**Date:** 2026-03-17  
+**Date:** 2026-03-18  
 **Part of:** [DESIGN_SYSTEM_AI_CONTEXT.md](../DESIGN_SYSTEM_AI_CONTEXT.md) modularization
 
 ---
@@ -47,17 +47,17 @@ Import components from `/src/app/components/`, use CSS variables from `theme.css
 | Module | Content | When to Read |
 |--------|---------|-------------|
 | [`CORE.md`](CORE.md) | This file — overview, checklist, mistakes | Always |
-| [`TYPOGRAPHY.md`](TYPOGRAPHY.md) | Font pairing, Major Third scale, weights | Any text/heading work |
-| [`COLORS.md`](COLORS.md) | 92-5-3 hierarchy, all color families, usage rules | Any color decisions |
-| [`COMPONENTS.md`](COMPONENTS.md) | Button, Link, Badge, Animation systems | Any interactive element |
-| [`LAYOUT.md`](LAYOUT.md) | Spacing, containers, responsive padding, section pattern | Any layout/section work |
-| [`PROMPTS.md`](PROMPTS.md) | Copy-paste prompts for common tasks | Quick AI sessions |
+| [`TYPOGRAPHY.md`](TYPOGRAPHY.md) | Font pairing, Major Third scale, weights, --text-card-micro | Any text/heading work |
+| [`COLORS.md`](COLORS.md) | 92-5-3 hierarchy, all color families, RS color recipes, inline style rules | Any color decisions |
+| [`COMPONENTS.md`](COMPONENTS.md) | Button, Link, Badge, Animation, Filter, **Molecules, Organisms, decision flowcharts** | Any interactive element or page composition |
+| [`LAYOUT.md`](LAYOUT.md) | Spacing, containers, SectionWrapper, SectionHeading v4.0, responsive padding, **RS/CS page assembly** | Any layout/section work |
+| [`PROMPTS.md`](PROMPTS.md) | **12 copy-paste prompts** — case study, RS, surveys, molecules, organisms, full-stack | Quick AI sessions |
 
 **Companion docs:**
 - `COMPONENT_GUIDELINES_4WH.md` — 4W+H for every Case Study DS component with decision flowcharts
-- `REPORT_STORE_COMPONENTS_4WH.md` — **4W+H for Report Store atoms, molecules, organisms, templates** (v4.0)
-- `FILTER_SEARCH_SYSTEM_4WH.md` — **4W+H for Filter & Search system** — 4 atoms + 2 molecules + 4 organisms + 1 hook + decision flowcharts (v4.1)
-- `design-system-checklist.md` — File map (76+ files, 11 groups)
+- `REPORT_STORE_COMPONENTS_4WH.md` — 4W+H for Report Store atoms, molecules, organisms, templates (v4.0)
+- `FILTER_SEARCH_SYSTEM_4WH.md` — 4W+H for filter system atoms + molecules (v4.3)
+- `design-system-checklist.md` — File map (165 files, 11 groups)
 - `QUICK_START_PROMPT.md` — Shortened copy-paste prompt
 - `GITHUB_PUSH_GUIDE.md` — Push safety rules
 
@@ -67,9 +67,8 @@ Import components from `/src/app/components/`, use CSS variables from `theme.css
 2. **Foundation tokens:** `ai-context/TYPOGRAPHY.md`, `COLORS.md`, `LAYOUT.md`
 3. **Original DS components:** `COMPONENT_GUIDELINES_4WH.md` (Button, Badge, Link, Card, Container, SectionHeading, SectionWrapper, Navbar, etc.)
 4. **Report Store components:** `REPORT_STORE_COMPONENTS_4WH.md` (Tooltip, ViewToggle, FadeInSection, CardReveal, SkeletonCard, EmptyState, HorizontalScroll, ScrollFade, StatCard, etc.)
-5. **Filter & Search system:** `FILTER_SEARCH_SYSTEM_4WH.md` (FilterSearchInput, FilterCheckboxItem, FilterSectionHeader, FiltersPanel, IndustrySidebar, useReportFilters, etc.)
-6. **Interactive elements:** `ai-context/COMPONENTS.md` (Button variants, animation rules)
-7. **Quick reference:** `QUICK_START_PROMPT.md`
+5. **Interactive elements:** `ai-context/COMPONENTS.md` (Button variants, animation rules)
+6. **Quick reference:** `QUICK_START_PROMPT.md`
 
 ---
 
@@ -211,7 +210,6 @@ AI-generated code should score:
 - **Link Components:** `/src/app/components/CTALink.tsx`, `/src/app/components/InlineLink.tsx`
 - **Dashboard:** `/src/app/components/DesignSystemDashboard.tsx`
 - **Report Store 4WH:** `REPORT_STORE_COMPONENTS_4WH.md`
-- **Filter System 4WH:** `FILTER_SEARCH_SYSTEM_4WH.md`
 - **Original DS 4WH:** `COMPONENT_GUIDELINES_4WH.md`
 
 ---
@@ -221,12 +219,11 @@ AI-generated code should score:
 1. **Read First:** This file + relevant `ai-context/` modules
 2. **Case Study Components:** `COMPONENT_GUIDELINES_4WH.md` (Button, Badge, CTALink, Card, Container, SectionHeading, etc.)
 3. **Report Store Components:** `REPORT_STORE_COMPONENTS_4WH.md` (Tooltip, ViewToggle, CardReveal, SkeletonCard, HorizontalScroll, StatCard, etc.)
-4. **Filter & Search System:** `FILTER_SEARCH_SYSTEM_4WH.md` (FilterSearchInput, FilterCheckboxItem, FiltersPanel, IndustrySidebar, useReportFilters, etc.)
-5. **Section Examples (Case Study):** `HeroSection.tsx`, `ChallengesSection.tsx`, `MethodologySection.tsx`
-6. **Section Examples (Report Store):** `organisms/ReportStoreHero.tsx`, `organisms/FeaturedResearch.tsx`, `organisms/IndustrySectorsGrid.tsx`, `organisms/ResearchMethodology.tsx`
-7. **Dashboard:** `DesignSystemDashboard.tsx` (visual reference)
-8. **Decision Flowcharts:** End of both 4WH docs
+4. **Section Examples (Case Study):** `HeroSection.tsx`, `ChallengesSection.tsx`, `MethodologySection.tsx`
+5. **Section Examples (Report Store):** `ReportStoreHero.tsx`, `FeaturedResearch.tsx`, `IndustrySectorsGrid.tsx`, `ResearchMethodology.tsx`
+6. **Dashboard:** `DesignSystemDashboard.tsx` (visual reference)
+7. **Decision Flowcharts:** End of both 4WH docs
 
 ---
 
-**v4.3 | March 17, 2026 | Full audit — accurate inventory, DS rule compliance verified, all arrow/token/hex fixes applied**
+**v4.3 | March 18, 2026 | Full audit — accurate inventory, DS rule compliance verified, all arrow/token/hex fixes applied, molecule/organism docs added**
