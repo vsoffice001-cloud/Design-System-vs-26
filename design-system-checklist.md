@@ -1,390 +1,266 @@
-# Design System File Checklist v2.2
+# Design System File Map & Checklist
 
-**Purpose:** The single reading-order guide for any AI or team member building a new report/product page.  
-**Rule:** Read top-to-bottom. Each group builds on the previous one.  
-**Repo:** `vsoffice001-cloud/Design-System-vs-26` (`main` branch)  
-**Last verified:** 2026-03-06 | DS version: 3.4.0
-
----
-
-## How to Use This File
-
-1. **New page?** Read Groups 1-2 first (rules + tokens). Then import from Groups 3-7 as needed.
-2. **Fixing a component?** Jump to the relevant group, check the 4W+H in `COMPONENT_GUIDELINES_4WH.md`.
-3. **Pushing to GitHub?** Read Group 10 (barrel exports) + `GITHUB_PUSH_GUIDE.md` before every push.
-
-**Companion docs (read in this order):**
-
-| Priority | File | What | Why Read It |
-|----------|------|------|-------------|
-| 1st | `DESIGN_SYSTEM_AI_CONTEXT.md` | Source of truth | Points to 6 modules in ai-context/ |
-| 2nd | `DESIGN_SYSTEM_UPDATES.md` | Changelog (v3.2.1 → v3.4.0) | FoundationsContent split, Badge CSS migration, secondary button two-state |
-| 3rd | `COMPONENT_GUIDELINES_4WH.md` | 4W+H for every component | Decision flowcharts, common mistakes, production checklist |
-| 4th | `GITHUB_PUSH_GUIDE.md` | Push safety | Never-push list, pre-push checklist, merge rules |
-| 5th | `QUICK_START_PROMPT.md` | Copy-paste prompt | Shortened rules for fast Figma Make sessions |
+**Version:** 3.0 | **Updated:** 2026-03-18  
+**Project:** Project K / Vishal  
+**Repository:** vsoffice001-cloud/Design-System-vs-26
 
 ---
 
-## Group 1 — Token Values (Import, Never Duplicate)
+## File Groups (11 groups, 140+ files)
 
-**WHY:** Every component pulls raw values from these 3 files. Hardcoding `#b01f24` or `48.8px` anywhere else creates drift.
+### Group 1: Design Tokens (5 files)
 
-| File | What You Get | When to Use |
-|------|-------------|-------------|
-| `src/design-system/tokens.ts` | All raw JS values — colors, shadows (sm/md/lg/brand/accent), border-radius (2.5/5/10px), opacity scale, spacing scale, z-index, easing, duration | When you need a token value in TypeScript/JSX (e.g., `colors.brand.red600`) |
-| `src/styles/theme.css` | CSS custom properties — `--text-*` typography scale, `--container-*` widths, `--button-*` sizing, `--badge-*` sizing/shape/animation, `--brand-red`, `--rc-*` ResourceCard tokens, responsive padding | When you need a token value in CSS or inline `style={{ fontSize: 'var(--text-sm)' }}` |
-| `src/styles/fonts.css` | Font imports (DM Sans + Noto Serif) | Already loaded globally — you never import this manually in components |
-
-**HOW to decide JS tokens vs CSS variables:**
-- Layout/typography in JSX `style={}` props? Use CSS variables: `var(--text-2xl)`
-- Logic/conditions in TypeScript? Use JS tokens: `colors.brand.red600`
-- Never mix — don't hardcode `#b01f24` when `var(--brand-red)` exists
-
----
-
-## Group 2 — Layout Primitives (Every Section Uses These)
-
-**WHY:** These 4 components enforce consistent spacing, width, background alternation, and heading hierarchy across every page. Without them, every section is hand-coded differently.
-
-| File | What It Builds | Props Summary |
-|------|---------------|---------------|
-| `src/app/components/SectionWrapper.tsx` | Every `<section>` — background color, vertical padding, max-width, anchor `id` | `background`: white / warm / black / periwinkle / coral | `spacing`: sm / md / lg / xl | `maxWidth`: content (1000px) / wide (1200px) / full |
-| `src/app/components/SectionHeading.tsx` | Every heading — semantic h1/h2/h3, optional eyebrow label, alignment | `level`: 1 (hero only) / 2 (sections) / 3 (subsections) | `eyebrow`: string | `align`: left / center / right |
-| `src/app/components/Container.tsx` | Content width wrapper — 5 semantic presets with responsive padding | `width`: page (1200px) / content (1000px) / narrow (900px) / prose (700px) / compact (600px) |
-| `src/app/components/Card.tsx` | Content containers — cards in grids, features, FAQs, metrics | `variant`: white / warm / outlined | `padding`: sm / md / lg | `shadow`: none / sm / md / lg | `hover`: boolean |
-
-**WHEN NOT:**
-- Don't nest `Container` inside `Container`
-- Don't use `SectionHeading level={1}` more than once per page
-- Don't use `Card` for full-width sections (use `SectionWrapper`)
-- Don't skip background alternation: white -> warm -> white -> warm -> black (CTA)
-
----
-
-## Group 3 — Interactive Components (CTAs, Buttons, Links)
-
-**WHY:** The link/CTA system has 4 components with strict usage rules. Using the wrong one breaks visual hierarchy and user expectations.
-
-| File | What It Builds | When to Use |
-|------|---------------|-------------|
-| `src/app/components/Button.tsx` | All button CTAs — 4 variants, 4 sizes, shimmer (always active), optional animated arrow | Primary actions: form submits, main CTAs, navigation. Use `brand` for conversion (max 1-2 per screen). |
-| `src/app/components/CTALink.tsx` | Text + arrow link — exploratory navigation | "Learn More ->", "Explore Features ->". NOT for inline paragraph text. |
-| `src/app/components/InlineLink.tsx` | Inline paragraph link — red underline, warm hover | Within `<p>` text. NOT for standalone CTAs. |
-| `src/app/components/AnimatedArrow.tsx` | Arrow animation — internal dependency | Don't use directly. Used by `Button.tsx` (via `showArrow`) and `CTALink.tsx` internally. |
-
-### Button Variant Reference (v3.3)
-
-| Variant | Resting State | Hover State | When |
-|---------|--------------|-------------|------|
-| `brand` | Red gradient, white text, red shadow | Shimmer sweep, deeper shadow | Conversion moments (max 1-2 per screen) |
-| `primary` | Black gradient, white text | Shimmer sweep, deeper shadow | Standard primary actions |
-| `secondary` (light) | White bg, neutral border `rgba(0,0,0,0.12)`, text `rgba(0,0,0,0.7)`, white shimmer, subtle shadow | Brand-red border `#b01f24`, brand-red text, red-tinted shimmer, red-tinted shadow | Supporting actions alongside primary/brand |
-| `secondary` (dark) | `bg-white/10`, white text, white border | Brighter border, brighter bg | Dark background contexts |
-| `ghost` | Transparent, subtle border | Darker border, subtle bg | Least emphasis actions |
-
-### Button Size Decision
-
-| Context | Size | Height |
-|---------|------|--------|
-| Navbar CTA | `sm` | 36px |
-| 90% of buttons | `md` | 42px |
-| Homepage hero only | `lg` | 48px |
-
-**Decision flowchart — "Which link component?"**
-```
-Is it a primary action (form submit, main CTA)?
- -> YES: <Button>
- -> NO: Is it text + arrow CTA ("Learn More ->")?
-         -> YES: <CTALink>
-         -> NO: Is it within paragraph text?
-                -> YES: <InlineLink>
-                -> NO: <CTALink> or <Button>
-```
-
----
-
-## Group 4 — Badge & Label System
-
-**WHY:** Badges provide categorical context (section labels, step numbers, status indicators). Without a unified system, every label is styled ad-hoc.
-
-| File | What It Builds | Key Exports |
-|------|---------------|-------------|
-| `src/app/components/Badge.tsx` | Labels, pills, section headers — 11 themes, 3 variants, CSS custom property driven | `Badge`, `SectionLabel`, `StepPill`, `ObjectivePill`, `CategoryBadge`, `StatusBadge`, `InfoBadge`, `MutedBadge`, `ClickableBadge` |
-
-### Quick Patterns
-
-```tsx
-// Section label above headings
-<SectionLabel theme="brand">KEY INSIGHTS</SectionLabel>
-
-// Step pill in methodology
-<StepPill>STEP 1</StepPill>
-
-// Status indicator
-<StatusBadge theme="success">COMPLETE</StatusBadge>
-
-// Chapter label
-<Badge variant="minimal" size="sm" theme="brand" fontWeight={600}>CHAPTER 1</Badge>
-```
-
-**Architecture (v3.3.2):** Badge.tsx uses CSS custom properties for ALL styling. Sizes and shapes reference `--badge-*` tokens in theme.css. Colors are set as inline CSS custom properties (`--badge-bg`, `--badge-text`, `--badge-border`, `--badge-shimmer`) per instance, consumed by CSS rules in theme.css for base + hover + shimmer states. THEME_COLORS remains in JS (prop-driven selection), but no inline `backgroundColor`/`color` styles — CSS owns all property application. See `BADGES_DOCUMENTATION.md` v3.0 and `DESIGN_SYSTEM_UPDATES.md` v3.3.2 for full architecture.
-
----
-
-## Group 5 — Icon Color System
-
-**WHY:** Without classification, the same icon appears in different colors across sections. Two constants enforce one rule: "Is this icon CONTENT or a UI CONTROL?"
-
-| File | What It Provides |
-|------|-----------------|
-| `src/app/components/iconColors.ts` | `iconColors.content` (#806ce0 periwinkle) for feature/data icons; `iconColors.utility` (#737373 gray) for navigation/control icons |
-
-### Rules
-
-| Icon Type | Color | Examples |
-|-----------|-------|----------|
-| Content / feature | `iconColors.content` (#806ce0) | Sparkles, TrendingUp, Target, BarChart3 |
-| Utility / control | `iconColors.utility` (#737373) | ChevronDown, X, Search, Filter |
-| ChevronRight as decorative bullet | `iconColors.content` | List item pointers |
-
-**NEVER:** Use brand red for icons (reserved for CTAs only). Use arbitrary hex colors for icons.
-
----
-
-## Group 6 — Page-Level Components (Wire Once at Page Root)
-
-**WHY:** These components are placed once at the top-level page layout. They handle global UX patterns (navigation, scroll progress, floating actions).
-
-| File | What It Builds | When to Use | When NOT |
-|------|---------------|-------------|----------|
-| `src/app/components/Navbar.tsx` | Fixed top navbar — 2 states (expanded at top, compact on scroll), brand logo, section nav pills, mobile hamburger, search | Every page | Never omit — users need consistent wayfinding |
-| `src/app/components/ScrollProgress.tsx` | Generic 3px brand-red bar at viewport top, fills by total document scroll, z-9999 | Any long page (generic scroll tracking) | Short pages, dashboards |
-| `src/app/components/ReadingProgressBar.tsx` | Case-study-specific progress bar — uses `useSectionProgress` + `useHeroVisibility`, hides during hero | Case study / report pages with defined section IDs | Generic pages without section anchors |
-| `src/app/components/ScrollToTop.tsx` | Floating button (bottom-right), appears after 400px scroll, Motion animations | Any page exceeding ~2 viewport heights | Short pages, pages with sticky sidebar nav |
-| `src/app/components/StickyCTA.tsx` | Context-aware floating CTA (bottom-right) — changes text/icon based on active section, expandable on hover, brand-red gradient | Report/case-study pages with multiple sections | Pages without section-based navigation |
-| `src/app/components/ContactModal.tsx` | Contact form modal — name/email/company/message, Escape to close, body scroll lock, success state | Any page with a "Contact Us" / "Get in Touch" CTA | Pages without contact functionality |
-| `src/app/components/NextSectionCTA.tsx` | Animated "scroll to next section" button with label + bouncing chevron | Between sections to guide reading flow | Sections that don't need directional guidance |
-| `src/app/components/TableOfContents.tsx` | Sidebar TOC with active-section highlighting | Pages with 5+ sections | Short pages (< 5 sections), mobile (use hamburger) |
-
-**IMPORTANT — ScrollProgress vs ReadingProgressBar:**
-- `ScrollProgress` = generic, any page, based on total document scroll
-- `ReadingProgressBar` = case-study specific, based on section IDs (`client-context` to `final-cta`), hides during hero
-- **Pick one per page. Never use both.**
-
-### Page Shell Template
-
-```tsx
-import { Navbar } from '@/app/components/Navbar';
-import { ReadingProgressBar } from '@/app/components/ReadingProgressBar';
-import { ScrollToTop } from '@/app/components/ScrollToTop';
-import { StickyCTA } from '@/app/components/StickyCTA';
-import { ContactModal } from '@/app/components/ContactModal';
-
-export default function ReportPage() {
-  const [showContact, setShowContact] = useState(false);
-
-  return (
-    <>
-      <ReadingProgressBar />
-      <Navbar />
-      <main id="main-content">
-        {/* Sections here */}
-      </main>
-      <ScrollToTop />
-      <StickyCTA />
-      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
-    </>
-  );
-}
-```
-
----
-
-## Group 7 — Resource / Blog Grid
-
-**WHY:** Content grids need visual variety. A single card style creates monotony. ResourceCard provides 7 layout variants with consistent design tokens.
-
-| File | What It Builds | When to Use |
-|------|---------------|-------------|
-| `src/app/components/ResourceCard.tsx` | Content cards — 7 variants (standard, full-featured, minimal, category-featured, clean, featured-focus, latest), 2 card styles (default/bordered), 2 color modes (light/dark), 53 `--rc-*` CSS tokens | Blog grids, article listings, case study collections, Masonry layouts |
-| `src/app/components/SubtleVariantSwitcher.tsx` | Dev-only floating pill for toggling card styles during design review | Design review sessions with stakeholders. **Never in production.** |
-
-**Rules:**
-- Mix 3-4 variant types per grid for visual rhythm
-- Max 1 `full-featured` card per grid (it's the hero card)
-- Don't mix more than 4 variant types (creates chaos)
-
----
-
-## Group 8 — Custom Hooks
-
-**WHY:** Hooks encapsulate reusable interaction patterns. Import from the barrel (`@/app/hooks`) — never duplicate logic.
-
-| File | What It Does | When to Use | Depends On |
-|------|-------------|-------------|-----------|
-| `src/app/hooks/useShimmer.ts` | Shimmer CSS generation | Used internally by CTALink + InlineLink. **Do not delete.** | — |
-| `src/app/hooks/useScrollDirection.ts` | Detects scroll up/down | Navbar compact/expanded state | — |
-| `src/app/hooks/useHeroVisibility.ts` | Detects when hero scrolls out of view | Navbar style change, ReadingProgressBar show/hide | — |
-| `src/app/hooks/useActiveSection.ts` | Tracks which section is in viewport | TOC highlighting, StickyCTA context switching, Navbar section pills | Section `id` attributes |
-| `src/app/hooks/useCounter.ts` | Animated number counting (0 -> target) | Impact/metrics sections with big numbers | IntersectionObserver |
-| `src/app/hooks/useScrollAnimation.ts` | Scroll-triggered fade/slide animations | Any element that should animate on scroll-into-view | IntersectionObserver |
-| `src/app/hooks/useResponsiveGutter.ts` | Returns pixel gutter (24px mobile, 32px desktop) | Masonry grids, JS-driven layouts needing pixel values | window.matchMedia |
-| `src/app/hooks/useReadingProgress.ts` | Generic reading progress (0-100%) | Simple progress tracking | — |
-| `src/app/hooks/useSectionProgress.ts` | Section-range progress (e.g., from `#client-context` to `#final-cta`) | ReadingProgressBar, section-specific progress | Section `id` attributes |
-| `src/app/hooks/useMagneticEffect.ts` | Magnetic hover effect (element follows cursor slightly) | Interactive cards, buttons with playful hover | — |
-
-**WHEN NOT to use hooks:**
-- `useResponsiveGutter` — Don't use when Tailwind classes work (`gap-6 md:gap-8`)
-- `useMagneticEffect` — Don't use on mobile (no hover), don't use on form inputs
-- `useCounter` — Don't use for non-numeric content
-
----
-
-## Group 9 — Reference Sections (Existing Page Examples)
-
-**WHY:** When building a new report page, these existing sections show proven patterns. Study them, don't reinvent.
-
-| File | Pattern It Demonstrates | Key Techniques |
-|------|------------------------|----------------|
-| `src/app/components/HeroSection.tsx` | Full-width hero with black bg | `SectionWrapper background="black"`, `SectionHeading level={1}`, dual CTAs (brand + ghost) |
-| `src/app/components/ClientContextSection.tsx` | Context/background narrative | Left-aligned prose, `Container width="prose"`, warm background |
-| `src/app/components/ChallengesSection.tsx` | Card grid pattern | JS-calculated card widths (intentional exception), warm bg, 3-column grid |
-| `src/app/components/EngagementObjectivesSection.tsx` | Numbered objectives | `StepPill` badges, ordered content, white bg |
-| `src/app/components/MethodologySection.tsx` | Timeline / step pattern | Sequential steps with connecting lines, methodology flow |
-| `src/app/components/ImpactSection.tsx` | Metrics + animated numbers | `useCounter` hook, big display numbers, stat cards |
-| `src/app/components/ValuePillarsSection.tsx` | Value proposition grid | Feature cards with icons, warm bg |
-| `src/app/components/TestimonialSection.tsx` | Social proof / quote | Serif font for quotes, attribution, warm bg |
-| `src/app/components/ResourcesSection.tsx` | Masonry + ResourceCard + dark mode | `useResponsiveGutter`, react-responsive-masonry, `ResourceCard` variants, `SubtleVariantSwitcher` |
-| `src/app/components/FinalCTASection.tsx` | Closing CTA section | Black bg, brand button, urgency language |
-
-### Section Background Sequence (standard report page)
-
-```
-Hero          -> black
-ClientContext -> warm
-Challenges    -> white
-Objectives    -> warm
-Methodology   -> white
-Impact        -> warm
-ValuePillars  -> white
-Testimonial   -> warm
-Resources     -> black
-FinalCTA      -> black
-```
-
----
-
-## Group 10 — Barrel Exports (Check Before Every Push)
-
-**WHY:** If you create a new component or hook but don't register it in the barrel, other files can't import it via `@/app/components` or `@/app/hooks`. This breaks the import convention and creates inconsistency.
-
-### Components: `src/app/components/index.ts`
-
-**HOW to register a new component:**
-```tsx
-// 1. Use named export in your component file:
-export function MyNewSection() { ... }
-
-// 2. Add to index.ts (in the correct category section):
-export { MyNewSection } from './MyNewSection';
-
-// 3. Other files can now import:
-import { MyNewSection } from '@/app/components';
-```
-
-### Hooks: `src/app/hooks/index.ts`
-
-**HOW to register a new hook:**
-```tsx
-// 1. Use named export in your hook file:
-export function useMyHook() { ... }
-
-// 2. Add to index.ts:
-export { useMyHook } from './useMyHook';
-
-// 3. Other files can now import:
-import { useMyHook } from '@/app/hooks';
-```
-
-**Pre-push barrel check:**
-- [ ] Every new `.tsx` component file has a corresponding `export` line in `src/app/components/index.ts`
-- [ ] Every new hook file has a corresponding `export` line in `src/app/hooks/index.ts`
-- [ ] No default exports — always use named exports
-- [ ] Import paths use `'./FileName'` (relative, no extension)
-
----
-
-## Group 11 — Dashboard Foundations (Modular)
-
-**WHY:** The Foundations tab of the Design System Dashboard documents all visual tokens (colors, typography, spacing, layout, elevation, border-radius). The original 110KB monolith `FoundationsContent.tsx` was too large to maintain or push to GitHub. It has been split into 6 modular sub-files.
-
-**WHAT:** 6 focused sub-files under `src/app/components/foundations/`, plus a thin re-export hub at the original path.
-
-**HOW:** Import via `@/app/components/FoundationsContent` — the re-export hub forwards all exports transparently. No consuming code needs to change.
-
-| File | Content | Exports |
+| File | Purpose | Status |
 |------|---------|--------|
-| `foundations/FoundationsHelpers.tsx` | Shared helper components used by all sub-files | `DocSection`, `ColorCard`, `TextColorCard`, `CodeExample`, `TypeScaleDemo` |
-| `foundations/ColorsContent.tsx` | Complete color documentation: Core Principle, Element-Color Classification, Purple Boundaries, Brand Red, Warm Editorial, 5 Accent Colors, Pure Colors, Text Colors, Border Colors, Section Background Pattern, Complete Palette Reference | `ColorsContent` |
-| `foundations/TypographyContent.tsx` | Type Scale (Major Third 1.25), Font Pairing (DM Sans + Noto Serif), Font Weights, Letter Spacing, Custom Font Sizes (14px family + 12px), Line Height | `TypographyContent` |
-| `foundations/SpacingContent.tsx` | Spacing Scale, Margin vs Padding, Component Spacing, List & Form Spacing, Responsive Spacing, Visual Rhythm | `SpacingContent` |
-| `foundations/LayoutGridContent.tsx` | Container Width System, Responsive Padding, Mobile-First Design, Grid System, Breakpoints, Border Radius Decision Table, Z-Index Strategy | `LayoutGridContent` |
-| `foundations/ElevationBorderRadius.tsx` | Shadow System (3-tier), Border Radius Scale (5px increments), Component Examples, Usage Guidelines, Quick Reference | `ElevationContent`, `BorderRadiusContent` |
+| `src/styles/theme.css` | ALL CSS custom properties | ✅ |
+| `src/styles/fonts.css` | Google Fonts imports (DM Sans, Noto Serif) | ✅ |
+| `src/styles/report-store-additions.css` | RS CSS classes, focus-visible, scrollbar-hide, skeleton | ✅ |
+| `src/styles/index.css` | CSS entry point + Tailwind directives | ✅ |
+| `src/styles/tailwind.css` | Tailwind base layer | ✅ |
 
-**Re-export hub:** `src/app/components/FoundationsContent.tsx` (~1KB, 26 lines) — re-exports everything above plus 6 "All Tokens" showcase components (`AllColorsPaletteContent`, `AllTypographyTokensContent`, etc.)
+### Group 2: Atoms — Core DS Components (24 files)
 
-**Dependencies:**
-- `SpacingContent` imports from `@/app/components/SpacingHelpers` (spacing visualization helpers)
-- All sub-files import from `./FoundationsHelpers` (shared DocSection, ColorCard, etc.)
-- `DesignSystemDashboard.tsx` imports from `@/app/components/FoundationsContent` (unchanged)
+| File | Purpose | Status |
+|------|---------|--------|
+| `Button.tsx` | 4 variants, 5 sizes, shimmer, arrow, two-state secondary | ✅ |
+| `Badge.tsx` | 11 themes, 4 sizes, 3 variants, CSS custom property driven | ✅ |
+| `Label.tsx` | Form field labels | ✅ |
+| `CTALink.tsx` | Text + animated arrow CTA link | ✅ |
+| `InlineLink.tsx` | Inline paragraph link | ✅ |
+| `AnimatedArrow.tsx` | Arrow icon with hover animation | ✅ |
+| `Card.tsx` | v4.0 — 3 variants, ref-based hover, as prop, onClick | ✅ |
+| `SectionHeading.tsx` | v4.0 — prop-based heading (title, label, subtitle, slots) | ✅ |
+| `SectionWrapper.tsx` | Section layout wrapper (background, spacing, maxWidth) | ✅ |
+| `Container.tsx` | Layout width wrapper (5 presets) | ✅ |
+| `Tooltip.tsx` | Portal-based tooltip (top/bottom, scroll-reposition) | ✅ |
+| `ViewToggle.tsx` | List/grid view toggle | ✅ |
+| `FadeInSection.tsx` | IO scroll-triggered fade-in | ✅ |
+| `ScrollProgress.tsx` | Page scroll progress bar | ✅ |
+| `ScrollToTop.tsx` | Floating scroll-to-top button | ✅ |
+| `IconBadge.tsx` | Icon container with tinted bg (4 sizes) | ✅ |
+| `CategoryListItem.tsx` | Category row (icon, label, count, chevron) | ✅ |
+| `FilterCheckbox.tsx` | Single filter option (label + count) | ✅ |
+| `FilterChip.tsx` | Dismissible active filter pill | ✅ |
+| `FilterSearchInput.tsx` | Search input with clear button | ✅ |
+| `FilterSectionHeader.tsx` | Collapsible section header | ✅ |
+| `FilterCheckboxItem.tsx` | Custom checkbox + label + count | ✅ |
+| `FilterIndustryItem.tsx` | Expandable industry row with sub-items | ✅ |
+| `iconColors.ts` | Semantic icon color constants | ✅ |
 
-**WHEN NOT:**
-- Don't import sub-files directly from `foundations/` in new code — always use the re-export hub
-- Don't add new content to the re-export hub — put it in the appropriate sub-file
-- Don't move the re-export hub — `DesignSystemDashboard.tsx` depends on its path
+### Group 3: Molecules (26 files in `molecules/`)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `index.ts` | Barrel exports | ✅ |
+| `ReportCard.tsx` | Canonical report card (grid + list) | ✅ |
+| `ReportGridCard.tsx` | @deprecated → ReportCard layout="grid" | ✅ |
+| `StatCard.tsx` | Market stat card with growth | ✅ |
+| `DataHighlightCard.tsx` | Data point card with value + trend | ✅ |
+| `AnalystPickCardB.tsx` | Expert recommendation card | ✅ |
+| `IndustryBadge.tsx` | Industry subcategory label | ✅ |
+| `CardMetaRow.tsx` | Card metadata row (A/B variants) | ✅ |
+| `CardFooterRow.tsx` | Card footer with date | ✅ |
+| `CardReveal.tsx` | IO staggered card entrance | ✅ |
+| `RevealImage.tsx` | Progressive image reveal | ✅ |
+| `SkeletonCard.tsx` | Loading skeleton (grid + list) | ✅ |
+| `EmptyState.tsx` | Zero results fallback | ✅ |
+| `BackToTop.tsx` | Floating scroll-to-top | ✅ |
+| `HorizontalScroll.tsx` | Transform-based card carousel | ✅ |
+| `ScrollFade.tsx` | Pill/tab overflow with fade edges | ✅ |
+| `CategoryListCard.tsx` | Vertical list card | ✅ |
+| `LoadMoreSentinel.tsx` | IO infinite scroll trigger | ✅ |
+| `SurveyCard.tsx` | Survey card (grid + list) | ✅ |
+| `CompletionBadge.tsx` | Survey lifecycle state badge | ✅ |
+| `ResponseChart.tsx` | CSS-only bar/donut chart | ✅ |
+| `QuestionPreview.tsx` | Survey question type preview | ✅ |
+| `SurveySkeleton.tsx` | Survey loading skeleton | ✅ |
+| `FilterAccordion.tsx` | Collapsible filter group | ✅ |
+| `SidebarPanel.tsx` | Sidebar container shell | ✅ |
+| `ActiveFilterChip.tsx` | Active filter chip bar + "Clear all" | ✅ |
+| `MobileFilterSheet.tsx` | Full-screen mobile filter overlay | ✅ |
+
+### Group 4: Organisms — Cross-Pillar (7 files in `organisms/`)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `index.ts` | Barrel exports | ✅ |
+| `ProductHero.tsx` | Cross-pillar hero section | ✅ |
+| `FeaturedCarousel.tsx` | Cross-pillar featured carousel | ✅ |
+| `StatsRow.tsx` | Cross-pillar stat cards row | ✅ |
+| `BrowseGrid.tsx` | Cross-pillar card grid + ViewToggle | ✅ |
+| `CTABanner.tsx` | Cross-pillar CTA banner | ✅ |
+| `ProductPageTemplate.tsx` | Declarative page template | ✅ |
+
+### Group 5: Organisms — Report Store (24 files in `organisms/`)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `ReportStoreHero.tsx` | RS hero (search, categories) | ✅ |
+| `FeaturedResearch.tsx` | RS featured carousel | ✅ |
+| `ListingToolbar.tsx` | Sort, search, ViewToggle | ✅ |
+| `CardListing.tsx` | Paginated card grid | ✅ |
+| `FiltersPanel.tsx` | Filter accordion sidebar | ✅ |
+| `IndustrySidebar.tsx` | Industry filter sidebar | ✅ |
+| `IndustryFocusBanner.tsx` | Industry context header | ✅ |
+| `DailyDataHighlights.tsx` | 4 DataHighlightCards | ✅ |
+| `AnalystPicks.tsx` | 3 AnalystPickCardBs | ✅ |
+| `IndustrySectorsGrid.tsx` | 14 industries (7+7) | ✅ |
+| `KeyMarketIndicators.tsx` | StatsRow wrapper | ✅ |
+| `RecommendedForYou.tsx` | BrowseGrid wrapper | ✅ |
+| `CustomResearchCTA.tsx` | CTABanner wrapper | ✅ |
+| `TrendingTopics.tsx` | Trending topic pills | ✅ |
+| `TopDownloads.tsx` | Ranked download list | ✅ |
+| `RecentlyViewed.tsx` | Recently viewed carousel | ✅ |
+| `UpcomingReports.tsx` | Upcoming report pipeline | ✅ |
+| `ResearchMethodology.tsx` | 5-step methodology | ✅ |
+| `NewsletterSignup.tsx` | Email subscription | ✅ |
+| `IndustrySpotlight.tsx` | Featured industry deep-dive | ✅ |
+| `ComparisonTable.tsx` | Format comparison table | ✅ |
+| `ReportPreview.tsx` | Report detail view | ✅ |
+| `TestimonialsRS.tsx` | Testimonial quotes | ✅ |
+| `QuickAccessBar.tsx` | Horizontal action bar | ✅ |
+
+### Group 6: Organisms — Case Study (11 files in root `components/`)
+
+| File | Background | Status |
+|------|-----------|--------|
+| `HeroSection.tsx` | BLACK | ✅ |
+| `ClientContextSection.tsx` | WHITE | ✅ |
+| `ChallengesSection.tsx` | WARM | ✅ |
+| `EngagementObjectivesSection.tsx` | WHITE | ✅ |
+| `MethodologySection.tsx` | WARM | ✅ |
+| `ImpactSection.tsx` | WHITE | ✅ |
+| `ValuePillarsSection.tsx` | WHITE | ✅ |
+| `TestimonialSection.tsx` | WHITE | ✅ |
+| `ResourcesSection.tsx` | BLACK | ✅ |
+| `FinalCTASection.tsx` | WHITE | ✅ |
+| `NextSectionCTA.tsx` | — | ✅ |
+
+### Group 7: Page Shell & Navigation (8 files)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `Navbar.tsx` | Responsive two-state navbar | ✅ |
+| `ContactModal.tsx` | Contact form modal | ✅ |
+| `StickyCTA.tsx` | Floating context-aware CTA | ✅ |
+| `ReadingProgressBar.tsx` | Case study reading progress | ✅ |
+| `TableOfContents.tsx` | Sidebar TOC with active tracking | ✅ |
+| `CodeBlockWithCopy.tsx` | Code block with copy button | ✅ |
+| `CollapsibleSection.tsx` | Expandable content section | ✅ |
+| `VariantSwitcher.tsx` | Component variant toggle | ✅ |
+
+### Group 8: Resource System (3 files)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `ResourceCard.tsx` | 7-variant content card | ✅ |
+| `SubtleVariantSwitcher.tsx` | Designer card style toggle | ✅ |
+| `SpacingHelpers.tsx` | Spacing utility components | ✅ |
+
+### Group 9: Hooks (15 files in `hooks/`)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `index.ts` | Barrel exports | ✅ |
+| `useShimmer.ts` | Shimmer CSS generation (DO NOT DELETE) | ✅ |
+| `useScrollDirection.ts` | Scroll up/down detection | ✅ |
+| `useHeroVisibility.ts` | Hero section visibility | ✅ |
+| `useActiveSection.ts` | Active section tracking | ✅ |
+| `useCounter.ts` | Animated number counting | ✅ |
+| `useScrollAnimation.ts` | Scroll-triggered animations | ✅ |
+| `useResponsiveGutter.ts` | Responsive gutter (24/32px) | ✅ |
+| `useReadingProgress.ts` | Page reading progress | ✅ |
+| `useSectionProgress.ts` | Section-range progress | ✅ |
+| `useMagneticEffect.ts` | Magnetic hover effect | ✅ |
+| `useReportFilters.ts` | RS filter state machine | ✅ |
+| `useProgressiveLoad.ts` | IO infinite scroll | ✅ |
+| `useCrossfade.ts` | Crossfade transition | ✅ |
+| `useMountTransition.ts` | Mount/unmount transitions | ✅ |
+
+### Group 10: Dashboard & Documentation Components (28+ files)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `DesignSystemDashboard.tsx` | Main dashboard shell | ✅ |
+| `DesignSystemSidebar.tsx` | Dashboard navigation | ✅ |
+| `FoundationsContent.tsx` | Re-export hub (~1KB) | ✅ |
+| `foundations/FoundationsHelpers.tsx` | Shared DocSection | ✅ |
+| `foundations/ColorsContent.tsx` | Color palette docs | ✅ |
+| `foundations/TypographyContent.tsx` | Typography docs | ✅ |
+| `foundations/SpacingContent.tsx` | Spacing docs | ✅ |
+| `foundations/LayoutGridContent.tsx` | Layout docs | ✅ |
+| `foundations/ElevationBorderRadius.tsx` | Shadow + radius docs | ✅ |
+| `ComponentsContent.tsx` | Components tab | ✅ |
+| `PatternsContent.tsx` | Patterns tab | ✅ |
+| `MotionContent.tsx` | Motion tab | ✅ |
+| `GuidelinesContent.tsx` | Guidelines tab | ✅ |
+| `ResourcesContent.tsx` | Resources tab | ✅ |
+| `AllColorsPaletteContent.tsx` | Full color palette | ✅ |
+| `AllTypographyTokensContent.tsx` | All type tokens | ✅ |
+| `AllSpacingTokensContent.tsx` | All spacing tokens | ✅ |
+| `AllLayoutGridTokensContent.tsx` | All layout tokens | ✅ |
+| `AllElevationTokensContent.tsx` | All elevation tokens | ✅ |
+| `AllBorderRadiusTokensContent.tsx` | All radius tokens | ✅ |
+| `ButtonDocumentation.tsx` | Button docs | ✅ |
+| `LinksDocumentation.tsx` | Link system docs | ✅ |
+| `NavigationDocumentation.tsx` | Navigation docs (uses ScrollFade) | ✅ |
+| `BadgeLabelsDocumentation.tsx` | Badge docs | ✅ |
+| `BadgeShowcase.tsx` | Badge gallery | ✅ |
+| `LinkSystemDemo.tsx` | Link demo | ✅ |
+| `ShimmerDemo.tsx` | Shimmer demo | ✅ |
+| `AnimatedArrowDemo.tsx` | Arrow demo | ✅ |
+| `AnimatedArrowQuickRef.tsx` | Arrow quick ref | ✅ |
+| `ButtonControlsGuide.tsx` | Button controls | ✅ |
+| `FigmaButtonComparison.tsx` | Figma vs code | ✅ |
+| `FiltersDocumentation.tsx` | Filter system docs | ✅ |
+| `ReportStoreOrganismsShowcase.tsx` | RS organisms gallery | ✅ |
+| `SurveysDemoContent.tsx` | Surveys home demo | ✅ |
+| `SurveysListingDemoContent.tsx` | Surveys listing demo | ✅ |
+| `TemplateDemoContent.tsx` | Template demo | ✅ |
+| `ReportStorePage.tsx` | RS template | ✅ |
+
+### Group 11: Data & Barrel Exports (5 files)
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `components/index.ts` | Component barrel exports | ✅ |
+| `data.ts` | Centralized mock data | ✅ |
+| `industryIconMap.ts` | Industry → Lucide icon mapping | ✅ |
+| `badges/index.ts` | Badge re-exports (backward compat) | ✅ |
+| `links/README.md` | Link system overview | ✅ |
 
 ---
 
-## Quick Reference — File Count by Group
+## Barrel Export Checklist
 
-| Group | Files | What |
-|-------|-------|------|
-| 1. Token Values | 3 | tokens.ts, theme.css, fonts.css |
-| 2. Layout Primitives | 4 | SectionWrapper, SectionHeading, Container, Card |
-| 3. Interactive (CTAs) | 4 | Button, CTALink, InlineLink, AnimatedArrow |
-| 4. Badges | 1 | Badge (with 9+ convenience exports) |
-| 5. Icon Colors | 1 | iconColors.ts |
-| 6. Page-Level | 8 | Navbar, ScrollProgress, ReadingProgressBar, ScrollToTop, StickyCTA, ContactModal, NextSectionCTA, TableOfContents |
-| 7. Resource Grid | 2 | ResourceCard, SubtleVariantSwitcher |
-| 8. Hooks | 10 | useShimmer, useScrollDirection, useHeroVisibility, useActiveSection, useCounter, useScrollAnimation, useResponsiveGutter, useReadingProgress, useSectionProgress, useMagneticEffect |
-| 9. Reference Sections | 10 | Hero, ClientContext, Challenges, Objectives, Methodology, Impact, ValuePillars, Testimonial, Resources, FinalCTA |
-| 10. Barrel Exports | 2 | components/index.ts, hooks/index.ts |
-| 11. Dashboard Foundations | 7 | FoundationsHelpers, ColorsContent, TypographyContent, SpacingContent, LayoutGridContent, ElevationBorderRadius, FoundationsContent (re-export hub) |
-| **Total** | **~52** | |
+When adding a new component, ensure it's exported from the correct barrel:
 
-**In practice:** For a new report page, you read `DESIGN_SYSTEM_AI_CONTEXT.md` first, then import from ~15 core files (Groups 2-6 + 8), reference ~3-4 existing sections (Group 9), and register in barrels (Group 10). Group 11 is for dashboard development only.
+| Component Type | Barrel File |
+|---------------|-------------|
+| Atom (root) | `components/index.ts` |
+| Molecule | `molecules/index.ts` + `components/index.ts` |
+| Organism | `organisms/index.ts` + `components/index.ts` |
+| Hook | `hooks/index.ts` |
 
 ---
 
-## Known Exceptions (Don't "Fix" These)
+## Summary
 
-These are intentional patterns that look like bugs but aren't:
-
-| File | Exception | Why |
-|------|-----------|-----|
-| `AllTypographyTokensContent` | Hardcoded font-size values | Demo/showcase component displaying raw token values |
-| `ChallengesSection.tsx` | JS-calculated card widths | Dynamic layout that can't use static Tailwind classes |
-| `ContactModal.tsx` | Hardcoded modal width (500px) | Modal width is independent of container system |
-| `Navbar.tsx` | Imports SVG from `@/imports/svg-fodxwe3cpi` | Figma-imported brand logo — don't recreate |
-| `PatternsContent.tsx` | `max-w-[1200px]` in demo code string | String content for documentation display, not actual layout |
+| Group | Count | Location |
+|-------|-------|----------|
+| Tokens | 5 | `src/styles/` |
+| Atoms | 24 | `src/app/components/` |
+| Molecules | 26 | `src/app/components/molecules/` |
+| Cross-Pillar Organisms | 7 | `src/app/components/organisms/` |
+| RS Organisms | 24 | `src/app/components/organisms/` |
+| CS Organisms | 11 | `src/app/components/` |
+| Shell/Nav | 8 | `src/app/components/` |
+| Resources | 3 | `src/app/components/` |
+| Hooks | 15 | `src/app/hooks/` |
+| Dashboard/Docs | 37 | `src/app/components/` + `foundations/` |
+| Data/Barrels | 5 | `src/app/components/` |
+| **Total** | **~165** | |
 
 ---
 
-## Changelog
-
-| Version | Date | Changes |
-|---------|------|---------|
-| v2.2 | 2026-03-06 | Added Group 11 (Dashboard Foundations) documenting the 6 modular sub-files in `foundations/`; updated file count to ~52; added PatternsContent to Known Exceptions; bumped DS version to v3.4.0 |
-| v2.1 | 2026-03-01 | Fixed Badge migration status (complete, not planned); updated theme.css description to include --badge-* tokens; added DESIGN_SYSTEM_UPDATES.md to companion docs; removed Badge from Known Exceptions; bumped to v3.3.2 |
-| v2.0 | 2026-03-01 | Complete rewrite: proper markdown tables, 4W+H structure, added 8 missing files, 3 missing hooks, ScrollProgress vs ReadingProgressBar, barrel export instructions, known exceptions, secondary button update |
-| v1.0 | 2026-02-28 | Initial checklist (9 groups, ~30 files) |
+*v3.0 | March 18, 2026 | Complete file inventory across all 11 groups*

@@ -1,46 +1,66 @@
-# DESIGN SYSTEM - AI CONTEXT FILE
+# DESIGN SYSTEM - AI CONTEXT INDEX
+
 **Version:** 4.3  
-**Date:** 2026-03-17  
-**Purpose:** Complete 4W+H documentation for AI tools to automatically apply this design system
+**Date:** 2026-03-18  
+**Project:** Project K / Vishal  
+**Repository:** vsoffice001-cloud/Design-System-vs-26
 
 ---
 
-## 🎯 CRITICAL: READ THIS FIRST
+## READ THIS FIRST
 
-**This file is the SINGLE SOURCE OF TRUTH for AI assistants building pages with our design system.**
+This file is a **lightweight index** pointing to modular AI context docs. The original monolithic file was split into 6 focused modules (each under 10KB) for better AI consumption.
 
-When any team member asks you to build a page, component, or feature:
-1. ✅ **ALWAYS read this file first**
-2. ✅ **Apply ALL rules automatically**
-3. ✅ **Reference component documentation**
-4. ✅ **Use exact tokens and patterns**
+**Start here:** [`ai-context/CORE.md`](ai-context/CORE.md) — contains overview, rules, checklist, component inventory, and module index.
 
 ---
 
-> **📦 This file has been modularized.** The detailed content now lives in 6 focused modules under `ai-context/`. This file serves as the lightweight entry point and index.
->
-> For the full design system reference, read the modules listed below.
+## Module System (`ai-context/`)
+
+| Module | Content | Size |
+|--------|---------|------|
+| [`CORE.md`](ai-context/CORE.md) | Overview, critical rules, AI checklist, common mistakes, quality metrics | 9KB |
+| [`TYPOGRAPHY.md`](ai-context/TYPOGRAPHY.md) | Font pairing (Serif/Sans/Mono), Major Third scale (1.25), --text-card-micro, weights | 4KB |
+| [`COLORS.md`](ai-context/COLORS.md) | 92-5-3 hierarchy, 10 color families, RS color patterns, inline style rules | 8KB |
+| [`COMPONENTS.md`](ai-context/COMPONENTS.md) | Button, Link, Badge, Animation, Filter, Molecules (26), Organisms (30+), decision flowcharts | 15KB |
+| [`LAYOUT.md`](ai-context/LAYOUT.md) | Spacing, 5 container widths, SectionWrapper, SectionHeading v4.0, RS/CS page assembly | 10KB |
+| [`PROMPTS.md`](ai-context/PROMPTS.md) | 12 copy-paste AI prompts covering all pillars and component types | 10KB |
+
+**Total:** ~56KB across 6 modules
 
 ---
 
-## 📚 Module Index
+## Companion Docs
 
-| Module | Content | When to Read |
-|--------|---------|-------------|
-| [`ai-context/CORE.md`](ai-context/CORE.md) | Overview, critical rules, AI checklist, common mistakes, quality metrics | **Always** |
-| [`ai-context/TYPOGRAPHY.md`](ai-context/TYPOGRAPHY.md) | Font pairing (Serif/Sans/Mono), Major Third scale (1.25), custom sizes, weights | Any text/heading work |
-| [`ai-context/COLORS.md`](ai-context/COLORS.md) | 92-5-3 hierarchy, brand/black/warm/red/accent/utility colors, section color recipe | Any color decisions |
-| [`ai-context/COMPONENTS.md`](ai-context/COMPONENTS.md) | Button (4 variants + two-state secondary), Link system, Badge (CSS driven), Animation, Filter system | Any interactive element |
-| [`ai-context/LAYOUT.md`](ai-context/LAYOUT.md) | Spacing scale, 5 container widths, responsive padding, section pattern, page assembly | Any layout/section work |
-| [`ai-context/PROMPTS.md`](ai-context/PROMPTS.md) | 7 copy-paste AI implementation prompts | Quick AI sessions |
-
-**Companion docs:**
-- `COMPONENT_GUIDELINES_4WH.md` — 4W+H for every Case Study DS component with decision flowcharts
-- `REPORT_STORE_COMPONENTS_4WH.md` — 4W+H for Report Store atoms, molecules, organisms, templates (v4.0)
-- `design-system-checklist.md` — File map (76+ files, 11 groups)
-- `QUICK_START_PROMPT.md` — Shortened copy-paste prompt
-- `GITHUB_PUSH_GUIDE.md` — Push safety rules
+| Document | Purpose |
+|----------|---------|
+| [`COMPONENT_GUIDELINES_4WH.md`](COMPONENT_GUIDELINES_4WH.md) | 4W+H for every Case Study DS component (22+ entries) |
+| [`REPORT_STORE_COMPONENTS_4WH.md`](REPORT_STORE_COMPONENTS_4WH.md) | 4W+H for RS atoms/molecules/organisms/templates (22 entries) |
+| [`QUICK_START_PROMPT.md`](QUICK_START_PROMPT.md) | Shortened copy-paste prompt for fast AI sessions |
+| [`GITHUB_PUSH_GUIDE.md`](GITHUB_PUSH_GUIDE.md) | Push safety rules, atomic classification, file registry |
+| [`design-system-checklist.md`](design-system-checklist.md) | Complete file map (~165 files, 11 groups) |
+| [`DESIGN_SYSTEM_UPDATES.md`](DESIGN_SYSTEM_UPDATES.md) | Changelog (v3.2 → v4.3) |
+| [`GITHUB_REPO_MANIFEST.md`](GITHUB_REPO_MANIFEST.md) | Canonical repository file inventory |
+| [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) | Project file tree with annotations |
 
 ---
 
-**v4.3 | March 17, 2026**
+## Quick Reading Order
+
+**For building a new page:**
+1. `ai-context/CORE.md` (always)
+2. `ai-context/LAYOUT.md` (section structure)
+3. `ai-context/COMPONENTS.md` (which components to use)
+4. `COMPONENT_GUIDELINES_4WH.md` or `REPORT_STORE_COMPONENTS_4WH.md` (deep reference)
+
+**For a quick fix:**
+1. `QUICK_START_PROMPT.md` (paste into AI)
+
+**For pushing to GitHub:**
+1. `GITHUB_PUSH_GUIDE.md` (safety checklist)
+
+---
+
+> **Migration note (2026-03-18):** This file was converted from a ~50KB monolith to a 3KB index.  
+> All content now lives in `ai-context/*.md`. If you previously referenced specific sections  
+> of this file, use the module index above to find the equivalent content.

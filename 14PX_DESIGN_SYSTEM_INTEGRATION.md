@@ -1,5 +1,7 @@
 # 14px Font Size - Complete Design System Integration
 
+> **ARCHIVE NOTICE (2026-03-18):** This document is historical reference only. The 14px integration is complete and live. For current typography guidance, see `ai-context/TYPOGRAPHY.md` (v4.3) which covers all font sizes including the 14px token family (`--text-nav`, `--text-compact`, `--button-font-sm`).
+
 **Date:** 2026-02-13  
 **Status:** ✅ COMPLETE & LIVE  
 **Quality Score:** 10/10 ⭐⭐⭐  
@@ -36,6 +38,7 @@ Complete integration of 14px font size across the **entire** design system with 
 ---
 
 ### 3. `/src/app/components/FoundationsContent.tsx` ✅ **MAJOR UPDATE**
+**Note (v3.4):** This file is now a re-export hub. The actual content described below lives in `foundations/TypographyContent.tsx`.
 **Added Complete "Custom Font Sizes" Section:**
 
 #### Section Contents:
@@ -44,15 +47,15 @@ Complete integration of 14px font size across the **entire** design system with 
    - Interactive examples for each
    - Live size preview
 
-2. **12px Token** 
-   - `--text-2xs` documentation
+2. **12.8px Token (Unified)** 
+   - `--text-xs` — all small text (merged from former `--text-2xs`)
    - Use cases and examples
 
 3. **Decision Matrix Table**
    - TOC Item Titles → `var(--text-nav)`
    - Small Button Text → `var(--button-font-sm)`
    - Challenge Cards (4+) → `var(--text-compact)`
-   - Navbar Menu → `var(--text-2xs)`
+   - Navbar Menu / Molecule Labels → `var(--text-xs)`
    - CTA Descriptions → `var(--text-nav)`
 
 4. **"Why Three Tokens for Same Value?" Explanation**
@@ -93,7 +96,7 @@ Design System Dashboard
             │   ├── --text-nav (Navigation)
             │   ├── --text-compact (Body text)
             │   └── --button-font-sm (Buttons)
-            ├── 12px Token (--text-2xs)
+            ├── 12.8px Token (--text-xs, unified)
             └── Decision Matrix Table
 ```
 
@@ -168,7 +171,7 @@ font-size: var(--text-nav);
 font-size: var(--text-compact);
 
 /* Small buttons - automatic via size="sm" */
-<Button size="sm">Text</Button> /* 14px font */
+<Button size="sm">Text</Button>
 ```
 
 ---
@@ -272,7 +275,7 @@ font-size: var(--text-compact);
 --text-nav: 0.875rem;        /* 14px - Navigation */
 --text-compact: 0.875rem;     /* 14px - Compact body */
 --button-font-sm: 0.875rem;   /* 14px - Small buttons */
---text-2xs: 0.75rem;          /* 12px - Micro labels */
+--text-xs: 0.8rem;            /* 12.8px - All small text (unified) */
 ```
 
 ---
